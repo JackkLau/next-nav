@@ -25,5 +25,21 @@ export const navigationData: NavigationItem[] = [
     favorite: true,
     description: '权威的Web技术文档'
   },
+  {
+    id: '3',
+    name: 'MDN Web Docs',
+    url: 'https://developer.mozilla.org',
+    category: '学习',
+    favorite: true,
+    description: '权威的Web技术文档'
+  },
+  {
+    id: '4',
+    name: 'MDN Web Docs',
+    url: 'https://developer.mozilla.org',
+    category: '学习',
+    favorite: true,
+    description: '权威的Web技术文档'
+  },
   // 更多导航项...
 ];

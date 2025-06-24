@@ -1,17 +1,11 @@
 'use client'
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCompass,
-  faSearch,
-  faStar,
-  faExternalLink,
-} from '@fortawesome/free-solid-svg-icons';
-import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'; // 空心星
-import { navigationData, NavigationItem } from '@/data/navigation';
+import {useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSearch,} from '@fortawesome/free-solid-svg-icons';
+import {navigation1, navigationData} from '@/data/navigation';
 import {Input} from '@/components/ui/input';
 import {searchTool} from '@/data/searchTool';
-import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
+import NaviItem from '@/components/navi-item';
 
 
 export default function Home() {
@@ -56,24 +50,8 @@ export default function Home() {
 
         {/* 导航列表 */}
         <div className="w-full " >
-          <div >
-            <h2 className="text-xl font-bold text-dark">远程招聘</h2>
-            <ul  className="flex flex-wrap justify-start items-center mt-2 gap-8">
-              {filteredItems.map((item, index) => (
-                <Tooltip key={index}>
-                  <TooltipTrigger asChild>
-                    <li  className="mb-4 w-32 h-16 bg-fuchsia-300 shadow hover:shadow cursor-pointer">
-
-                    </li>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom">
-                    <p>Add to library</p>
-                  </TooltipContent>
-                </Tooltip>
-
-              ))}
-            </ul>
-          </div>
+          <NaviItem navItems={navigationData.filter(item => item.category === '常用网站')} title={'常用网站'}></NaviItem>
+          <NaviItem navItems={navigationData.filter(item => item.category === '远程社区')} title={'远程社区'}></NaviItem>
         </div>
       </main>
 

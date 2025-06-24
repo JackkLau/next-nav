@@ -2,6 +2,7 @@ import React from 'react';
 import {faCompass} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
+import Image from 'next/image';
 import {leftMenu} from '@/data/left-menu';
 import {topMenu} from '@/data/top-menu';
 
@@ -12,8 +13,14 @@ function Index({children}: {children: React.ReactNode}) {
       <div className="flex flex-col items-center justify-start w-40 bg-gray-100 sticky">
         <header className="px-4 py-4 flex justify-between items-start ">
           <Link  href="/">
-            <h1 className="text-xl font-bold text-dark w-full">
-              <FontAwesomeIcon icon={faCompass} className="mr-2 text-2xl" />
+            <h1 className="flex text-xl font-bold text-dark w-full">
+              <Image
+                src="/favicon.png"
+                alt="logo"
+                width={28}
+                height={28}
+                className={"mr-2"}
+              ></Image>
               流苏导航
             </h1>
           </Link>
@@ -53,7 +60,7 @@ function Index({children}: {children: React.ReactNode}) {
         </main>
         {/*底部版权信息*/}
         <footer className="px-4 py-4 bg-gray-100 text-center text-gray-500">
-          <p>© 2023 流苏导航. All rights reserved.</p>
+          <p>© 2025 流苏导航. All rights reserved.</p>
         </footer>
       </div>
     </div>

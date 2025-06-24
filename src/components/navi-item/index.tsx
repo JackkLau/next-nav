@@ -7,18 +7,19 @@ import Image from 'next/image';
 function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
   return (
     <div >
-      <h2 className="text-xl font-bold text-dark">{title}</h2>
+      <h2 id={title} className="text-xl font-bold text-dark">{title}</h2>
       <ul  className="flex flex-wrap justify-start items-center mt-2 gap-8">
         {navItems.map((item, index) => (
           <Tooltip key={index}>
-            <TooltipTrigger asChild>
-              <li  className="mb-4 w-60 h-20 bg-gray-100 shadow hover:shadow cursor-pointer">
-                <Link  href={'/detail/' + item.id}>
-                  <div className={"flex justify-start items-center w-full h-full"}>
+
+              <li  className="relative mb-4 w-60 h-20 bg-gray-100 shadow hover:shadow cursor-pointer">
+                <TooltipTrigger asChild>
+                <Link  href={item.url} target={'_blank'} >
+                  <div className={" flex justify-start items-center w-full h-full"}>
                     <Image
                       width={50}
                       height={50}
-                      src={item.imgUrl ? item.imgUrl : '/images/eleduck.png'}
+                      src={item.imgUrl ? item.imgUrl : '/favicon.png'}
                       alt={item.name}
                       className="ml-2  rounded-full object-cover"
                     />
@@ -26,10 +27,18 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
                       <p className="w-42 mb-1 text-md font-medium truncate">{item.name}</p>
                       <p className="w-42 text-xs line-clamp-2 ">{item.description}</p>
                     </div>
+
                   </div>
                 </Link>
+                </TooltipTrigger>
+                {item.needVPN && (
+                  <Link href={"https://y-too.com/aff.php?aff=6690"} target="_blank"
+                        className="absolute right-0 top-0 border px-2 py-1 text-red-500 text-xs hover:bg-blue-300 hover:bg-opacity-75 hover:text-white" >
+                    需梯子
+                  </Link>
+                )}
               </li>
-            </TooltipTrigger>
+
             <TooltipContent side="bottom">
               <p className={"max-w-40"}>{item.description}</p>
             </TooltipContent>

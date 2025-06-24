@@ -1,4 +1,6 @@
-export const topMenu: any[] = [
+import {MenuData} from '@/data/left-menu';
+
+export const topMenu: MenuData[] = [
   {
     id: '1',
     name: '首页',

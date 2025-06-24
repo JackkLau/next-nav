@@ -1,12 +1,13 @@
+import {navigationData } from '@/data/navigation';
 
-export const leftMenu: any[] = [
-  {
-    id: '1',
-    name: '远程招聘',
-  },
-  {
-    id: '2',
-    name: '前端技术',
-  },
-  // 更多导航项...
-];
+export interface MenuData {
+  id: string;
+  name: string;
+}
+
+// 过滤数据，只保留 category，并且去除重复的 category
+export const categories = [...new Set(navigationData.map(item => item.category))];
+export const leftMenu: MenuData[] = categories.map((item, index) => ({
+  id: String(index),
+  name: item,
+}));

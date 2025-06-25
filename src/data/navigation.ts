@@ -132,6 +132,13 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.c,
     description: 'PixiJS - The HTML5 Creation Engine. Create beautiful digital content with the fastest, most flexible 2D WebGL renderer.',
   },
+  {
+    name: '学吧导航',
+    url: 'https://www.xue8nav.com/',
+    imgUrl: '',
+    category: CategoryType.g,
+    description: '学吧导航，超过四十万学习爱好者都在用的专业学习网址大全学霸导航，汇集了国内外优质的学习网站和平台。网站囊括了综合平台、外语学习、编程算法、电脑办公、百科知识、设计剪辑、音乐艺术、文史哲理、医学政经、演讲座谈、数理化生等10余项分类，收录了上百个个优质的国内外学习网站。无论你是在校学生，还是上班人群，亦或是单纯的学习爱好者，无需再苦恼于四处寻找学习网站。',
+  },
 
 
 

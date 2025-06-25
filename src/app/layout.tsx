@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import GlobalLayout from '@/components/global-layout';
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,10 @@ export const metadata: Metadata = {
     '导航网站',
     '分类网站',
     '实用网站',
-  ]
+  ],
+  other: {
+    "google-adsense-account": "ca-pub-5653851953778502"
+  },
 };
 
 export default function RootLayout({
@@ -46,12 +50,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-      <GlobalLayout>
-        {children}
-      </GlobalLayout>
+    <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5653851953778502"
+            crossOrigin="anonymous"></Script>
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    >
+    <GlobalLayout>
+      {children}
+    </GlobalLayout>
       </body>
     </html>
   );

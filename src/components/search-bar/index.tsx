@@ -30,7 +30,7 @@ function Index() {
   }
   return (
     <>
-      <div className="relative w-1/2 flex justify-between">
+      <div className="relative w-1/2 flex justify-between mt-2">
         <Input onInput={handleInput} onKeyDown={handleKeyDown}  className="rounded-4xl px-4" type="search" placeholder="远程工作" />
         {/*<FontAwesomeIcon onClick={handleSearch} icon={faSearch} className="absolute top-2 right-1 text-gray-400 text-xl cursor-pointer" />*/}
       </div>

@@ -1,24 +1,21 @@
-"use client"
-import React, {useState, useEffect} from 'react';
+'use client'
+import React, {useState} from 'react';
 import {Input} from '@/components/ui/input';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSearch} from '@fortawesome/free-solid-svg-icons';
-import {searchTool} from '@/data/searchTool';
+import {searchTool, SearchTool} from '@/data/searchTool';
 
 function Index() {
   const [engine, setEngine] = useState(searchTool[0].url)
-  const [content, setContent] = useState()
-  const [toolId, setToolId] = useState()
+  const [content, setContent] = useState('')
+  const [toolId, setToolId] = useState('0')
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       handleSearch()
     }
   }
-  function onSelectEngine(tool) {
+  function onSelectEngine(tool: SearchTool) {
     setEngine(tool.url)
     setToolId(tool.id)
-    console.log('tool :>>', tool);
   }
 
   function handleSearch() {
@@ -27,10 +24,14 @@ function Index() {
       window.open(`${engine}${content}`)
     }
   }
+
+  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+    setContent(e.target.value)
+  }
   return (
     <>
       <div className="relative w-1/2 flex justify-between">
-        <Input onInput={(e) => setContent(e.target.value)} onKeyDown={handleKeyDown}  className="rounded-4xl px-4" type="search" placeholder="远程工作" />
+        <Input onInput={handleInput} onKeyDown={handleKeyDown}  className="rounded-4xl px-4" type="search" placeholder="远程工作" />
         {/*<FontAwesomeIcon onClick={handleSearch} icon={faSearch} className="absolute top-2 right-1 text-gray-400 text-xl cursor-pointer" />*/}
       </div>
       <div className="mt-2">

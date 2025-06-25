@@ -5,7 +5,7 @@ import SearchBar from '@/components/search-bar';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen  overflow-y-auto">
       {/* 主内容区 */}
       <main className="flex-grow container px-4">
         {/* 搜索栏 */}

@@ -22,7 +22,7 @@ function Index({topMenu}: { topMenu: MenuData[] }) {
           ></Image>
           <div>价值导航</div>
         </h1>
-        <ul className="flex space-x-4">
+        <ul className="flex items-center space-x-4">
           <li className="sm:hidden text- hover:text-gray-300">
             {/*移动端菜单按钮（仅小屏幕显示）*/}
             <button className="sm:hidden text- hover:text-gray-300">
@@ -34,16 +34,16 @@ function Index({topMenu}: { topMenu: MenuData[] }) {
             </button>
           </li>
           {topMenu.map((item) => (
-            <li key={item.id} className="mb-2 text-l text-dark">
+            <li key={item.id} className="text-l text-dark">
               {item.name === '首页' &&
                   <Link href={'/'} className="flex items-center text-gray-500 hover:text-gray-700">
-                      <FontAwesomeIcon icon={item.icon} className="mr-2 w-4 text-primary"/>
+                      <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary"/>
                       <div>{item.name}</div>
                   </Link>}
               {item.name === '收藏' &&
                   <div onClick={() => alert('欢迎添加收藏夹，请按 ctrl + D 或 command + D')}
                        className="flex items-center text-gray-500 hover:text-gray-700 cursor-pointer">
-                      <FontAwesomeIcon icon={item.icon} className="mr-2 w-4 text-primary text-yellow-300"/>
+                      <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary text-yellow-300"/>
                       <div>{item.name}</div>
                   </div>
               }
@@ -51,7 +51,7 @@ function Index({topMenu}: { topMenu: MenuData[] }) {
                   <Popover >
                       <PopoverTrigger>
                           <div className="flex items-center text-gray-500 hover:text-gray-700 cursor-pointer">
-                              <FontAwesomeIcon icon={item.icon} className="mr-2 w-4 text-primary text-red-600"/>
+                              <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary text-red-600"/>
                               <div>{item.name}</div>
                           </div>
                       </PopoverTrigger>

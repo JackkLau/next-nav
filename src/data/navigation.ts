@@ -139,6 +139,35 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.g,
     description: '学吧导航，超过四十万学习爱好者都在用的专业学习网址大全学霸导航，汇集了国内外优质的学习网站和平台。网站囊括了综合平台、外语学习、编程算法、电脑办公、百科知识、设计剪辑、音乐艺术、文史哲理、医学政经、演讲座谈、数理化生等10余项分类，收录了上百个个优质的国内外学习网站。无论你是在校学生，还是上班人群，亦或是单纯的学习爱好者，无需再苦恼于四处寻找学习网站。',
   },
+  {
+    name: 'google收录',
+    url: 'https://search.google.com/search-console',
+    imgUrl: '/nav/14.png',
+    category: CategoryType.c,
+    description: 'Google Search Console 是一项由 Google 提供的免费服务，可帮助您监控和维护您的网站在 Google 搜索结果中的展示情况以及排查问题。',
+  },
+  {
+    name: 'google广告',
+    url: 'https://www.google.com/adsense/',
+    imgUrl: '/nav/14.png',
+    category: CategoryType.c,
+    description: 'Google AdSense广告系统',
+  },
+  {
+    name: 'google趋势',
+    url: 'https://trends.google.com/home',
+    imgUrl: '/nav/14.png',
+    category: CategoryType.c,
+    description: 'Google Trends了解全球用户都在搜什么',
+  },
+  {
+    name: 'google分析',
+    url: 'https://analytics.google.com/analytics/',
+    imgUrl: '/nav/14.png',
+    category: CategoryType.c,
+    description: 'Google Analytics流量统计分析系统',
+  },
+
 
 
 

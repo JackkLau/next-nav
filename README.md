@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 价值导航
 
-## Getting Started
+## 项目简介
+价值导航是一个基于 Next.js 的发现页，旨在帮助用户探索和发现各种价值。
+该应用程序提供了一个用户友好的界面，可以发现有价值的个人站、 资源、商业信息等。
 
-First, run the development server:
+## 项目地址
+[价值导航](https://nav.loverezhao.top/)  
+欢迎观摩，并留下您宝贵的意见。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 项目部署
+本项目通过 vercel 进行部署，您可以 fork 本项目后，通过vercel进行一键部署。  
+链接访问：https://vercel.com/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 支持与反馈
+如果您在使用过程中遇到任何问题或有任何建议，欢迎通过以下方式与我们联系：  
+vx: xiaoke_edit
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+还可以关注我的公众号，发现更多内容：  
+![](./public/qrcode.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+喜欢ben的话，欢迎star支持一下！你的支持是我最大的动力！

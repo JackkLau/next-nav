@@ -1,5 +1,5 @@
 import {MenuData} from '@/data/left-menu';
-import {faHouse, faStar} from '@fortawesome/free-solid-svg-icons';
+import {faHeart, faHouse, faStar} from '@fortawesome/free-solid-svg-icons';
 
 export const topMenu: MenuData[] = [
   {
@@ -11,6 +11,11 @@ export const topMenu: MenuData[] = [
     id: '2',
     name: '收藏',
     icon: faStar,
+  },
+  {
+    id: '2',
+    name: '关注我',
+    icon: faHeart,
   },
   // 更多导航项...
 ];

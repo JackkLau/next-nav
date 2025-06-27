@@ -38,7 +38,8 @@ export const metadata: Metadata = {
     '实用网站',
   ],
   other: {
-    "google-adsense-account": "ca-pub-5653851953778502"
+    "google-adsense-account": "ca-pub-5653851953778502",
+    "msvalidate.01": "1CCA2B8229A0C45CAB754FE9BBB190BE",
   },
 };
 

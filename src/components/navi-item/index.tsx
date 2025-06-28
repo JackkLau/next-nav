@@ -15,13 +15,14 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
                 <TooltipTrigger asChild>
                 <Link  href={item.url} target={'_blank'} >
                   <div className={" flex justify-start items-center w-full h-full"}>
-                    <Image
-                      width={50}
-                      height={50}
-                      src={item.imgUrl ? item.imgUrl : '/favicon.png'}
-                      alt={item.name}
-                      className="ml-2  rounded-full object-cover"
-                    />
+                    <div className="h-[50] flex items-center ml-2 bg-gray-100 rounded-full object-cover">
+                      <Image
+                        width={50}
+                        height={50}
+                        src={item.imgUrl ? item.imgUrl : '/favicon.png'}
+                        alt={item.name}
+                      />
+                    </div>
                     <div className="flex flex-col justify-start items-start ml-2">
                       <p className="w-42 mb-1 text-md font-medium truncate">{item.name}</p>
                       <p className="w-42 text-xs line-clamp-2 ">{item.description}</p>

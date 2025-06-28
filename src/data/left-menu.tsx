@@ -1,12 +1,13 @@
 import {navigationData} from '@/data/navigation';
 import {
+  faBook,
   faBoxArchive,
+  faCamera,
   faClone,
   faCompass,
-  faScrewdriverWrench,
+  faPeopleGroup,
   faPersonChalkboard,
-  faBook,
-  faPeopleGroup
+  faScrewdriverWrench
 } from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
@@ -24,6 +25,7 @@ const CategoryIconMap: {[key: string]: IconDefinition} = {
   '资源收藏': faBoxArchive,
   '镜像站': faClone,
   '导航发现': faCompass,
+  '影视娱乐': faCamera,
 }
 
 // 过滤数据，只保留 category，并且去除重复的 category

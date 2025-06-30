@@ -3,6 +3,8 @@ import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 import Link from 'next/link';
 import {NavigationItem} from '@/data/navigation';
 import Image from 'next/image';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faArrowAltCircleRight} from '@fortawesome/free-regular-svg-icons';
 
 function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
   return (
@@ -11,9 +13,9 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
       <ul  className="md:flex block  flex-wrap justify-start items-center mt-2 gap-x-8 gap-y-1">
         {navItems.map((item, index) => (
           <Tooltip key={index}>
-              <li  className="relative mb-4 md:w-60 w-full h-20 bg-gray-50 shadow hover:shadow-xl hover:bg-gray-100 cursor-pointer">
+              <li  className="relative mb-4 md:w-70 w-full h-24 bg-gray-50 shadow hover:shadow-xl hover:bg-gray-100 cursor-pointer">
                 <TooltipTrigger asChild>
-                <Link  href={item.url} target={'_blank'} >
+                <Link  href={item.id} target={'_blank'} >
                   <div className={" flex justify-start items-center w-full h-full"}>
                     <div className="h-[50] flex items-center ml-2 bg-gray-100 rounded-full object-cover">
                       <Image
@@ -27,7 +29,9 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
                       <p className="w-42 mb-1 text-md font-medium truncate">{item.name}</p>
                       <p className="w-42 text-xs line-clamp-2 ">{item.description}</p>
                     </div>
-
+                    <Link href={item.url} title="直接访问" className={'ml-2 text-3xl font-light text-right text-gray-400'}>
+                      <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2"/>
+                    </Link>
                   </div>
                 </Link>
                 </TooltipTrigger>
@@ -37,6 +41,8 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
                     需梯子
                   </Link>
                 )}
+
+
               </li>
 
             <TooltipContent side="bottom">

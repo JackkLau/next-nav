@@ -4,6 +4,13 @@ import Link from 'next/link';
 import QrBox from '@/components/qr-box';
 
 
+export function generateStaticParams() {
+  return navigationData.map((post) => ({
+    slug: post.id,
+  }))
+}
+
+
 export default async function Home({
                                      params,
                                    }: {

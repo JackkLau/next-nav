@@ -16,17 +16,17 @@ function Index({children}: { children: React.ReactNode }) {
     setMenuShow(!menuShow)
   }
 
-  function handleLeftMenu(item: MenuData) {
+  function handleLeftMenu(item?: MenuData) {
     setMenuShow(false)
-    setMenuId(item.id)
+    setMenuId(item?.id || '')
   }
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/*左侧导航*/}
-      <div className={`md:flex ${menuShow ? 'fixed left-0 z-10': 'fixed -left-1/2'} transition-all flex-col items-center justify-start min-h-full w-40 bg-gray-100 `}>
+      <div className={`md:flex md:static fixed ${menuShow ? 'left-0 z-10': '-left-1/2'} transition-all flex-col items-center justify-start min-h-full w-40 bg-gray-100 `}>
         <header className="px-4 py-4 flex justify-between items-start ">
-          <Link href="/">
+          <Link href="/" onClick={() => handleLeftMenu()}>
             <h1 className="flex items-center text-xl font-bold text-dark w-full">
               <Image
                 src="/favicon.png"

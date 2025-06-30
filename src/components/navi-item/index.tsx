@@ -15,7 +15,7 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
           <Tooltip key={index}>
               <li  className="relative mb-4 md:w-70 w-full h-24 bg-gray-50 shadow hover:shadow-xl hover:bg-gray-100 cursor-pointer">
                 <TooltipTrigger asChild>
-                <Link  href={item.id} target={'_blank'} >
+                <Link  href={`/${item.id}`} target={'_blank'} >
                   <div className={"flex flex-nowrap justify-start items-center w-full h-full"}>
                     <div className="flex-none h-[50] flex items-center ml-2 bg-gray-100 rounded-full object-cover">
                       <Image

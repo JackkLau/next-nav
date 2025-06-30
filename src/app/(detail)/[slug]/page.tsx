@@ -34,14 +34,14 @@ export default async function Home({
           </Image>
 
           <div className={'h-full max-w-1/3 truncate'}>
-            <h2 className={'mb-2 text-2xl font-bold truncate'}>{navItem?.name}呀呀呀呀 呀呀呀</h2>
+            <h2 className={'mb-2 text-2xl font-bold truncate'}>{navItem?.name}</h2>
 
             <div  className={'w-fit text-center px-2 py-1  text-sm text-white bg-blue-500 border rounded-md'}>
             {navItem?.category}
           </div>
           </div>
           <div className={'flex-1 flex items-center justify-end '}>
-            <Link title={navItem?.url || '/'} href={navItem?.url || '/'} target={'_blank'}
+            <Link title={navItem?.url || '/'} href={'/' + navItem?.url || '/'} target={'_blank'}
                   className="text-center ml-4 text-white md:text-lg text-sm hover:bg-blue-500 bg-blue-300 rounded-md p-2">
               直接访问
             </Link>

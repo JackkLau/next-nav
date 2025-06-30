@@ -42,17 +42,17 @@ export default async function Home({
           </div>
           <div className={'flex-1 flex items-center justify-end '}>
             <Link title={navItem?.url || '/'} href={'/' + navItem?.url || '/'} target={'_blank'}
-                  className="text-center ml-4 text-white md:text-lg text-sm hover:bg-blue-500 bg-blue-300 rounded-md p-2">
+                  className="text-center ml-4 text-white md:text-lg text-sm bg-blue-500 rounded-md p-2">
               直接访问
             </Link>
             <div
-              className="flex items-center justify-end ml-4 text-white md:text-lg text-sm hover:bg-blue-500 bg-blue-300 rounded-md p-2">
+              className="flex items-center justify-end ml-4 text-white md:text-lg text-sm bg-blue-500  rounded-md p-2">
               <QrBox url={navItem?.url || '/'}/>
             </div>
           </div>
         </div>
 
-        <p className={'min-h-1/4 w-full px-4 py-1 bg-gray-100 text-gray-800 border '}>
+        <p className={'min-h-1/4 w-full px-4 py-1 bg-gray-50 text-gray-800 '}>
           {navItem?.description}
         </p>
       </div>

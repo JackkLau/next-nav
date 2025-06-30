@@ -16,8 +16,8 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
               <li  className="relative mb-4 md:w-70 w-full h-24 bg-gray-50 shadow hover:shadow-xl hover:bg-gray-100 cursor-pointer">
                 <TooltipTrigger asChild>
                 <Link  href={item.id} target={'_blank'} >
-                  <div className={" flex justify-start items-center w-full h-full"}>
-                    <div className="h-[50] flex items-center ml-2 bg-gray-100 rounded-full object-cover">
+                  <div className={"flex flex-nowrap justify-start items-center w-full h-full"}>
+                    <div className="flex-none h-[50] flex items-center ml-2 bg-gray-100 rounded-full object-cover">
                       <Image
                         width={50}
                         height={50}
@@ -25,11 +25,12 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
                         alt={item.name}
                       />
                     </div>
-                    <div className="flex flex-col justify-start items-start ml-2">
-                      <p className="w-42 mb-1 text-md font-medium truncate">{item.name}</p>
-                      <p className="w-42 text-xs line-clamp-2 ">{item.description}</p>
+                    <div className="flex-1 flex flex-col ml-2">
+                      <h2 className="max-w-[160] mb-1 text-md font-medium truncate">{item.name}</h2>
+                      <p className="text-sm line-clamp-2 ">{item.description}</p>
                     </div>
-                    <Link href={item.url} title="直接访问" className={'ml-2 text-3xl font-light text-right text-gray-400'}>
+                    <Link href={item.url || '/'} target={'_blank'} title="直接访问"
+                          className={'w-[45] ml-2 text-3xl font-light text-right text-gray-400'}>
                       <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2"/>
                     </Link>
                   </div>

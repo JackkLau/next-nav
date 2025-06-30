@@ -13,9 +13,9 @@ function Index({topMenu, onMenuShow}: { topMenu: MenuData[]; onMenuShow: () => v
     <div className="px-4 py-4">
       <nav>
         <ul className="flex items-center space-x-4">
-          <li className="flex item-center sm:hidden text- hover:text-gray-300">
+          <li className="flex item-center md:hidden text- hover:text-gray-300">
             {/*移动端菜单按钮（仅小屏幕显示）*/}
-            <button onClick={onMenuShow} className="sm:hidden text- hover:text-gray-300">
+            <button onClick={onMenuShow} className="text- hover:text-gray-300">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                    xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"

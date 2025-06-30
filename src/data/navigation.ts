@@ -127,7 +127,7 @@ export const navigationData: NavigationItem[] = [
     description: '简洁好用的常用网站导航，免费实用的在线工具大全',
   },
   {
-    name: 'PixiJS | The HTML5 Creation Engine | PixiJS',
+    name: 'PixiJS',
     url: 'https://pixijs.com/',
     imgUrl: '/nav/12.png',
     category: CategoryType.c,
@@ -300,6 +300,13 @@ export const navigationData: NavigationItem[] = [
     imgUrl: '/nav/31.png',
     category: CategoryType.h,
     description: '樱花动漫,动漫,樱花动漫app下载_拥有上万集高清晰画质的在线动漫，观看完全免费、无须注册、高速播放、更新及时的专业在线樱花动漫站，我们致力为所有动漫迷们提供最好看的动漫。',
+  },
+  {
+    name: 'bing收录',
+    url: 'https://www.bing.com/webmasters/home?siteUrl=https://www.loverezhao.top/',
+    imgUrl: '/nav/32.png',
+    category: CategoryType.c,
+    description: 'Bing Webmaster Tools - Bing Webmaster Tools',
   },
 
 

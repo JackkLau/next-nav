@@ -4,17 +4,27 @@ import React, {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import Image from 'next/image';
-import {leftMenu} from '@/data/left-menu';
+import {leftMenu, MenuData} from '@/data/left-menu';
 import {topMenu} from '@/data/top-menu';
 import TopMenu from '@/components/top-menu';
 
 function Index({children}: { children: React.ReactNode }) {
   const [menuId, setMenuId] = useState<string>()
+  const [menuShow, setMenuShow] = useState(false)
+
+  function onHandleMenuShow() {
+    setMenuShow(!menuShow)
+  }
+
+  function handleLeftMenu(item: MenuData) {
+    setMenuShow(false)
+    setMenuId(item.id)
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/*左侧导航*/}
-      <div className="md:flex hidden flex-col items-center justify-start min-h-full w-40 bg-gray-100 ">
+      <div className={`md:flex ${menuShow ? 'fixed left-0 z-10': 'fixed -left-1/2'} transition-all flex-col items-center justify-start min-h-full w-40 bg-gray-100 `}>
         <header className="px-4 py-4 flex justify-between items-start ">
           <Link href="/">
             <h1 className="flex items-center text-xl font-bold text-dark w-full">
@@ -32,7 +42,7 @@ function Index({children}: { children: React.ReactNode }) {
         <nav className="w-full mt-2">
           <ul className="w-26 mx-6">
             {leftMenu.map((item) => (
-              <li key={item.id} onClick={() => setMenuId(item.id)} className={`mb-2 text-lg`}>
+              <li key={item.id} onClick={() => handleLeftMenu(item)} className={`mb-2 text-lg`}>
                 <Link href={'#' + item.name} className={`flex items-center hover:text-primary  ${menuId === item.id ? 'text-primary': 'text-gray-500'}`}>
                   <FontAwesomeIcon icon={item.icon} className="mr-2 w-4"/>
                   <div>{item.name}</div>
@@ -44,7 +54,7 @@ function Index({children}: { children: React.ReactNode }) {
       {/*右侧内容*/}
       <div className="flex-grow flex flex-col min-h-full overflow-hidden">
         {/*顶部导航*/}
-        <TopMenu topMenu={topMenu} />
+        <TopMenu topMenu={topMenu} onMenuShow={onHandleMenuShow} />
         {/*主内容区*/}
         <main className={'flex-1 overflow-y-scroll scroll-smooth'}>
           {children}

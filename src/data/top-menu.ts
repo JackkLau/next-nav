@@ -13,7 +13,7 @@ export const topMenu: MenuData[] = [
     icon: faStar,
   },
   {
-    id: '2',
+    id: '3',
     name: '关注我',
     icon: faHeart,
   },

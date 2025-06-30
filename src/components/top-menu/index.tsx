@@ -7,25 +7,15 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {MenuData} from '@/data/left-menu';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 
-function Index({topMenu}: { topMenu: MenuData[] }) {
+function Index({topMenu, onMenuShow}: { topMenu: MenuData[]; onMenuShow: () => void }) {
 
   return (
     <div className="px-4 py-4">
       <nav>
-        <h1 className="sm:hidden flex items-center text-xl font-bold text-dark w-full mb-4">
-          <Image
-            src="/favicon.png"
-            alt="logo"
-            width={28}
-            height={28}
-            className={'w-8 h-8 mr-2'}
-          ></Image>
-          <div>价值导航</div>
-        </h1>
         <ul className="flex items-center space-x-4">
-          <li className="sm:hidden text- hover:text-gray-300">
+          <li className="flex item-center sm:hidden text- hover:text-gray-300">
             {/*移动端菜单按钮（仅小屏幕显示）*/}
-            <button className="sm:hidden text- hover:text-gray-300">
+            <button onClick={onMenuShow} className="sm:hidden text- hover:text-gray-300">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                    xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
@@ -34,7 +24,7 @@ function Index({topMenu}: { topMenu: MenuData[] }) {
             </button>
           </li>
           {topMenu.map((item) => (
-            <li key={item.id} className="text-l text-dark">
+            <li key={item.id} className="flex items-center  text-l text-dark">
               {item.name === '首页' &&
                   <Link href={'/'} className="flex items-center text-gray-500 hover:text-gray-700">
                       <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary"/>

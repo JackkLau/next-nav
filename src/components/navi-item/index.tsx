@@ -8,10 +8,10 @@ function Index({navItems, title}: {navItems: NavigationItem[], title: string}) {
   return (
     <div >
       <h2 id={title} className="text-xl font-bold text-dark">{title}</h2>
-      <ul  className="flex flex-wrap justify-start items-center mt-2 gap-x-8 gap-y-1">
+      <ul  className="md:flex block  flex-wrap justify-start items-center mt-2 gap-x-8 gap-y-1">
         {navItems.map((item, index) => (
           <Tooltip key={index}>
-              <li  className="relative mb-4 w-60 h-20 bg-gray-50 shadow hover:shadow-xl hover:bg-gray-100 cursor-pointer">
+              <li  className="relative mb-4 md:w-60 w-full h-20 bg-gray-50 shadow hover:shadow-xl hover:bg-gray-100 cursor-pointer">
                 <TooltipTrigger asChild>
                 <Link  href={item.url} target={'_blank'} >
                   <div className={" flex justify-start items-center w-full h-full"}>

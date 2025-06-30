@@ -1,9 +1,10 @@
 import {CategoryType, navigationData} from '@/data/navigation';
 import NaviItem from '@/components/navi-item';
 import SearchBar from '@/components/search-bar';
+import {Suspense} from 'react';
 
 
-export default function Home() {
+function SearchParamsComponent() {
   return (
     <div className="flex min-h-screen  overflow-y-auto mt-2">
       {/* 主内容区 */}
@@ -32,5 +33,13 @@ export default function Home() {
 
 
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchParamsComponent />
+    </Suspense>
   );
 }

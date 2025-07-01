@@ -15,7 +15,7 @@ export function generateStaticParams() {
 export default async function Home({
                                      params,
                                    }: {
-  params: Promise<{ slug: string[] }>
+  params: Promise<{ slug: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 })
 {

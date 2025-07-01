@@ -5,7 +5,7 @@ import QrBox from '@/components/qr-box';
 import {redirect} from 'next/navigation';
 
 
-export function generateStaticParams(params: Record<string, unknown>) {
+export function generateStaticParams() {
   return navigationData.map((post) => ({
     slug: post.id,
   }))

@@ -2,9 +2,10 @@ import {navigationData} from '@/data/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import QrBox from '@/components/qr-box';
+import {redirect} from 'next/navigation';
 
 
-export function generateStaticParams() {
+export function generateStaticParams(params: Record<string, unknown>) {
   return navigationData.map((post) => ({
     slug: post.id,
   }))
@@ -20,6 +21,10 @@ export default async function Home({
 {
   const { slug: menuId } = await params
   const navItem = navigationData.find((item) => item.id === menuId);
+  // 没找到对应导航的详情就重定向到首页
+  if (!navItem) {
+    return redirect('/');
+  }
   return (
     <div className="flex justify-center min-h-full">
       <div className={'flex flex-col w-10/12'}>

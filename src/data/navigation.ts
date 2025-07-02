@@ -308,6 +308,27 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.c,
     description: 'Bing Webmaster Tools - Bing Webmaster Tools',
   },
+  {
+    name: '爱站网',
+    url: 'https://www.aizhan.com/',
+    imgUrl: '/nav/34.png',
+    category: CategoryType.c,
+    description: '爱站网站长工具提供网站收录查询和站长查询以及百度权重值查询等多个站长工具，免费查询各种工具，包括有关键词排名查询，百度收录查询等。',
+  },
+  {
+    name: '完美网址',
+    url: 'https://www.9eip.com/',
+    imgUrl: '/nav/33.png',
+    category: CategoryType.g,
+    description: '完美导航（www.9eip.com） 给您最好的互联网搜索功能和网址收集体验，拥有超强的聚合搜索引擎，精选大量实用的网址，（生活、休闲、办公、影视、工具、资源网址）超贴心的服务，某个网址失效了？找不到？完美导航会第一时间给您找出相关并且发布在失效网址页内和回复您的反馈。',
+  },
+  {
+    name: '站长导航',
+    url: 'https://18dh.cn/',
+    imgUrl: '/nav/35.png',
+    category: CategoryType.g,
+    description: '站长导航网(www.18dh.cn)是全网最大的技术导航网站,专业为用户提供网址导航服务,学习技术就上站长导航,数千个优质站点等你来查阅',
+  },
 
 
 

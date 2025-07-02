@@ -28,7 +28,7 @@ function Index({navItems, title}: { navItems: NavigationItem[], title: string })
                       <h2 className="max-w-[160] mb-1 text-md font-medium truncate">{item.name}</h2>
                       <p className="max-w-[250] text-sm line-clamp-2 ">{item.description}</p>
                     </div>
-
+                    <div className={'w-16'}></div>
                   </div>
                 </Link>
               </TooltipTrigger>

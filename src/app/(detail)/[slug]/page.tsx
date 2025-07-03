@@ -3,11 +3,37 @@ import Image from 'next/image';
 import Link from 'next/link';
 import QrBox from '@/components/qr-box';
 import {redirect} from 'next/navigation';
+import {Metadata} from 'next';
+import {DefaultMetaData} from '@/constant/metaData';
 
+type Props = {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+  const { slug } = (await params)
+
+  const navItem = navigationData.find((post) => post.id === slug)
+
+  if (!navItem) {
+    return {
+      title: DefaultMetaData.title,
+      description: DefaultMetaData.description,
+    }
+  }
+
+  return {
+    title: `${DefaultMetaData.title} | ${navItem.name}`,
+    description: navItem.description,
+  }
+}
 
 export function generateStaticParams() {
-  return navigationData.map((post) => ({
-    slug: post.id,
+  return navigationData.map((navItem) => ({
+    slug: navItem.id,
   }))
 }
 

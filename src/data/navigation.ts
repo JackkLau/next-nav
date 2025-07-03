@@ -329,6 +329,13 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.g,
     description: '站长导航网(www.18dh.cn)是全网最大的技术导航网站,专业为用户提供网址导航服务,学习技术就上站长导航,数千个优质站点等你来查阅',
   },
+  {
+    name: '吾爱导航',
+    url: 'https://www.gxfcseo.com/',
+    imgUrl: '/nav/36.png',
+    category: CategoryType.g,
+    description: '吾爱导航专注于收录全网高品质的网址，为广大网民提供优质站点预览、共享优质网络资源，做一个有帮助的网址导航。',
+  },
 
 
 

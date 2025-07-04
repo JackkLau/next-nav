@@ -26,7 +26,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${DefaultMetaData.title} | ${navItem.name}`,
+    title: `${DefaultMetaData.title}|${navItem.name}`,
     description: navItem.description,
   }
 }

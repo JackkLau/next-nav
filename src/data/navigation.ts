@@ -336,6 +336,13 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.g,
     description: '吾爱导航专注于收录全网高品质的网址，为广大网民提供优质站点预览、共享优质网络资源，做一个有帮助的网址导航。',
   },
+  {
+    name: '利器',
+    url: 'https://liqi.io/',
+    imgUrl: '/nav/37.png',
+    category: CategoryType.d,
+    description: '「工具是一个过程：用大小形状都合适的物体，以最有效的方式完成工作。」 利器采访优秀的创造者，邀请他们来分享工作时所使用的工具，以及使用工具的方',
+  },
 
 
 

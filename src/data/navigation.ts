@@ -343,6 +343,13 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.d,
     description: '「工具是一个过程：用大小形状都合适的物体，以最有效的方式完成工作。」 利器采访优秀的创造者，邀请他们来分享工作时所使用的工具，以及使用工具的方',
   },
+  {
+    name: 'Next实践教程',
+    url: 'https://doc.loverezhao.top/',
+    imgUrl: '/nav/38.png',
+    category: CategoryType.d,
+    description: 'JackLove的个人博客，记录学习过程中的各种知识',
+  },
 
 
 

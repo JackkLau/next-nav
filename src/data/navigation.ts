@@ -350,6 +350,13 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.d,
     description: 'JackLove的个人博客，记录学习过程中的各种知识',
   },
+  {
+    name: 'TJ个人博客',
+    url: 'https://blog.loverezhao.top/',
+    imgUrl: '/nav/39.png',
+    category: CategoryType.d,
+    description: 'TJ的个人博客，记录学习过程中的各种知识',
+  },
 
 
 

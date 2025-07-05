@@ -72,7 +72,7 @@ export default async function Home({
           </div>
           </div>
           <div className={'flex-1 flex items-center justify-end '}>
-            <Link title={navItem?.url || '/'} href={'/' + navItem?.url || '/'} target={'_blank'}
+            <Link title={navItem?.url || '/'} href={navItem?.url || '/'} target={'_blank'}
                   className="text-center ml-4 text-white md:text-lg text-sm bg-blue-500 rounded-md p-2">
               直接访问
             </Link>

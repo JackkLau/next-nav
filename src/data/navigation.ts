@@ -357,6 +357,13 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.d,
     description: 'TJ的个人博客，记录学习过程中的各种知识',
   },
+  {
+    name: '美图宝库',
+    url: 'https://pic.loverezhao.top/',
+    imgUrl: '/nav/39.png',
+    category: CategoryType.e,
+    description: '美图宝库网站，提供海量高清壁纸资源，动漫、游戏、美女、风景等壁纸类型应有尽有。轻松下载心仪壁纸，装点您的电脑。壁纸大全任你挑选，尽在美图宝库！',
+  },
 
 
 

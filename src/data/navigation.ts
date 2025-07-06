@@ -360,9 +360,16 @@ export const navigationData: NavigationItem[] = [
   {
     name: '美图宝库',
     url: 'https://pic.loverezhao.top/',
-    imgUrl: '/nav/39.png',
+    imgUrl: '/nav/41.png',
     category: CategoryType.e,
     description: '美图宝库网站，提供海量高清壁纸资源，动漫、游戏、美女、风景等壁纸类型应有尽有。轻松下载心仪壁纸，装点您的电脑。壁纸大全任你挑选，尽在美图宝库！',
+  },
+  {
+    name: '聚煊自媒体 - 专业新媒体运营工具 、资源导航网站 - JUXUAN自媒体导航',
+    url: 'https://juxuan.pro/',
+    imgUrl: '/nav/40.png',
+    category: CategoryType.g,
+    description: 'JUXUAN.PRO 新媒体运营必备助手，开后台、搜素材和找工具、教程 都及其方便，并且收录了大量的实用网址和干货（包含：排版工具、无版权图库、社群运营、数据分析、创意素材、等..）',
   },
 
 

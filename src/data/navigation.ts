@@ -371,7 +371,42 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.g,
     description: 'JUXUAN.PRO 新媒体运营必备助手，开后台、搜素材和找工具、教程 都及其方便，并且收录了大量的实用网址和干货（包含：排版工具、无版权图库、社群运营、数据分析、创意素材、等..）',
   },
-
+  {
+    name: 'Favicons CDN',
+    url: 'https://favicons.teamtailor-cdn.com/',
+    imgUrl: '/nav/42.png', // 通过The Favicon Finder获取的图标链接
+    category: CategoryType.c,
+    favorite: false,
+    description: 'A service finding icons on web sites. 专注于提供网站favicon图标的CDN服务，方便开发者快速调用各类网站的图标资源',
+    needVPN: false,
+  },
+  {
+    name: 'Pintree',
+    url: 'https://www.pintree.io/',
+    imgUrl: '/nav/44.png', // 通过The Favicon Finder获取的图标链接
+    category: CategoryType.c,
+    favorite: false,
+    description: '一款专注于网页内容收藏与整理的工具，支持一键保存网页、图片等信息并进行分类管理',
+    needVPN: false,
+  },
+  {
+    name: '牛码工具',
+    url: 'https://niumatool.com/',
+    imgUrl: '/nav/43.png', // 通过The Favicon Finder获取的图标链接
+    category: CategoryType.c,
+    favorite: false,
+    description: '一款集成多种实用功能的在线工具平台，涵盖文本处理、格式转换、开发辅助等多种工具',
+    needVPN: false,
+  },
+  {
+    name: '嗨纪录片',
+    url: 'https://www.haiw.com/',
+    imgUrl: '/nav/45.png', // 使用指定工具获取的图标链接
+    category: CategoryType.e,
+    favorite: false,
+    description: '提供自媒体解说高清纪录片素材下载的网站，主要涵盖央视、NHK、BBC、探索频道等出品的历史人文、旅行地理、生活美食等多种类型纪录片，支持4K、2K、1080P等多种清晰度下载',
+    needVPN: false,
+  }
 
 
 

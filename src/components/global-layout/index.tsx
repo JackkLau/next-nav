@@ -43,7 +43,7 @@ function Index({children}: { children: React.ReactNode }) {
           <ul className="w-26 mx-6">
             {leftMenu.map((item) => (
               <li key={item.id} onClick={() => handleLeftMenu(item)} className={`mb-2 text-lg`}>
-                <Link href={'#' + item.name} className={`flex items-center hover:text-primary  ${menuId === item.id ? 'text-primary': 'text-gray-500'}`}>
+                <Link href={'/#' + item.name} className={`flex items-center hover:text-primary  ${menuId === item.id ? 'text-primary': 'text-gray-500'}`}>
                   <FontAwesomeIcon icon={item.icon} className="mr-2 w-4"/>
                   <div>{item.name}</div>
                 </Link>

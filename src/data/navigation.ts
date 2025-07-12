@@ -406,6 +406,24 @@ export const navigationData: NavigationItem[] = [
     favorite: false,
     description: '提供自媒体解说高清纪录片素材下载的网站，主要涵盖央视、NHK、BBC、探索频道等出品的历史人文、旅行地理、生活美食等多种类型纪录片，支持4K、2K、1080P等多种清晰度下载',
     needVPN: false,
+  },
+  {
+    "name": "一为忆",
+    "url": "https://www.iowen.cn/",
+    "imgUrl": "/nav/46.png",
+    "category": CategoryType.d,
+    "favorite": false,
+    "description": "一为忆博客，涵盖建站技巧、WordPress主题与插件、黑科技工具、前端资源等内容。",
+    "needVPN": false
+  },
+  {
+    "name": "Tabler",
+    "url": "https://tabler.io/",
+    "imgUrl": "/nav/47.png",
+    "category": CategoryType.e,
+    "favorite": false,
+    "description": "Tabler 是一个基于 Bootstrap 5 的开源 Web 应用 UI 组件库，包含丰富的响应式组件、模板和图标，适用于现代网页和管理后台开发。",
+    "needVPN": false
   }
 
 

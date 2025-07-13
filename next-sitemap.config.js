@@ -54,7 +54,7 @@ module.exports = {
     }
     
     // 分类页面高优先级
-    if (path.startsWith('/category/') || path.startsWith('/posts/')) {
+    if (path.startsWith('/category/')) {
       return {
         loc: path,
         changefreq: 'weekly',
@@ -63,8 +63,8 @@ module.exports = {
       }
     }
     
-    // 详情页面中等优先级
-    if (path.includes('/[slug]') || path.includes('/detail/')) {
+    // 详情页面中等优先级（实际路由是 /[slug]，不是 /detail/[slug]）
+    if (path.match(/^\/[^\/]+$/) && path !== '/') {
       return {
         loc: path,
         changefreq: 'monthly',

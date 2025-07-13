@@ -7,41 +7,32 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {MenuData} from '@/data/left-menu';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 
-function Index({topMenu, onMenuShow}: { topMenu: MenuData[]; onMenuShow: () => void }) {
-
+function Index({topMenu, sheetTrigger}: { topMenu: MenuData[]; sheetTrigger?: React.ReactNode }) {
   return (
-    <div className="px-4 py-4">
-      <nav>
-        <ul className="flex items-center space-x-4">
-          <li className="flex item-center md:hidden text- hover:text-gray-300">
-            {/*移动端菜单按钮（仅小屏幕显示）*/}
-            <button onClick={onMenuShow} className="text- hover:text-gray-300">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                   xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                      d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
-            </button>
-          </li>
+    <header className="sticky top-0 z-30 w-full flex bg-transparent">
+      <nav className="w-full bg-white/90 backdrop-blur rounded-xl shadow-md px-4 py-3 mt-4 mb-2 flex items-center justify-start">
+        <ul className="flex items-center w-full space-x-4">
+          {/* 移动端菜单按钮（汉堡按钮） */}
+          <li className="flex items-center md:hidden">{sheetTrigger}</li>
           {topMenu.map((item) => (
-            <li key={item.id} className="flex items-center  text-l text-dark">
+            <li key={item.id} className="flex items-center text-l text-dark">
               {item.name === '首页' &&
-                  <Link href={'/'} className="flex items-center text-gray-500 hover:text-gray-700">
+                  <Link href={'/'} className="flex items-center text-gray-500 hover:text-blue-700 font-semibold px-3 py-2 rounded-lg transition-colors">
                       <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary"/>
                       <div>{item.name}</div>
                   </Link>}
               {item.name === '收藏' &&
                   <div onClick={() => alert('欢迎添加收藏夹，请按 ctrl + D 或 command + D')}
-                       className="flex items-center text-gray-500 hover:text-gray-700 cursor-pointer">
-                      <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary text-yellow-300"/>
+                       className="flex items-center text-gray-500 hover:text-yellow-500 cursor-pointer font-semibold px-3 py-2 rounded-lg transition-colors">
+                      <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-yellow-400"/>
                       <div>{item.name}</div>
                   </div>
               }
               {item.name === '关注我' &&
                   <Popover >
                       <PopoverTrigger>
-                          <div className="flex items-center text-gray-500 hover:text-gray-700 cursor-pointer">
-                              <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary text-red-600"/>
+                          <div className="flex items-center text-gray-500 hover:text-red-600 cursor-pointer font-semibold px-3 py-2 rounded-lg transition-colors">
+                              <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-red-600"/>
                               <div>{item.name}</div>
                           </div>
                       </PopoverTrigger>
@@ -56,12 +47,11 @@ function Index({topMenu, onMenuShow}: { topMenu: MenuData[]; onMenuShow: () => v
                       </PopoverContent>
                   </Popover>
               }
-
             </li>
           ))}
         </ul>
       </nav>
-    </div>
+    </header>
   );
 }
 

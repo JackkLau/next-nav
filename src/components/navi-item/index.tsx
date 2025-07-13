@@ -8,51 +8,57 @@ import {faArrowAltCircleRight} from '@fortawesome/free-regular-svg-icons';
 
 function Index({navItems, title}: { navItems: NavigationItem[], title: string }) {
   return (
-    <div>
-      <h2 id={title} className="text-xl font-bold text-dark">{title}</h2>
-      <ul className="md:flex  flex-wrap justify-start items-center mt-2 gap-x-8 gap-y-1">
-        {navItems.map((item, index) => (
+    <section aria-labelledby={title} className="w-full">
+      <div className="flex items-center justify-between mb-2 pl-2 pr-2">
+        <h2 id={title} className="text-xl font-bold text-dark">{title}</h2>
+        {navItems.length > 5 && (
+          <Link
+            href={`/category/${encodeURIComponent(title)}`}
+            className="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors border border-blue-100 shadow-sm ml-2"
+          >
+            更多
+          </Link>
+        )}
+      </div>
+      <ul className="flex flex-col gap-2 md:gap-3 md:flex-col md:overflow-visible">
+        {navItems.slice(0, 5).map((item, index) => (
           <Tooltip key={index}>
             <li
-              className="relative mb-4 md:w-70 w-full h-24 bg-gray-50 shadow hover:shadow-xl hover:bg-gray-100 cursor-pointer">
+              className="relative flex items-center min-h-[84px] bg-white rounded-lg shadow hover:shadow-lg border border-gray-100 hover:border-blue-200 transition-all cursor-pointer px-2 py-2 md:px-3 md:py-2 w-full flex-shrink md:w-full md:flex-shrink">
+              {item.needVPN && (
+                <span
+                  className="absolute top-0 right-0 z-20 px-2 py-1 text-red-500 text-xs bg-red-50 border border-red-100 rounded-tr-xl rounded-bl-md rounded-tl-none rounded-br-none translate-x-[1px] -translate-y-[1px] shadow-sm pointer-events-none select-none flex items-center"
+                  aria-label="需梯子"
+                >
+                  <span className="pointer-events-auto">需梯子</span>
+                </span>
+              )}
               <TooltipTrigger asChild>
-                <Link href={`/${item.id}`} target={'_blank'}>
-                  <div className={'flex justify-start items-center w-full h-full'}>
-                    <Image className="w-12 shrink-0 ml-2 bg-gray-100 rounded-full"
-                           width={50}
-                           height={50}
-                      src={item.imgUrl || '/favicon.png'}
-                      alt={item.name}
-                    />
-                    <div className="flex flex-col ml-2">
-                      <h2 className="max-w-[160] mb-1 text-md font-medium truncate">{item.name}</h2>
-                      <p className="max-w-[250] text-sm line-clamp-2 ">{item.description}</p>
-                    </div>
-                    <div className={'w-16'}></div>
+                <Link href={`/${item.id}`} className="flex items-center flex-1 min-w-0" prefetch={false}>
+                  <Image className="w-12 h-12 shrink-0 bg-gray-100 rounded-lg object-contain"
+                         width={48}
+                         height={48}
+                    src={item.imgUrl || '/favicon.png'}
+                    alt={item.name}
+                  />
+                  <div className="flex flex-col ml-3 min-w-0">
+                    <h3 className="text-md font-medium truncate text-gray-900">{item.name}</h3>
+                    <p className="text-sm text-gray-500 line-clamp-2">{item.description}</p>
                   </div>
                 </Link>
               </TooltipTrigger>
               <Link href={item.url || '/'} target={'_blank'} title="直接访问"
-                    className={'absolute right-0 top-1/2 -translate-y-1/2  w-[45] ml-auto text-3xl font-light text-right text-gray-400'}>
-                <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2"/>
+                className={'ml-auto text-xl text-blue-400 hover:text-blue-600 transition-colors z-10 relative mr-1'}>
+                <FontAwesomeIcon icon={faArrowAltCircleRight} />
               </Link>
-              {item.needVPN && (
-                <Link href={'https://y-too.com/aff.php?aff=6690'} target="_blank"
-                      className="absolute right-0 top-0 border px-2 py-1 text-red-500 text-xs hover:bg-blue-300 hover:bg-opacity-75 hover:text-white">
-                  需梯子
-                </Link>
-              )}
-
-
             </li>
-
             <TooltipContent side="bottom">
               <p className={'max-w-40'}>{item.description}</p>
             </TooltipContent>
           </Tooltip>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
 

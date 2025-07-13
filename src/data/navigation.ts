@@ -146,6 +146,7 @@ export const navigationData: NavigationItem[] = [
     imgUrl: '/nav/14.png',
     category: CategoryType.c,
     description: 'Google Search Console 是一项由 Google 提供的免费服务，可帮助您监控和维护您的网站在 Google 搜索结果中的展示情况以及排查问题。',
+    needVPN: true,
   },
   {
     name: 'google广告',
@@ -153,6 +154,7 @@ export const navigationData: NavigationItem[] = [
     imgUrl: '/nav/14.png',
     category: CategoryType.c,
     description: 'Google AdSense广告系统',
+    needVPN: true,
   },
   {
     name: 'google趋势',
@@ -160,6 +162,7 @@ export const navigationData: NavigationItem[] = [
     imgUrl: '/nav/14.png',
     category: CategoryType.c,
     description: 'Google Trends了解全球用户都在搜什么',
+    needVPN: true,
   },
   {
     name: 'google分析',
@@ -167,6 +170,7 @@ export const navigationData: NavigationItem[] = [
     imgUrl: '/nav/14.png',
     category: CategoryType.c,
     description: 'Google Analytics流量统计分析系统',
+    needVPN: true,
   },
   {
     name: 'AI工具集',

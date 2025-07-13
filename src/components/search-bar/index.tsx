@@ -2,24 +2,33 @@
 import React, {useState} from 'react';
 import {Input} from '@/components/ui/input';
 import {searchTool, SearchTool} from '@/data/searchTool';
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue
+} from '@/components/ui/select';
 
 function Index() {
   const [engine, setEngine] = useState(searchTool[0].url)
-  const [content, setContent] = useState('')
   const [toolId, setToolId] = useState('0')
+  const [content, setContent] = useState('')
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       handleSearch()
     }
   }
-  function onSelectEngine(tool: SearchTool) {
-    setEngine(tool.url)
-    setToolId(tool.id)
+  function onSelectEngine(value: string) {
+    const selected = searchTool.find(tool => tool.id === value)
+    if (selected) {
+      setEngine(selected.url)
+      setToolId(selected.id)
+    }
   }
 
   function handleSearch() {
-    console.log('engine :>>', engine);
     if (engine) {
       window.open(`${engine}${content}`)
     }
@@ -29,23 +38,30 @@ function Index() {
     setContent(e.target.value)
   }
   return (
-    <>
-      <div className="relative w-full md:w-1/2 flex justify-between mt-2">
-        <Input onInput={handleInput} onKeyDown={handleKeyDown}  className="rounded-4xl px-4" type="search" placeholder="远程工作" />
-        {/*<FontAwesomeIcon onClick={handleSearch} icon={faSearch} className="absolute top-2 right-1 text-gray-400 text-xl cursor-pointer" />*/}
+    <div className="w-full flex items-center">
+      <div className="flex items-center rounded-xl border border-gray-200 bg-white overflow-hidden w-full">
+        {/* shadcn Select 组件 */}
+        <Select value={toolId} onValueChange={onSelectEngine}>
+          <SelectTrigger className="h-12 px-3 text-base border-none rounded-l-xl rounded-r-none bg-transparent focus:ring-0 focus:outline-none shadow-none">
+            <SelectValue placeholder="选择引擎" />
+          </SelectTrigger>
+          <SelectContent side="bottom">
+            {searchTool.map(tool => (
+              <SelectItem key={tool.id} value={tool.id}>{tool.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {/* 搜索输入框 */}
+        <Input
+          onInput={handleInput}
+          onKeyDown={handleKeyDown}
+          className="h-12 px-4 text-base border-none rounded-r-xl rounded-l-none bg-transparent focus:ring-0 focus:outline-none flex-1 shadow-none"
+          type="search"
+          placeholder="远程工作"
+          style={{ boxSizing: 'border-box' }}
+        />
       </div>
-      <div className="mt-2">
-        <ul className="flex justify-between items-center">
-          {searchTool.map((tool) => (
-            <li onClick={() => onSelectEngine(tool)} key={tool.id} className={`mr-2   ${toolId === tool.id ? 'px-2 py-1 bg-blue-500 text-white rounded-lg': 'text-gray-500'}`}>
-              <a className={"cursor-pointer visited:bg-blue-500"}>
-                {tool.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+    </div>
   );
 }
 

@@ -153,3 +153,22 @@
     -webkit-line-clamp: 4;
   }
 }
+
+/* 优化PC端滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
+}

@@ -4,17 +4,16 @@ export const DefaultMetaData = {
   keywords: [
     '价值导航',
     '网址导航',
-    '分类导航网站',
+    '发现页',
     '实用网站大全',
     '高效网址导航',
-    '营销内容',
+    '营销导航',
     '学习资源',
     '技术工具',
     '资源分享',
     '热门网站推荐',
     '安全链接',
     '每日更新',
-    '用户信赖',
     '导航网站',
     '分类网站',
     '实用网站',
@@ -22,5 +21,6 @@ export const DefaultMetaData = {
   other: {
     "google-adsense-account": "ca-pub-5653851953778502",
     "msvalidate.01": "1CCA2B8229A0C45CAB754FE9BBB190BE",
+    canonical: 'https://loverezhao.top',
   },
 }

@@ -437,10 +437,19 @@ export const navigationData: NavigationItem[] = [
   {
     "name": "抓鱼鸭",
     "url": "https://www.zhuayuya.com/",
-    "imgUrl": "/nav/49.png",
+    "imgUrl": "/nav/49.svg",
     "category": CategoryType.g,
     "favorite": false,
     "description": "【摸鱼中国】抓鱼鸭 - 不仅仅是起始页,它能帮你收藏网站,还能帮你找到好玩的网站,还有聚合搜索帮你快速找到自己想要的,还有弹幕功能,跟小伙伴一起分享点有趣的事",
+    "needVPN": false
+  },
+  {
+    "name": "52破解",
+    "url": "https://www.52pojie.cn/",
+    "imgUrl": "/nav/50.png",
+    "category": "b",
+    "favorite": false,
+    "description": "52破解是一个专注于软件破解、逆向工程和技术交流的社区平台，提供软件分享、技术讨论、安全研究等内容。",
     "needVPN": false
   }
 

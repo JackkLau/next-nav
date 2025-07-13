@@ -431,7 +431,7 @@ export const navigationData: NavigationItem[] = [
     "imgUrl": "/nav/48.png",
     "category": CategoryType.b,
     "favorite": false,
-    "description": "虫部落是一个专注于搜索技巧、资源分享和社区交流的平台，提供快搜、学术搜索、Wiki等功能，涵盖AI产品、职场、生活、软件等多个话题讨论。",
+    "description": "虫部落是一个纯粹的搜索知识、技术和经验分享平台，虫部落快搜、虫部落学术搜索等搜索聚合工具均为虫部落原创出品，搜索世界的乐趣，就在虫部落！",
     "needVPN": false
   },
   {
@@ -449,7 +449,7 @@ export const navigationData: NavigationItem[] = [
     "imgUrl": "/nav/50.png",
     "category": "b",
     "favorite": false,
-    "description": "52破解是一个专注于软件破解、逆向工程和技术交流的社区平台，提供软件分享、技术讨论、安全研究等内容。",
+    "description": "吾爱破解论坛深耕软件逆向工程与反病毒技术领域，汇聚众多技术爱好者的智慧与经验，共同探索与分享前沿安全技术和防护策略，构建业内最具影响力的技术交流平台。 ",
     "needVPN": false
   }
 

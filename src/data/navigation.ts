@@ -447,7 +447,7 @@ export const navigationData: NavigationItem[] = [
     "name": "52破解",
     "url": "https://www.52pojie.cn/",
     "imgUrl": "/nav/50.png",
-    "category": "b",
+    "category": CategoryType.b,
     "favorite": false,
     "description": "吾爱破解论坛深耕软件逆向工程与反病毒技术领域，汇聚众多技术爱好者的智慧与经验，共同探索与分享前沿安全技术和防护策略，构建业内最具影响力的技术交流平台。 ",
     "needVPN": false

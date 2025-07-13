@@ -3,7 +3,7 @@ export const CategoryType: {
   [key: string]: string
 } = {
   a: '常用网站',
-  b: '远程社区',
+  b: '优秀社区',
   c: '实用工具',
   d: '个人网站',
   e: '资源收藏',
@@ -423,6 +423,15 @@ export const navigationData: NavigationItem[] = [
     "category": CategoryType.e,
     "favorite": false,
     "description": "Tabler 是一个基于 Bootstrap 5 的开源 Web 应用 UI 组件库，包含丰富的响应式组件、模板和图标，适用于现代网页和管理后台开发。",
+    "needVPN": false
+  },
+  {
+    "name": "虫部落",
+    "url": "https://www.chongbuluo.com/",
+    "imgUrl": "/nav/48.png",
+    "category": CategoryType.b,
+    "favorite": false,
+    "description": "虫部落是一个专注于搜索技巧、资源分享和社区交流的平台，提供快搜、学术搜索、Wiki等功能，涵盖AI产品、职场、生活、软件等多个话题讨论。",
     "needVPN": false
   }
 

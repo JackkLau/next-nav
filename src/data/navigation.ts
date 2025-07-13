@@ -470,6 +470,15 @@ export const navigationData: NavigationItem[] = [
     "description": "AllCani网站，韩语启蒙素材网站",
     "needVPN": false
   },
+  {
+    "name": "发卡网联盟",
+    "url": "https://fkwlm.com/",
+    "imgUrl": "/nav/53.png",
+    "category": CategoryType.g,
+    "favorite": false,
+    "description": "发卡网联盟是一个汇集各种发卡网站的导航平台，主要提供瓶盖/烟盒发卡网等服务的聚合。",
+    "needVPN": false
+  },
 
 
 

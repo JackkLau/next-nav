@@ -6,6 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "postbuild": "next-sitemap",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "validate-sitemap": "node scripts/validate-sitemap.js",
     "start": "next start",
     "lint": "next lint"
   },
@@ -18,6 +20,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "he": "^1.2.0",
     "lucide-react": "^0.522.0",
     "next": "15.3.4",
     "next-sitemap": "^4.2.3",
@@ -29,11 +32,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/he": "^1.2.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
+    "globby": "^14.0.0",
+    "prettier": "^3.0.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"

@@ -3,7 +3,7 @@ export const CategoryType: {
   [key: string]: string
 } = {
   a: '常用网站',
-  b: '优秀社区',
+  b: '优质社区',
   c: '实用工具',
   d: '个人网站',
   e: '资源收藏',
@@ -477,6 +477,15 @@ export const navigationData: NavigationItem[] = [
     "category": CategoryType.g,
     "favorite": false,
     "description": "发卡网联盟是一个汇集各种发卡网站的导航平台，主要提供瓶盖/烟盒发卡网等服务的聚合。",
+    "needVPN": false
+  },
+  {
+    "name": "一流导航",
+    "url": "https://16map.com/",
+    "imgUrl": "/nav/54.png",
+    "category": CategoryType.g,
+    "favorite": false,
+    "description": "一流导航(16map.com)致力于打造国内最好的互联网上优质网站网址大全，收录了全网好用强大的网站网址和软件包括设计、开发、影视、人工智能、AI、运营、生活、休闲、办公、工具、资源等超全面的网址和职业技巧内容，让您的上网体验更便捷更放心，努力成为全民级人人都在用的网址导航。",
     "needVPN": false
   },
 

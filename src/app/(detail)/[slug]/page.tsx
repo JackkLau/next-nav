@@ -2,9 +2,18 @@ import {navigationData} from '@/data/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import QrBox from '@/components/qr-box';
+import RelatedSites from '@/components/related-sites';
+import SiteIcon from '@/components/ui/site-icon';
 import {redirect} from 'next/navigation';
 import {Metadata} from 'next';
 import {DefaultMetaData} from '@/constant/metaData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faStar, 
+  faShieldHalved, 
+  faTag, 
+  faExternalLinkAlt 
+} from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -37,6 +46,27 @@ export function generateStaticParams() {
   }))
 }
 
+// 智能推荐算法：获取同分类下的其他网站（排除当前网站）
+function getRelatedSites(currentSite: any, allSites: any[]) {
+  // 1. 首先获取同分类的网站
+  const sameCategorySites = allSites.filter(site => 
+    site.category === currentSite.category && 
+    site.id !== currentSite.id
+  );
+
+  // 2. 按优先级排序：推荐网站 > 普通网站
+  const sortedSites = sameCategorySites.sort((a, b) => {
+    // 优先显示推荐网站
+    if (a.favorite && !b.favorite) return -1;
+    if (!a.favorite && b.favorite) return 1;
+    
+    // 然后按名称排序
+    return a.name.localeCompare(b.name);
+  });
+
+  // 3. 返回前6个
+  return sortedSites.slice(0, 6);
+}
 
 export default async function Home({
                                      params,
@@ -51,41 +81,74 @@ export default async function Home({
   if (!navItem) {
     return redirect('/');
   }
+
+  // 获取同分类下的其他网站
+  const relatedSites = getRelatedSites(navItem, navigationData);
+
   return (
-    <div className="flex justify-center min-h-full">
-      <div className={'flex flex-col w-10/12'}>
-        <div className={'flex items-center w-full  md:w-3/5 md:p-6 p-2 border my-4 rounded-sm bg-gray-100'}>
-          <Image
-            width={150}
-            height={150}
-            src={navItem?.imgUrl ? navItem.imgUrl : '/favicon.png'}
-            alt={navItem?.name || 'favicon'}
-            className={'w-[50] h-[50] md:w-auto md:h-12  md:mr-8 mr-2'}
-          >
-          </Image>
+    <div className="flex justify-center min-h-full py-8">
+      <div className="flex flex-col w-11/12 max-w-6xl">
+        {/* 主要信息卡片 */}
+        <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 mb-6">
+          <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-6 space-y-4 md:space-y-0">
+            {/* 网站图标 */}
+            <div className="flex-shrink-0 relative flex justify-center items-center">
+              <SiteIcon 
+                src={navItem?.imgUrl} 
+                alt={navItem?.name || '网站图标'} 
+                size="lg"
+              />
+              {navItem?.favorite && (
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow-md">
+                  <FontAwesomeIcon icon={faStar} className="w-4 h-4 text-white" />
+                </div>
+              )}
+            </div>
 
-          <div className={'h-full max-w-1/3 truncate'}>
-            <h2 className={'mb-2 text-2xl font-bold truncate'}>{navItem?.name}</h2>
-
-            <div  className={'w-fit text-center px-2 py-1  text-sm text-white bg-blue-500 border rounded-md'}>
-            {navItem?.category}
-          </div>
-          </div>
-          <div className={'flex-1 flex items-center justify-end '}>
-            <Link title={navItem?.url || '/'} href={navItem?.url || '/'} target={'_blank'}
-                  className="text-center ml-4 text-white md:text-lg text-sm bg-blue-500 rounded-md p-2">
-              直接访问
-            </Link>
-            <div
-              className="flex items-center justify-end ml-4 text-white md:text-lg text-sm bg-blue-500  rounded-md p-2">
-              <QrBox url={navItem?.url || '/'}/>
+            {/* 网站信息 */}
+            <div className="flex-1 min-w-0 flex flex-col items-center md:items-start w-full">
+              <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-3 mb-3 w-full">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 truncate text-center md:text-left w-full">
+                  {navItem?.name}
+                </h1>
+                {navItem?.needVPN && (
+                  <Link href={'https://y-too.com/aff.php?aff=6690'} target="_blank" className="inline-flex items-center px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full mt-2 md:mt-0">
+                    <FontAwesomeIcon icon={faShieldHalved} className="w-4 h-4 mr-1" />
+                    需梯子
+                  </Link>
+                )}
+              </div>
+              <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-3 mb-4 w-full">
+                <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full mb-2 md:mb-0">
+                  <FontAwesomeIcon icon={faTag} className="w-4 h-4 mr-1" />
+                  {navItem?.category}
+                </span>
+              </div>
+              {/* 描述 */}
+              <p className="text-gray-600 leading-relaxed mb-4 text-center md:text-left w-full">
+                {navItem?.description || '暂无描述'}
+              </p>
+              {/* 操作按钮 */}
+              <div className="flex flex-col space-y-3 w-full md:flex-row md:space-y-0 md:space-x-3 md:justify-start items-center md:items-center">
+                <Link 
+                  title={navItem?.url || '/'} 
+                  href={navItem?.url || '/'} 
+                  target="_blank"
+                  className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow-md"
+                >
+                  <FontAwesomeIcon icon={faExternalLinkAlt} className="w-4 h-4 mr-2" />
+                  直接访问
+                </Link>
+                <div className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors duration-200 shadow-sm hover:shadow-md">
+                  <QrBox url={navItem?.url || '/'} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <p className={'min-h-1/4 w-full px-4 py-1 bg-gray-50 text-gray-800 '}>
-          {navItem?.description}
-        </p>
+        {/* 你可能感兴趣模块 */}
+        <RelatedSites currentSite={navItem} relatedSites={relatedSites} />
       </div>
     </div>
   )

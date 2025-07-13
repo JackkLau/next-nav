@@ -451,7 +451,26 @@ export const navigationData: NavigationItem[] = [
     "favorite": false,
     "description": "吾爱破解论坛深耕软件逆向工程与反病毒技术领域，汇聚众多技术爱好者的智慧与经验，共同探索与分享前沿安全技术和防护策略，构建业内最具影响力的技术交流平台。 ",
     "needVPN": false
-  }
+  },
+  {
+    "name": "吾爱在线工具箱",
+    "url": "https://www.5ii.com/",
+    "imgUrl": "/nav/51.png",
+    "category": CategoryType.c,
+    "favorite": false,
+    "description": "吾爱在线工具箱是集合了大量优质在线工具的网站平台，涵盖了开发工具、网站查询工具、编程工具、办公/代码转换工具、加解密工具等上百种便捷的在线工具，功能完善，无需登录。",
+    "needVPN": false
+  },
+  {
+    "name": "AllCani",
+    "url": "https://www.allcani.com/",
+    "imgUrl": "/nav/52.png",
+    "category": CategoryType.e,
+    "favorite": false,
+    "description": "AllCani网站，韩语启蒙素材网站",
+    "needVPN": false
+  },
+
 
 
 

@@ -1,5 +1,4 @@
 import {navigationData} from '@/data/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import QrBox from '@/components/qr-box';
 import RelatedSites from '@/components/related-sites';
@@ -14,6 +13,7 @@ import {
   faTag, 
   faExternalLinkAlt 
 } from '@fortawesome/free-solid-svg-icons';
+import {NavigationItem} from '@/data/navigation';
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -78,7 +78,7 @@ export function generateStaticParams() {
 }
 
 // 智能推荐算法：获取同分类下的其他网站（排除当前网站）
-function getRelatedSites(currentSite: any, allSites: any[]) {
+function getRelatedSites(currentSite: NavigationItem, allSites: NavigationItem[]) {
   // 1. 首先获取同分类的网站
   const sameCategorySites = allSites.filter(site => 
     site.category === currentSite.category && 

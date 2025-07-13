@@ -1,7 +1,7 @@
 'use client'
 import React, {useState} from 'react';
 import {Input} from '@/components/ui/input';
-import {searchTool, SearchTool} from '@/data/searchTool';
+import {searchTool} from '@/data/searchTool';
 import {
   Select,
   SelectTrigger,

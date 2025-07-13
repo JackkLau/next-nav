@@ -1,12 +1,10 @@
 import { NavigationItem } from '@/data/navigation'
-import Image from 'next/image'
 import Link from 'next/link'
 import SiteIcon from '@/components/ui/site-icon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faStar, 
   faShieldHalved, 
-  faExternalLinkAlt,
   faBolt,
   faFolder
 } from '@fortawesome/free-solid-svg-icons';

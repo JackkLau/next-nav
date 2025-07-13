@@ -433,6 +433,15 @@ export const navigationData: NavigationItem[] = [
     "favorite": false,
     "description": "虫部落是一个专注于搜索技巧、资源分享和社区交流的平台，提供快搜、学术搜索、Wiki等功能，涵盖AI产品、职场、生活、软件等多个话题讨论。",
     "needVPN": false
+  },
+  {
+    "name": "抓鱼鸭",
+    "url": "https://www.zhuayuya.com/",
+    "imgUrl": "/nav/49.png",
+    "category": CategoryType.g,
+    "favorite": false,
+    "description": "【摸鱼中国】抓鱼鸭 - 不仅仅是起始页,它能帮你收藏网站,还能帮你找到好玩的网站,还有聚合搜索帮你快速找到自己想要的,还有弹幕功能,跟小伙伴一起分享点有趣的事",
+    "needVPN": false
   }
 
 

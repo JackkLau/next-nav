@@ -1,5 +1,5 @@
 import {MenuData} from '@/data/left-menu';
-import {faHeart, faHouse, faStar} from '@fortawesome/free-solid-svg-icons';
+import {faHeart, faHouse, faStar, faWrench} from '@fortawesome/free-solid-svg-icons';
 
 export const topMenu: MenuData[] = [
   {

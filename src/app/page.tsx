@@ -49,16 +49,16 @@ function SearchParamsComponent() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="w-full flex flex-col items-center min-h-screen bg-transparent">
-        <div className="w-full max-w-7xl mx-auto flex flex-col gap-3 px-2 md:px-0">
+      <div className="w-full flex  items-center min-h-screen bg-transparent">
+        <div className="w-full  mx-auto flex flex-col gap-3 px-2 md:px-0">
           {/* 搜索栏卡片 */}
           <section className="mb-0 flex flex-col items-center">
-            <div className="w-full bg-white/95 backdrop-blur rounded-2xl shadow-md px-6 py-5">
+            <div className="max-w-full md:w-1/2 w-full  bg-white/95 backdrop-blur rounded-2xl shadow-md px-6 py-5">
               <SearchBar />
             </div>
           </section>
           {/* 分类导航多列平铺区块 */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-none">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 max-w-none">
             {
               Object.keys(CategoryType).map((type) => (
                 <section

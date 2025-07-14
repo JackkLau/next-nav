@@ -14,6 +14,7 @@ import {
   faExternalLinkAlt 
 } from '@fortawesome/free-solid-svg-icons';
 import {NavigationItem} from '@/data/navigation';
+import FavoriteButtonWrapper from "@/components/favorite-button-wrapper";
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -140,10 +141,10 @@ export default async function Home({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="flex justify-center min-h-full py-8">
+      <main className="flex justify-center min-h-full py-4">
         <div className="flex flex-col w-11/12 max-w-6xl">
           {/* 主要信息卡片 */}
-          <section className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 mb-6">
+          <section className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200">
             <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-6 space-y-4 md:space-y-0">
               {/* 网站图标 */}
               <div className="flex-shrink-0 relative flex justify-center items-center">
@@ -165,16 +166,18 @@ export default async function Home({
                   <h1 className="text-2xl md:text-3xl font-bold text-gray-900 truncate text-center md:text-left w-full">
                     {navItem?.name}
                   </h1>
+                  {/* 收藏按钮 */}
+                  <FavoriteButtonWrapper item={navItem} />
                   {navItem?.needVPN && (
                     <Link 
                       href={'https://y-too.com/aff.php?aff=6690'} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-flex items-center px-3 py-1 text-sm bg-red-100 text-red-700 rounded-full mt-2 md:mt-0"
+                      className="flex items-center  text-center  px-4 py-1 text-sm bg-red-100 text-red-700 rounded-full mt-2 md:mt-0"
                       aria-label="需要VPN访问"
                     >
                       <FontAwesomeIcon icon={faShieldHalved} className="w-4 h-4 mr-1" />
-                      需梯子
+                      <span className=" w-12 text-center">需梯子</span>
                     </Link>
                   )}
                 </div>

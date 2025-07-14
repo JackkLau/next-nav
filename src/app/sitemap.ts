@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { navigationData, CategoryType } from '@/data/navigation'
+import { navigationData, CategoryNameMapping } from '@/data/navigation'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.SITE_URL || 'https://loverezhao.top'
@@ -15,8 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   // 分类页面
-  const categoryPages = Object.values(CategoryType).map((category) => ({
-    url: `${baseUrl}/category/${encodeURIComponent(category)}`,
+  const categoryPages = Object.keys(CategoryNameMapping).map((category) => ({
+    url: `${baseUrl}/category/${category}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,

@@ -10,8 +10,8 @@ import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 function Index({topMenu, sheetTrigger}: { topMenu: MenuData[]; sheetTrigger?: React.ReactNode }) {
   return (
     <header className="sticky top-0 z-30 w-full flex bg-transparent">
-      <nav className="w-full bg-white/90 backdrop-blur rounded-xl shadow-md px-4 py-3 mt-4 mb-2 flex items-center justify-start">
-        <ul className="flex items-center w-full space-x-4">
+      <nav className=" md:w-11/12 w-full mx-auto bg-white/90 backdrop-blur rounded-xl shadow-md px-4 py-3 mt-4 mb-2 flex items-center justify-start">
+        <ul className="flex items-center w-full space-x-2">
           {/* 移动端菜单按钮（汉堡按钮） */}
           <li className="flex items-center md:hidden">{sheetTrigger}</li>
           {topMenu.map((item) => (

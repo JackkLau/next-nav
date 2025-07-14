@@ -21,6 +21,7 @@ const CategoryIconMap: {[key: string]: IconDefinition} = {
   '常用网站': faBook,
   '优质社区': faPeopleGroup,
   '实用工具': faScrewdriverWrench,
+  '远程机会': faPersonChalkboard,
   '个人网站': faPersonChalkboard,
   '资源收藏': faBoxArchive,
   '镜像站': faClone,

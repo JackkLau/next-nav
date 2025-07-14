@@ -25,7 +25,7 @@ interface GeneratedNavItem {
   name: string
   url: string
   imgUrl?: string
-  category: keyof typeof CategoryType
+  category: string
   favorite?: boolean
   description?: string
   needVPN?: boolean
@@ -33,7 +33,7 @@ interface GeneratedNavItem {
 
 export default function NavGenPage() {
   const [url, setUrl] = useState('')
-  const [category, setCategory] = useState('a')
+  const [category, setCategory] = useState('common')
   const [favorite, setFavorite] = useState(false)
   const [needVPN, setNeedVPN] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -92,7 +92,7 @@ export default function NavGenPage() {
         name: siteName,
         url: url,
         imgUrl: generateIconPath(domain),
-        category: category,
+        category: CategoryType[category as keyof typeof CategoryType],
         favorite: favorite,
         description: meta.description || '',
         needVPN: needVPN,
@@ -137,6 +137,16 @@ export default function NavGenPage() {
         <p className="text-muted-foreground">
           输入网站地址，自动生成符合格式的导航数据，方便添加到 navigation.ts 文件中
         </p>
+        {/* 使用指南 */}
+        <div className="rounded-md bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-800 mt-4">
+          <strong>使用指南：</strong>
+          <ol className="list-decimal list-inside mt-1 space-y-1">
+            <li>输入你要收录的网址（需以 <span className="font-mono">http://</span> 或 <span className="font-mono">https://</span> 开头）</li>
+            <li>选择合适的分类，可选“收藏”或“需梯子”</li>
+            <li>点击下方“生成导航数据”按钮</li>
+            <li>复制生成的代码，粘贴到 <span className="font-mono">navigation.ts</span> 文件中</li>
+          </ol>
+        </div>
       </div>
 
       <div className="grid gap-6">
@@ -158,11 +168,12 @@ export default function NavGenPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="category">分类</Label>
+            {/* 分类、收藏、需梯子表单样式优化（PC端对齐） */}
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-4">
+              <div className="flex flex-1 items-center gap-2">
+                <Label htmlFor="category" className="mb-0 whitespace-nowrap">分类</Label>
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full md:w-40">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -174,23 +185,21 @@ export default function NavGenPage() {
                   </SelectContent>
                 </Select>
               </div>
-
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-1 items-center gap-2">
                 <Switch
                   id="favorite"
                   checked={favorite}
                   onCheckedChange={setFavorite}
                 />
-                <Label htmlFor="favorite">收藏</Label>
+                <Label htmlFor="favorite" className="mb-0 whitespace-nowrap">收藏</Label>
               </div>
-
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-1 items-center gap-2">
                 <Switch
                   id="needVPN"
                   checked={needVPN}
                   onCheckedChange={setNeedVPN}
                 />
-                <Label htmlFor="needVPN">需梯子</Label>
+                <Label htmlFor="needVPN" className="mb-0 whitespace-nowrap">需梯子</Label>
               </div>
             </div>
 

@@ -8,6 +8,7 @@ import {
   faBolt,
   faFolder
 } from '@fortawesome/free-solid-svg-icons';
+import { getCategorySlug } from '@/lib/category';
 
 interface RelatedSitesProps {
   currentSite: NavigationItem
@@ -22,11 +23,11 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
   return (
     <section className="mt-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200" aria-labelledby="related-sites-heading">
       <div className="flex items-center justify-between mb-6">
-        <h2 id="related-sites-heading" className="text-xl font-semibold text-gray-800 flex items-center">
+        <h2 id="related-sites-heading" className="text-lg md:text-xl font-semibold text-gray-800 flex items-center">
           <FontAwesomeIcon icon={faBolt} className="w-5 h-5 mr-2 text-blue-500" />
-          你可能感兴趣
+          <span >你可能感兴趣</span>
         </h2>
-        <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border">
+        <span className="text-sm text-gray-500 bg-white px-4 py-1 rounded-full border">
           {currentSite.category}
         </span>
       </div>
@@ -63,10 +64,16 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
                       : site.description || '暂无描述'}
                   </p>
                   {site.needVPN && (
-                    <span className="inline-block mt-2 px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">
+                    <Link 
+                        href={'https://y-too.com/aff.php?aff=6690'} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-block mt-2 px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full"
+                        aria-label="需要VPN访问"
+                    >
                       <FontAwesomeIcon icon={faShieldHalved} className="w-3 h-3 mr-1" />
-                      VPN
-                    </span>
+                      需梯子
+                    </Link>
                   )}
                 </div>
               </div>
@@ -78,7 +85,7 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
       {relatedSites.length >= 6 && (
         <div className="mt-6 text-center">
           <Link
-            href={`/category/${encodeURIComponent(currentSite.category)}`}
+            href={`/category/${getCategorySlug(currentSite.category)}`}
             className="inline-flex items-center px-6 py-3 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 shadow-sm hover:shadow-md"
             aria-label={`查看更多 ${currentSite.category} 分类的网站`}
           >

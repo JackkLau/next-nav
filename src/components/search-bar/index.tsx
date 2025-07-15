@@ -1,7 +1,7 @@
 'use client'
 import React, {useState} from 'react';
 import {Input} from '@/components/ui/input';
-import {searchTool} from '@/data/searchTool';
+import {searchTool, SearchToolMapping} from '@/data/searchTool';
 import {
   Select,
   SelectTrigger,
@@ -9,8 +9,10 @@ import {
   SelectItem,
   SelectValue
 } from '@/components/ui/select';
+import { useTranslations } from 'next-intl';
 
 function Index() {
+  const t = useTranslations();
   const [engine, setEngine] = useState(searchTool[0].url)
   const [toolId, setToolId] = useState('0')
   const [content, setContent] = useState('')
@@ -47,7 +49,7 @@ function Index() {
           </SelectTrigger>
           <SelectContent side="bottom">
             {searchTool.map(tool => (
-              <SelectItem key={tool.id} value={tool.id}>{tool.name}</SelectItem>
+              <SelectItem key={tool.id} value={tool.id}>{t(`search_tool.${SearchToolMapping[tool.name as keyof typeof SearchToolMapping]}`)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -57,7 +59,7 @@ function Index() {
           onKeyDown={handleKeyDown}
           className="h-12 px-4 text-base border-none rounded-r-xl rounded-l-none bg-transparent focus:ring-0 focus:outline-none flex-1 shadow-none"
           type="search"
-          placeholder="远程工作"
+          placeholder={t('search_placeholder')}
           style={{ boxSizing: 'border-box' }}
         />
       </div>

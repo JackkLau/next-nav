@@ -17,7 +17,7 @@ export interface MenuData {
   icon: IconDefinition;
 }
 
-const CategoryIconMap: {[key: string]: IconDefinition} = {
+export const CategoryIconMap: {[key: string]: IconDefinition} = {
   '常用网站': faBook,
   '优质社区': faPeopleGroup,
   '实用工具': faScrewdriverWrench,

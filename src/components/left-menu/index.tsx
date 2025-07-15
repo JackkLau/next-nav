@@ -4,8 +4,12 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { leftMenu } from '@/data/left-menu';
 import { getCategorySlug } from '@/lib/category';
+import { useTranslations } from 'next-intl';
+import { CategoryMapping } from '@/data/navigation';
+
 
 function LeftMenu() {
+  const t = useTranslations();
   const pathname = usePathname();
   let currentCategorySlug = '';
   if (pathname.startsWith('/category/')) {
@@ -34,7 +38,7 @@ function LeftMenu() {
                 className={`flex items-center gap-3 hover:text-primary hover:bg-blue-50 ${isActive ? 'text-primary bg-blue-50 font-bold' : 'text-gray-700'} px-4 py-3 rounded-xl transition-all text-base`}
               >
                 <FontAwesomeIcon icon={item.icon} className="w-5 h-5"/>
-                <span className="truncate">{item.name}</span>
+                <span className="truncate">{t(`category.${CategoryMapping[item.name]}`)}</span>
               </Link>
             </li>
           );

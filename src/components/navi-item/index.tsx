@@ -10,8 +10,10 @@ import {faArrowAltCircleRight, faStar} from '@fortawesome/free-regular-svg-icons
 import {faStar as faStarSolid} from '@fortawesome/free-solid-svg-icons';
 import { getCategorySlug } from '@/lib/category';
 import { useFavoriteSites } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: NavigationItem[], title: string, showAll?: boolean, hideTitle?: boolean, gridCols?: number }) {
+  const t = useTranslations();
   const { favorites, toggleFavorite } = useFavoriteSites();
   // 收藏的排前面
   const sortedNavItems = [...navItems].sort((a, b) => {
@@ -34,7 +36,7 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
             href={`/category/${getCategorySlug(title)}`}
             className="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors border border-blue-100 shadow-sm ml-2"
           >
-            更多
+            {t('more')}
           </Link>
         )}
       </div>
@@ -46,9 +48,9 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
               {item.needVPN && (
                 <span
                   className="absolute top-0 right-0 z-20 px-2 py-1 text-red-500 text-xs bg-red-50 border border-red-100 rounded-tr-xl rounded-bl-md rounded-tl-none rounded-br-none translate-x-[1px] -translate-y-[1px] shadow-sm pointer-events-none select-none flex items-center"
-                  aria-label="需梯子"
+                  aria-label={t('need_vpn')}
                 >
-                  <span className="pointer-events-auto">需梯子</span>
+                  <span className="pointer-events-auto">{t('need_vpn')}</span>
                 </span>
               )}
               <TooltipTrigger asChild>
@@ -67,14 +69,14 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
               </TooltipTrigger>
               {/* 卡片底部按钮区域：星星和直接访问按钮 */}
               <div className="flex flex-col items-center justify-center pt-8 ml-2">
-                <Link href={item.url || '/'} target={'_blank'} title="直接访问"
+                <Link href={item.url || '/'} target={'_blank'} title={t('direct_access')}
                   className={'text-xl text-blue-400 hover:text-blue-600 transition-colors'}>
                   <FontAwesomeIcon icon={faArrowAltCircleRight} />
                 </Link>
                 <button
                   className={`text-yellow-400 z-10 ${favorites.includes(item.id) ? '' : 'opacity-30'}`}
                   onClick={() => toggleFavorite(item.id)}
-                  aria-label={favorites.includes(item.id) ? '取消收藏' : '收藏'}
+                  aria-label={favorites.includes(item.id) ? t('cancel_favorite') : t('add_favorite')}
                   tabIndex={0}
                 >
                   <FontAwesomeIcon icon={favorites.includes(item.id) ? faStarSolid : faStar} className="w-4 h-4" />

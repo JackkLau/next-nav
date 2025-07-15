@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
-
+import { useTranslations } from 'next-intl'
 interface SiteIconProps {
   src?: string
   alt: string
@@ -13,6 +13,7 @@ interface SiteIconProps {
 }
 
 export default function SiteIcon({ src, alt, size = 'md', className = '' }: SiteIconProps) {
+  const t = useTranslations()
   const [imageError, setImageError] = useState(false)
   
   const sizeClasses = {
@@ -30,7 +31,7 @@ export default function SiteIcon({ src, alt, size = 'md', className = '' }: Site
       {!imageError && src ? (
         <Image
           src={src}
-          alt={alt}
+          alt={`${alt} ${t('site_icon')}`}  
           width={size === 'lg' ? 96 : size === 'md' ? 48 : 32}
           height={size === 'lg' ? 96 : size === 'md' ? 48 : 32}
           className={`${sizeClasses[size]} rounded-lg object-contain bg-white border border-gray-200 shadow-sm`}

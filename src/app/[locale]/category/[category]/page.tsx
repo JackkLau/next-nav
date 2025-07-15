@@ -10,6 +10,8 @@ import {
   faFolder
 } from '@fortawesome/free-solid-svg-icons';
 import NaviItem from '@/components/navi-item';
+import { getTranslations } from 'next-intl/server';
+import { CategoryIconMap } from '@/data/left-menu'
 
 type Props = {
   params: Promise<{ category: string }>
@@ -72,6 +74,7 @@ export default async function CategoryPage({
 }: {
   params: Promise<{ category: string }>
 }) {
+  const t = await getTranslations();
   const { category } = await params
   const categoryName = CategoryNameMapping[category]
   
@@ -136,25 +139,25 @@ export default async function CategoryPage({
             <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
               <div className="flex-shrink-0 flex justify-center items-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center" aria-hidden="true">
-                  <FontAwesomeIcon icon={faTag} className="w-8 h-8 text-blue-600" />
+                  <FontAwesomeIcon icon={CategoryIconMap[finalCategoryName]} className="w-20 h-20 text-blue-600" />
                 </div>
               </div>
               <div className="flex-1 flex flex-col items-center md:items-start w-full">
                 <h1 id="category-header" className="text-3xl font-bold text-gray-900 mb-2 text-center md:text-left w-full">
-                  {finalCategoryName}
+                  {t(`category.${CategoryMapping[finalCategoryName]}`)}
                 </h1>
                 <p className="text-gray-600 text-center md:text-left w-full">
-                  共找到 {categorySites.length} 个优质网站
+                  {t('category_count', { count: categorySites.length })}
                 </p>
               </div>
               <div className="flex-shrink-0 w-full md:w-auto flex justify-center md:justify-end">
                 <Link
                   href="/"
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors duration-200 w-full md:w-auto justify-center"
-                  aria-label="返回首页"
+                  aria-label={t('back_home')}
                 >
                   <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4 mr-2" />
-                  返回首页
+                  {t('back_home')}
                 </Link>
               </div>
             </div>
@@ -165,12 +168,16 @@ export default async function CategoryPage({
 
           {/* 空状态 */}
           {sortedSites.length === 0 && (
-            <section className="text-center py-12" aria-label="空状态">
+            <section className="text-center py-12" aria-label={t('empty_state')}>
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                 <FontAwesomeIcon icon={faFolder} className="w-8 h-8 text-gray-400" />
               </div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">暂无网站</h2>
-              <p className="text-gray-500">该分类下暂时没有网站</p>
+              <h2 className="text-lg font-medium text-gray-900 mb-2">
+                {t('empty_title')}
+              </h2>
+              <p className="text-gray-500">
+                {t('empty_desc')}
+              </p>
             </section>
           )}
         </div>

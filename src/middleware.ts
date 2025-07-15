@@ -1,35 +1,40 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
 
-// 中文分类名称到英文标识符的映射
-const categoryRedirects: { [key: string]: string } = {
-  '常用网站': 'common',
-  '优质社区': 'community',
-  '实用工具': 'tools',
-  '个人网站': 'personal',
-  '资源收藏': 'resources',
-  '镜像站': 'mirror',
-  '导航发现': 'navigation',
-  '影视娱乐': 'entertainment',
-}
+const PUBLIC_FILE = /\.(.*)$/;
+const locales = ['en', 'zh-CN', 'zh-TW'];
+const defaultLocale = 'en';
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const { pathname } = request.nextUrl;
 
-  // 检查是否是分类页面路径
-  if (pathname.startsWith('/category/')) {
-    const category = decodeURIComponent(pathname.replace('/category/', ''))
-    
-    // 如果是中文分类名称，重定向到英文标识符
-    if (categoryRedirects[category]) {
-      const newUrl = new URL(`/category/${categoryRedirects[category]}`, request.url)
-      return NextResponse.redirect(newUrl, 301) // 301永久重定向
-    }
+  // 忽略静态资源和 API 路由
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    PUBLIC_FILE.test(pathname)
+  ) {
+    return;
   }
 
-  return NextResponse.next()
+  // 已有 locale 前缀则不处理
+  if (locales.some((locale) => pathname.startsWith(`/${locale}`))) {
+    return;
+  }
+
+  // 检测浏览器语言
+  const acceptLang = request.headers.get('accept-language');
+  const detected = acceptLang
+    ? locales.find((locale) => acceptLang.includes(locale))
+    : null;
+
+  const locale = detected || defaultLocale;
+
+  // 跳转到对应语言路径
+  return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
 }
 
 export const config = {
-  matcher: '/category/:path*',
-} 
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+}; 

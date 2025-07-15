@@ -1,4 +1,4 @@
-import {navigationData} from '@/data/navigation';
+import {CategoryMapping, navigationData} from '@/data/navigation';
 import Link from 'next/link';
 import QrBox from '@/components/qr-box';
 import RelatedSites from '@/components/related-sites';
@@ -15,6 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {NavigationItem} from '@/data/navigation';
 import FavoriteButtonWrapper from "@/components/favorite-button-wrapper";
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -107,6 +108,7 @@ export default async function Home({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 })
 {
+  const t = await getTranslations();
   const { slug: menuId } = await params
   const navItem = navigationData.find((item) => item.id === menuId);
   // 没找到对应导航的详情就重定向到首页
@@ -150,11 +152,11 @@ export default async function Home({
               <div className="flex-shrink-0 relative flex justify-center items-center">
                 <SiteIcon 
                   src={navItem?.imgUrl} 
-                  alt={`${navItem?.name} 网站图标`}
+                  alt={`${navItem?.name} ${t('site_icon')}`}
                   size="lg"
                 />
                 {navItem?.favorite && (
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow-md" aria-label="推荐网站">
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow-md" aria-label={t('recommend_site')}>
                     <FontAwesomeIcon icon={faStar} className="w-4 h-4 text-white" />
                   </div>
                 )}
@@ -174,35 +176,35 @@ export default async function Home({
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="flex items-center  text-center  px-4 py-1 text-sm bg-red-100 text-red-700 rounded-full mt-2 md:mt-0"
-                      aria-label="需要VPN访问"
+                      aria-label={t('need_vpn_desc')}
                     >
                       <FontAwesomeIcon icon={faShieldHalved} className="w-4 h-4 mr-1" />
-                      <span className=" w-12 text-center">需梯子</span>
+                      <span className=" w-12 text-center">{t('need_vpn')}</span>
                     </Link>
                   )}
                 </div>
                 <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-3 mb-4 w-full">
                   <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full mb-2 md:mb-0">
                     <FontAwesomeIcon icon={faTag} className="w-4 h-4 mr-1" />
-                    {navItem?.category}
+                    {t(`category.${CategoryMapping[navItem?.category as keyof typeof CategoryMapping]}`)}
                   </span>
                 </div>
                 {/* 描述 */}
                 <p className="text-gray-600 leading-relaxed mb-4 text-center md:text-left w-full">
-                  {navItem?.description || '暂无描述'}
+                  {navItem?.description || t('no_description')}
                 </p>
                 {/* 操作按钮 */}
                 <div className="flex flex-col space-y-3 w-full md:flex-row md:space-y-0 md:space-x-3 md:justify-start items-center md:items-center">
                   <Link 
-                    title={`访问 ${navItem?.name}`}
+                    title={`${t('direct_access')} ${navItem?.name}`}
                     href={navItem?.url || '/'} 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow-md"
-                    aria-label={`直接访问 ${navItem?.name}`}
+                    aria-label={`${t('direct_access')} ${navItem?.name}`}
                   >
                     <FontAwesomeIcon icon={faExternalLinkAlt} className="w-4 h-4 mr-2" />
-                    直接访问
+                    {t('direct_access')}
                   </Link>
                   <div className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors duration-200 shadow-sm hover:shadow-md">
                     <QrBox url={navItem?.url || '/'} />
@@ -213,7 +215,7 @@ export default async function Home({
           </section>
 
           {/* 你可能感兴趣模块 */}
-          <aside aria-label="相关推荐">
+          <aside aria-label={t('related_sites')}>
             <RelatedSites currentSite={navItem} relatedSites={relatedSites} />
           </aside>
         </div>

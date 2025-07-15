@@ -7,14 +7,17 @@ import {topMenu} from '@/data/top-menu';
 import TopMenu from '@/components/top-menu';
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import LeftMenu from '@/components/left-menu';
+import { useTranslations } from 'next-intl';
 
 function Index({children}: { children: React.ReactNode }) {
+  const t = useTranslations();
+  console.log(t('site_name'));
   return (
     <div className="flex h-screen overflow-hidden">
       {/* 移动端 Sheet 抽屉菜单 */}
       <Sheet>
         <SheetContent side="left" className="p-0 w-64 max-w-xs md:hidden">
-          <SheetTitle className="sr-only">导航菜单</SheetTitle>
+          <SheetTitle className="sr-only">{t('navigation_menu')}</SheetTitle>
           {/* 左侧菜单内容 */}
           <header className="px-6 py-5 flex justify-between items-start w-full">
             <Link href="/" className="w-full">
@@ -26,7 +29,7 @@ function Index({children}: { children: React.ReactNode }) {
                   height={32}
                   className={'w-9 h-9 mr-3'}
                 ></Image>
-                <div>价值导航</div>
+                <div>{t('site_name')}</div>
               </h1>
             </Link>
           </header>
@@ -58,7 +61,7 @@ function Index({children}: { children: React.ReactNode }) {
           </main>
           {/*底部版权信息*/}
           <footer className="px-4 py-4 bg-gray-100 text-center text-gray-500">
-            <p>© 2025 价值导航. All rights reserved. | 价值导航，发掘价值的导航站，发现有价值的信息发现页。</p>
+            <p>© 2025 {t('site_name')} . All rights reserved. | {t('site_collection_desc')}</p>
           </footer>
         </div>
       </Sheet>
@@ -74,7 +77,7 @@ function Index({children}: { children: React.ReactNode }) {
                 height={32}
                 className={'w-9 h-9 mr-3'}
               ></Image>
-              <div>价值导航</div>
+              <div>{t('site_name')}</div>
             </h1>
           </Link>
         </header>

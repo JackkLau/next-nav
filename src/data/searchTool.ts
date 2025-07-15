@@ -4,6 +4,23 @@ export interface SearchTool {
   url: string;
 }
 
+export const SearchToolMapping = {
+  '必应': 'bing',
+  '谷歌': 'google',
+  '百度': 'baidu',
+  '搜狗': 'sogou',
+  '有道': 'youdao',
+  '360搜索': '360',
+  '头条搜索': 'toutiao',
+  '知乎搜索': 'zhihu',
+  'DuckDuckGo': 'duckduckgo',
+  'Yahoo': 'yahoo',
+  'Yandex': 'yandex',
+  'Naver': 'naver',
+  'You.com': 'you_com',
+  'Brave': 'brave'
+}
+
 export const searchTool: SearchTool[] = [
   {
     name: '必应',

@@ -4,6 +4,7 @@ import SearchBar from '@/components/search-bar';
 import {Suspense} from 'react';
 import {Metadata} from 'next';
 import {DefaultMetaData} from '@/constant/metaData';
+import { useTranslations } from 'next-intl';
 
 export const metadata: Metadata = {
   title: DefaultMetaData.title,
@@ -22,12 +23,13 @@ export const metadata: Metadata = {
 };
 
 function SearchParamsComponent() {
+  const t = useTranslations();
   // 结构化数据 - 网站集合
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "价值导航网站集合",
-    "description": "汇聚全网优质分类站点的导航平台",
+    "name": t('site_collection_name') ,
+    "description": t('site_collection_desc'),
     "url": "https://loverezhao.top",
     "numberOfItems": navigationData.length,
     "itemListElement": navigationData.slice(0, 10).map((item, index) => ({
@@ -67,7 +69,8 @@ function SearchParamsComponent() {
                   className="w-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-md border border-gray-200 p-3 scroll-mt-24"
                   tabIndex={-1}
                 >
-                  <NaviItem navItems={navigationData.filter(item => item.category === CategoryType[type])} title={CategoryType[type]} />
+                  {/* title 不能国际化，会导致找不到路由 */}
+                  <NaviItem navItems={navigationData.filter(item => item.category === CategoryType[type])} title={type} />
                 </section>
               ))
             }
@@ -79,8 +82,9 @@ function SearchParamsComponent() {
 }
 
 export default function Page() {
+  const t = useTranslations();
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{t('loading')}</div>}>
       <SearchParamsComponent />
     </Suspense>
   );

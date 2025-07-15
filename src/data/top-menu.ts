@@ -1,6 +1,13 @@
 import {MenuData} from '@/data/left-menu';
 import {faHeart, faHouse, faStar} from '@fortawesome/free-solid-svg-icons';
 
+export const topMenuMapping = {
+  '首页': 'home',
+  '收藏': 'favorite',
+  '关注我': 'follow_me',
+  '发现更多有价值内容': 'more_value_content',
+}
+
 export const topMenu: MenuData[] = [
   {
     id: '1',

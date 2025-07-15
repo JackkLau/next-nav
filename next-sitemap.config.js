@@ -81,4 +81,9 @@ module.exports = {
       lastmod: new Date().toISOString(),
     }
   },
+
+  i18n: {
+    locales: ['en', 'zh-CN', 'zh-TW'],
+    defaultLocale: 'en'
+  },
 }

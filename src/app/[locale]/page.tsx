@@ -5,6 +5,12 @@ import {Suspense} from 'react';
 import {Metadata} from 'next';
 import {DefaultMetaData} from '@/constant/metaData';
 import { useTranslations } from 'next-intl';
+import { routing } from '@/i18n/routing';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({locale}));
+}
 
 export const metadata: Metadata = {
   title: DefaultMetaData.title,
@@ -22,7 +28,8 @@ export const metadata: Metadata = {
   },
 };
 
-function SearchParamsComponent() {
+function SearchParamsComponent({locale}: {locale: string}) {
+  setRequestLocale(locale);
   const t = useTranslations();
   // 结构化数据 - 网站集合
   const jsonLd = {
@@ -81,11 +88,13 @@ function SearchParamsComponent() {
   );
 }
 
-export default function Page() {
-  const t = useTranslations();
+export default async function Page({params}: {params: Promise<{locale: string}>}) {
+  const { locale } = await params;
+  const t = await getTranslations({locale});
+
   return (
     <Suspense fallback={<div>{t('loading')}</div>}>
-      <SearchParamsComponent />
+      <SearchParamsComponent locale={locale} />
     </Suspense>
   );
 }

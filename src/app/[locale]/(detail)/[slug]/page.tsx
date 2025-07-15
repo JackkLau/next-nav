@@ -18,13 +18,15 @@ import FavoriteButtonWrapper from "@/components/favorite-button-wrapper";
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string, locale: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
   { params }: Props,
 ): Promise<Metadata> {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'Metadata'});
   const { slug } = (await params)
 
   const navItem = navigationData.find((post) => post.id === slug)
@@ -32,8 +34,8 @@ export async function generateMetadata(
 
   if (!navItem) {
     return {
-      title: DefaultMetaData.title,
-      description: DefaultMetaData.description,
+      title: t('title'),
+      description: t('description'),
       alternates: {
         canonical: baseUrl,
       },

@@ -1,12 +1,14 @@
 import GlobalLayout from '@/components/global-layout';
 import { DefaultMetaData } from '@/constant/metaData';
 import { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 import '../globals.css';
+import { routing } from '@/i18n/routing';
+import { setRequestLocale } from 'next-intl/server';
 
 export function generateStaticParams() {
     return [{ locale: 'en' }, { locale: 'zh-CN' }, { locale: 'zh-TW' }];
@@ -86,9 +88,18 @@ export const metadata: Metadata = {
 export default async function LocaleLayout({ children, params }: { children: ReactNode, params: { locale: string } }) {
     let messages;
     const { locale } = await params;
+    
+    if (!hasLocale(routing.locales, locale)) {
+        notFound();
+      }
+     
+      // Enable static rendering
+      setRequestLocale(locale);
+
     try {
         messages = (await import(`../../messages/${locale}.json`)).default;
     } catch (error) {
+        console.error('LocaleLayout error', error);
         notFound();
     }
 

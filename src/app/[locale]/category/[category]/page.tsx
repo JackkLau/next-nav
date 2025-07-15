@@ -5,7 +5,6 @@ import { DefaultMetaData } from '@/constant/metaData'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faTag, 
   faArrowLeft,
   faFolder
 } from '@fortawesome/free-solid-svg-icons';
@@ -14,13 +13,15 @@ import { getTranslations } from 'next-intl/server';
 import { CategoryIconMap } from '@/data/left-menu'
 
 type Props = {
-  params: Promise<{ category: string }>
+  params: Promise<{ category: string, locale: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
   { params }: Props,
 ): Promise<Metadata> {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'Metadata'});
   const { category } = await params
   const categoryName = CategoryNameMapping[category]
   
@@ -33,8 +34,8 @@ export async function generateMetadata(
   
   if (!categoryExists) {
     return {
-      title: DefaultMetaData.title,
-      description: DefaultMetaData.description,
+      title: t('title'),
+      description: t('description'),
       alternates: {
         canonical: baseUrl,
       },

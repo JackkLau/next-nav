@@ -539,6 +539,14 @@ export const navigationData: NavigationItem[] = [
     description: '输入网址一键生成导航数据代码，便于维护 navigation.ts',
     favorite: false
   },
+  {
+    name: '导航数据生成器',
+    url: '/tools/nav-gen',
+    imgUrl: '/favicon.png',
+    category: CategoryType.common,
+    description: '输入网址一键生成导航数据代码，便于维护 navigation.ts',
+    favorite: false
+  },
 
 
 

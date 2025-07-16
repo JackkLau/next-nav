@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "postbuild": "next-sitemap",
+    "postbuild": "set DEBUG=next-sitemap* && next-sitemap",
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
     "validate-sitemap": "node scripts/validate-sitemap.js",
     "start": "next start",

@@ -16,6 +16,7 @@ import {
 import {NavigationItem} from '@/data/navigation';
 import FavoriteButtonWrapper from "@/components/favorite-button-wrapper";
 import { getTranslations } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 
 type Props = {
   params: Promise<{ slug: string, locale: string }>
@@ -76,12 +77,28 @@ export async function generateMetadata(
 }
 
 export function generateStaticParams() {
-  return navigationData.map((navItem) => ({
-    slug: navItem.id,
-  }))
+  const params = [];
+  for (const locale of routing.locales) {
+    for (const navItem of navigationData) {
+      params.push({
+        slug: String(navItem.id),
+        locale,
+      });
+    }
+  }
+  return params;
 }
 
-// 智能推荐算法：获取同分类下的其他网站（排除当前网站）
+// export function generateStaticParams() {
+//   return routing.locales.flatMap(locale =>
+//     navigationData.map(navItem => ({
+//       slug: String(navItem.id),
+//       locale,
+//     }))
+//   )
+// }
+
+// )智能推荐算法：获取同分类下的其他网站（排除当前网站）
 function getRelatedSites(currentSite: NavigationItem, allSites: NavigationItem[]) {
   // 1. 首先获取同分类的网站
   const sameCategorySites = allSites.filter(site => 
@@ -106,11 +123,12 @@ function getRelatedSites(currentSite: NavigationItem, allSites: NavigationItem[]
 export default async function Home({
                                      params,
                                    }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string, locale: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 })
 {
-  const t = await getTranslations();
+  const { locale } = await params;
+  const t = await getTranslations({locale});
   const { slug: menuId } = await params
   const navItem = navigationData.find((item) => item.id === menuId);
   // 没找到对应导航的详情就重定向到首页

@@ -11,6 +11,7 @@ import {
 import NaviItem from '@/components/navi-item';
 import { getTranslations } from 'next-intl/server';
 import { CategoryIconMap } from '@/data/left-menu'
+import { routing } from '@/i18n/routing'
 
 type Props = {
   params: Promise<{ category: string, locale: string }>
@@ -60,9 +61,12 @@ export async function generateMetadata(
 }
 
 export function generateStaticParams() {
-  return Object.keys(CategoryNameMapping).map((category) => ({
-    category: category,
-  }))
+  return routing.locales.flatMap(locale =>
+    Object.keys(CategoryNameMapping).map(category => ({
+      locale,
+      category
+    }))
+  );
 }
 
 // 获取分类下的所有网站
@@ -73,10 +77,10 @@ function getCategorySites(categoryName: string) {
 export default async function CategoryPage({
   params,
 }: {
-  params: Promise<{ category: string }>
+  params: Promise<{ category: string, locale: string }>
 }) {
-  const t = await getTranslations();
-  const { category } = await params
+  const { locale, category } = await params;
+  const t = await getTranslations({locale});
   const categoryName = CategoryNameMapping[category]
   
   // 如果英文标识符不存在，尝试作为中文名称处理（向后兼容）

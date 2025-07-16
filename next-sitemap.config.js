@@ -9,7 +9,7 @@ module.exports = {
   
   // 网站地图配置
   sitemapSize: 7000, // 每个网站地图文件的最大 URL 数量
-  generateIndexSitemap: true, // 生成索引网站地图（推荐开启）
+  generateIndexSitemap: false, // 生成索引网站地图（推荐开启）
   
   // 默认优先级和更新频率
   priority: 0.7, // 默认优先级（0.0-1.0）

@@ -3,7 +3,7 @@
 import React from 'react';
 import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 import Link from 'next/link';
-import {CategoryMapping, NavigationItem} from '@/data/navigation';
+import {NavigationItem} from '@/data/navigation';
 import Image from 'next/image';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowAltCircleRight, faStar} from '@fortawesome/free-regular-svg-icons';

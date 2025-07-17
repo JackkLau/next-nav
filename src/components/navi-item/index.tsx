@@ -11,8 +11,11 @@ import {faStar as faStarSolid} from '@fortawesome/free-solid-svg-icons';
 import { getCategorySlug } from '@/lib/category';
 import { useFavoriteSites } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: NavigationItem[], title: string, showAll?: boolean, hideTitle?: boolean, gridCols?: number }) {
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1];
   const t = useTranslations();
   const { favorites, toggleFavorite } = useFavoriteSites();
   // 收藏的排前面
@@ -33,7 +36,7 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
         {!hideTitle && <h2 id={title} className="text-xl font-bold text-dark">{t(`category.${title}`)}</h2>}
         {!showAll && navItems.length > 5 && (
           <Link
-            href={`/category/${getCategorySlug(title)}`}
+            href={`/${locale}/category/${getCategorySlug(title)}`}
             className="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors border border-blue-100 shadow-sm ml-2"
           >
             {t('more')}
@@ -54,7 +57,7 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
                 </span>
               )}
               <TooltipTrigger asChild>
-                <Link href={`/${item.id}`} className="flex items-center flex-1 min-w-0" prefetch={false}>
+                <Link href={`/${locale}/${item.id}`} className="flex items-center flex-1 min-w-0" prefetch={false}>
                   <Image className="w-12 h-12 shrink-0 bg-gray-100 rounded-lg object-contain"
                          width={48}
                          height={48}
@@ -69,7 +72,7 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
               </TooltipTrigger>
               {/* 卡片底部按钮区域：星星和直接访问按钮 */}
               <div className="flex flex-col items-center justify-center pt-8 ml-2">
-                <Link href={item.url || '/'} target={'_blank'} title={t('direct_access')}
+                <Link href={item.url || `/${locale}`} target={'_blank'} title={t('direct_access')}
                   className={'text-xl text-blue-400 hover:text-blue-600 transition-colors'}>
                   <FontAwesomeIcon icon={faArrowAltCircleRight} />
                 </Link>

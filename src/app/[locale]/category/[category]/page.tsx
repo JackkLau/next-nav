@@ -157,7 +157,7 @@ export default async function CategoryPage({
               </div>
               <div className="flex-shrink-0 w-full md:w-auto flex justify-center md:justify-end">
                 <Link
-                  href="/"
+                  href={`/${locale}`}
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors duration-200 w-full md:w-auto justify-center"
                   aria-label={t('back_home')}
                 >

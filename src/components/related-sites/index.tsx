@@ -1,3 +1,4 @@
+'use client'
 import { CategoryMapping, NavigationItem } from '@/data/navigation'
 import Link from 'next/link'
 import SiteIcon from '@/components/ui/site-icon'
@@ -10,6 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { getCategorySlug } from '@/lib/category';
 import { useTranslations } from 'next-intl'
+import { usePathname } from 'next/navigation';
 interface RelatedSitesProps {
   currentSite: NavigationItem
   relatedSites: NavigationItem[]
@@ -17,6 +19,8 @@ interface RelatedSitesProps {
 
 export default function RelatedSites({ currentSite, relatedSites }: RelatedSitesProps) {
   const t = useTranslations()
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1];
   if (relatedSites.length === 0) {
     return null
   }
@@ -37,7 +41,7 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
         {relatedSites.map((site) => (
           <article key={site.id} role="listitem" className="group block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
             <Link
-              href={`/${site.id}`}
+              href={`/${locale}/${site.id}`}
               
               aria-label={`${t('related_sites_view')} ${site.name} ${t('related_sites_detail')}`}
             >

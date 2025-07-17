@@ -34,7 +34,8 @@
   "need_vpn": "VPN richiesta",
   "direct_access": "Accesso diretto",
   "cancel_favorite": "Rimuovi dai preferiti",
-  "add_favorite": "Aggiungi ai preferiti",
+  "add_favorite": "Aggiungi ai preferiti",  
+  "open_menu": "Apri menu",
   "top_menu": {
     "home": "Home",
     "favorite": "Preferiti",

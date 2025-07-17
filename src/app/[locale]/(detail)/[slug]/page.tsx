@@ -218,7 +218,7 @@ export default async function Home({
                 <div className="flex flex-col space-y-3 w-full md:flex-row md:space-y-0 md:space-x-3 md:justify-start items-center md:items-center">
                   <Link 
                     title={`${t('direct_access')} ${navItem?.name}`}
-                    href={navItem?.url || '/'} 
+                    href={navItem?.url || `/${locale}`} 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow-md"
@@ -228,7 +228,7 @@ export default async function Home({
                     {t('direct_access')}
                   </Link>
                   <div className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors duration-200 shadow-sm hover:shadow-md">
-                    <QrBox url={navItem?.url || '/'} />
+                    <QrBox url={navItem?.url || `/${locale}`} />
                   </div>
                 </div>
               </div>

@@ -11,18 +11,19 @@ import { CategoryMapping } from '@/data/navigation';
 function LeftMenu() {
   const t = useTranslations();
   const pathname = usePathname();
+  const locale = pathname.split('/')[1];
   let currentCategorySlug = '';
   if (pathname.startsWith('/category/')) {
     currentCategorySlug = decodeURIComponent(pathname.replace('/category/', ''));
   }
-  const isHome = pathname === '/';
+  const isHome = pathname === `/${locale}`;
 
   return (
     <nav className="w-full mt-2">
       <ul className="w-full px-2">
         {leftMenu.map((item) => {
           const slug = getCategorySlug(item.name);
-          const href = isHome ? `/#${item.name}` : `/category/${slug}`;
+          const href = isHome ? `/${locale}/#${item.name}` : `/${locale}/category/${slug}`;
           // 首页高亮：锚点hash和菜单名匹配，分类页高亮：slug匹配
           let isActive = false;
           if (typeof window !== 'undefined' && isHome) {

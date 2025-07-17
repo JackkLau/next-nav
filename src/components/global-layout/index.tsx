@@ -8,8 +8,11 @@ import TopMenu from '@/components/top-menu';
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import LeftMenu from '@/components/left-menu';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
 
 function Index({children}: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1];
   const t = useTranslations();
   console.log(t('site_name'));
   return (
@@ -20,7 +23,7 @@ function Index({children}: { children: React.ReactNode }) {
           <SheetTitle className="sr-only">{t('navigation_menu')}</SheetTitle>
           {/* 左侧菜单内容 */}
           <header className="px-6 py-5 flex justify-between items-start w-full">
-            <Link href="/" className="w-full">
+            <Link href={`/${locale}`} className="w-full">
               <h1 className="flex items-center text-2xl font-bold text-dark w-full">
                 <Image
                   src="/favicon.png"
@@ -45,10 +48,10 @@ function Index({children}: { children: React.ReactNode }) {
                 <SheetTrigger asChild>
                   <button
                     className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-white shadow-xs border border-gray-200 focus:outline-none"
-                    aria-label="打开菜单"
+                    aria-label={t('open_menu')}
                     type="button"
                   >
-                    <span className="sr-only">打开菜单</span>
+                    <span className="sr-only">{t('open_menu')}</span>
                     <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
                   </button>
                 </SheetTrigger>
@@ -61,14 +64,14 @@ function Index({children}: { children: React.ReactNode }) {
           </main>
           {/*底部版权信息*/}
           <footer className="px-4 py-4 bg-gray-100 text-center text-gray-500">
-            <p>© 2025 {t('site_name')} . All rights reserved. | {t('site_collection_desc')}</p>
+            <p>© {new Date().getFullYear()} {t('site_name')} . All rights reserved. | {t('site_collection_desc')}</p>
           </footer>
         </div>
       </Sheet>
       {/* 桌面端常驻菜单，固定在左侧 */}
       <aside className="hidden md:fixed md:flex flex-col items-center justify-start min-h-full w-64 max-w-xs bg-white/95 backdrop-blur rounded-2xl shadow-2xl m-2 border border-gray-200 left-0 top-0 z-30">
         <header className="px-6 py-5 flex justify-between items-start w-full">
-          <Link href="/" className="w-full">
+          <Link href={`/${locale}`} className="w-full">
             <h1 className="flex items-center text-2xl font-bold text-dark w-full">
               <Image
                 src="/favicon.png"

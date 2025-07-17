@@ -169,7 +169,7 @@ export default async function CategoryPage({
           </section>
 
           {/* 网站列表（复用NaviItem） */}
-          <NaviItem navItems={categorySites} title={finalCategoryName} showAll hideTitle gridCols={4} />
+          <NaviItem navItems={categorySites} title={CategoryMapping[finalCategoryName]} showAll hideTitle gridCols={4} />
 
           {/* 空状态 */}
           {sortedSites.length === 0 && (

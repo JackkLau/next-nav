@@ -1,0 +1,129 @@
+{
+  "greeting": "Bonjour",
+  "Metadata": {
+    "site_name": "Navigation de Valeur",
+    "title": "Navigation de Valeur | Découvrir la valeur | Page de découverte",
+    "description": "Navigation de Valeur (www.loverezhao.top) se consacre à la création d'une plateforme de navigation web tout-en-un, efficace et pratique, rassemblant des sites de haute qualité dans plus de 20 catégories principales, dont la technologie, les outils, les ressources, le marketing, les services de la vie, l'apprentissage et le bureau, le divertissement et le shopping. Recommandation intelligente de sites populaires, mise à jour en temps réel des liens sécurisés, vous aidant à trouver rapidement ce dont vous avez besoin et à éviter les recherches fastidieuses ! Portail de confiance pour des millions d'utilisateurs chaque jour, pour une navigation plus efficace et plus fluide.",
+    "keywords": "Navigation de Valeur, Découvrir la valeur, Page de découverte, Annuaire de sites utiles, Navigation efficace, Navigation marketing, Ressources d'apprentissage, Outils techniques, Partage de ressources, Recommandation de sites populaires"
+  },
+  "switch_language": "Changer de langue",
+  "loading": "Chargement...",
+  "site_name": "Navigation de Valeur",
+  "site_collection_name": "Collection de sites Navigation de Valeur",
+  "site_collection_desc": "Plateforme de navigation rassemblant des sites de haute qualité par catégorie",
+  "category": {
+    "common": "Sites courants",
+    "community": "Communautés de qualité",
+    "tools": "Outils pratiques",
+    "remote": "Opportunités à distance",
+    "personal": "Sites personnels",
+    "resources": "Collection de ressources",
+    "mirror": "Sites miroirs",
+    "navigation": "Découverte de navigation",
+    "entertainment": "Divertissement vidéo"
+  },
+  "category_count": "{count} sites de qualité trouvés au total",
+  "back_home": "Retour à l'accueil",
+  "empty_state": "Aucun contenu",
+  "empty_title": "Aucun site pour le moment",
+  "empty_desc": "Aucun site dans cette catégorie pour le moment",
+  "more": "Plus",
+  "navigation_menu": "Menu de navigation",
+  "home_title": "Valeur de la navigation",
+  "navigation_menu_desc": "Plateforme de navigation rassemblant des sites de haute qualité par catégorie",
+  "need_vpn": "VPN requis",
+  "direct_access": "Accès direct",
+  "cancel_favorite": "Retirer des favoris",
+  "add_favorite": "Ajouter aux favoris",
+  "top_menu": {
+    "home": "Accueil",
+    "favorite": "Favoris",
+    "follow_me": "Suivez-moi",
+    "more_value_content": "Découvrez plus de contenus de valeur"
+  },
+  "search_tool": {
+    "bing": "Bing",
+    "google": "Google",
+    "baidu": "Baidu",
+    "sogou": "Sogou",
+    "youdao": "Youdao",
+    "360": "360",
+    "toutiao": "Toutiao",
+    "zhihu": "Zhihu",
+    "duckduckgo": "DuckDuckGo",
+    "yahoo": "Yahoo",
+    "yandex": "Yandex",
+    "naver": "Naver",
+    "you_com": "You.com",
+    "brave": "Brave"
+  },
+  "search_placeholder": "Découvrez des contenus de valeur",
+  "site_icon": "Icône du site",
+  "qr_code_view": "Voir le QR code",
+  "need_vpn_desc": "Nécessite un VPN pour accéder",
+  "recommend_site": "Site recommandé",
+  "favorite_button": {
+    "cancel_favorite": "Déjà dans les favoris",
+    "add_favorite": "Ajouter aux favoris"
+  },
+  "no_description": "Aucune description",
+  "related_sites": "Sites associés",
+  "related_sites_view": "Voir",
+  "related_sites_detail": "Détails",
+  "related_sites_view_more": "Voir plus",
+  "tools": {
+    "nav-gen": {
+      "title": "Générateur de données de navigation",
+      "description": "Saisissez l'adresse du site et les informations de base",
+      "guide": {
+        "title": "Guide d'utilisation",
+        "step1": "Saisissez l'URL du site à ajouter (doit commencer par http:// ou https://)",
+        "step2": "Choisissez la catégorie appropriée, vous pouvez sélectionner 'Favoris' ou 'VPN requis'",
+        "step3": "Cliquez sur le bouton 'Générer les données de navigation' ci-dessous",
+        "step4": "Copiez le code généré et collez-le dans le fichier navigation.ts"
+      },
+      "form": {
+        "title": "Informations sur le site",
+        "description": "Saisissez l'adresse du site et les informations de base",
+        "url": "Adresse du site *",
+        "category": "Catégorie",
+        "favorite": "Favoris",
+        "needVPN": "VPN requis",
+        "generate": "Générer les données de navigation",
+        "loading": "Génération en cours...",
+        "success": "Données de navigation générées avec succès !",
+        "error": {
+          "url": "Veuillez saisir une adresse de site valide (commençant par http:// ou https://)",
+          "url-format": "Veuillez saisir une adresse de site valide (commençant par http:// ou https://)",
+          "generate-failed": "Échec de la génération, veuillez vérifier l'adresse du site",
+          "copy-failed": "Échec de la copie"
+        },
+        "meta-data": {
+          "title": "Métadonnées du site",
+          "description": "Informations du site récupérées automatiquement",
+          "favicon": "Icône"
+        },
+        "generated-data": {
+          "title": "Données de navigation générées",
+          "description": "À copier directement dans le fichier navigation.ts",
+          "copy": "Copier",
+          "json-format": "Format JSON"
+        }
+      }
+    }
+  },
+  "lang": {
+    "en": "Anglais",
+    "zh_cn": "Chinois simplifié",
+    "zh_tw": "Chinois traditionnel",
+    "ja": "Japonais",
+    "ko": "Coréen",
+    "fr": "Français",
+    "de": "Allemand",
+    "es": "Espagnol",
+    "pt": "Portugais",
+    "ru": "Russe",
+    "ar": "Arabe",
+    "it": "Italien"
+  }
+} 

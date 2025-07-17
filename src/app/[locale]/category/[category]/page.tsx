@@ -28,7 +28,7 @@ export async function generateMetadata(
   
   // 如果英文标识符不存在，尝试作为中文名称处理（向后兼容）
   const finalCategoryName = categoryName || category
-  const baseUrl = 'https://loverezhao.top';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';
   
   // 验证分类是否存在
   const categoryExists = categoryName || Object.values(CategoryType).includes(finalCategoryName)
@@ -38,7 +38,7 @@ export async function generateMetadata(
       title: t('title'),
       description: t('description'),
       alternates: {
-        canonical: baseUrl,
+        canonical: siteUrl,
       },
     }
   }
@@ -47,12 +47,12 @@ export async function generateMetadata(
     title: `${finalCategoryName} - ${DefaultMetaData.title}`,
     description: `${finalCategoryName} 分类下的优质网站导航，汇聚${finalCategoryName}相关的高质量网站资源`,
     alternates: {
-      canonical: `${baseUrl}/category/${category}`,
+      canonical: `${siteUrl}/category/${category}`,
     },
     openGraph: {
       title: `${finalCategoryName} - ${DefaultMetaData.title}`,
       description: `${finalCategoryName} 分类下的优质网站导航`,
-      url: `${baseUrl}/category/${category}`,
+      url: `${siteUrl}/category/${category}`,
       siteName: '价值导航',
       locale: 'zh_CN',
       type: 'website',
@@ -116,7 +116,7 @@ export default async function CategoryPage({
     "@type": "ItemList",
     "name": `${finalCategoryName} 网站导航`,
     "description": `${finalCategoryName} 分类下的优质网站导航`,
-    "url": `https://loverezhao.top/category/${finalCategory}`,
+    "url": `${siteUrl}/category/${finalCategory}`,
     "numberOfItems": sortedSites.length,
     "itemListElement": sortedSites.map((site, index) => ({
       "@type": "ListItem",

@@ -1,0 +1,129 @@
+{
+  "greeting": "안녕하세요",
+  "Metadata": {
+    "site_name": "가치 내비게이션",
+    "title": "가치 내비게이션 | 가치를 발견하다 | 발견 페이지",
+    "description": "가치 내비게이션(www.loverezhao.top)은 효율적이고 편리한 원스톱 웹사이트 내비게이션 플랫폼 구축에 전념하고 있습니다. 기술, 도구, 리소스, 마케팅, 생활 서비스, 학습 및 사무, 엔터테인먼트, 쇼핑 등 20개 이상의 핵심 카테고리의 고품질 사이트를 모았습니다. 인기 사이트를 지능적으로 추천하고, 안전한 링크를 실시간으로 업데이트하여 필요한 콘텐츠를 빠르게 찾고 번거로운 검색에서 벗어나세요! 매일 수백만 명의 사용자가 신뢰하는 인터넷 입구로, 더 효율적이고 원활한 브라우징 경험을 제공합니다.",
+    "keywords": "가치 내비게이션, 가치를 발견하다, 발견 페이지, 실용 웹사이트 모음, 효율적 내비게이션, 마케팅 내비게이션, 학습 리소스, 기술 도구, 리소스 공유, 인기 사이트 추천"
+  },
+  "switch_language": "언어 변경",
+  "loading": "로딩 중...",
+  "site_name": "가치 내비게이션",
+  "site_collection_name": "가치 내비게이션 사이트 모음",
+  "site_collection_desc": "고품질 카테고리별 사이트를 모은 내비게이션 플랫폼",
+  "category": {
+    "common": "자주 쓰는 사이트",
+    "community": "우수 커뮤니티",
+    "tools": "유용한 도구",
+    "remote": "원격 기회",
+    "personal": "개인 사이트",
+    "resources": "리소스 모음",
+    "mirror": "미러 사이트",
+    "navigation": "내비게이션 발견",
+    "entertainment": "영화/엔터테인먼트"
+  },
+  "category_count": "총 {count}개의 우수 사이트를 찾았습니다",
+  "back_home": "홈으로 돌아가기",
+  "empty_state": "비어 있음",
+  "empty_title": "사이트 없음",
+  "empty_desc": "이 카테고리에는 아직 사이트가 없습니다",
+  "more": "더 보기",
+  "navigation_menu": "내비게이션 메뉴",
+  "home_title": "내비게이션 가치",
+  "navigation_menu_desc": "고품질 카테고리별 사이트를 모은 내비게이션 플랫폼",
+  "need_vpn": "VPN 필요",
+  "direct_access": "직접 접속",
+  "cancel_favorite": "즐겨찾기 해제",
+  "add_favorite": "즐겨찾기",
+  "top_menu": {
+    "home": "홈",
+    "favorite": "즐겨찾기",
+    "follow_me": "팔로우하기",
+    "more_value_content": "더 가치 있는 콘텐츠 발견"
+  },
+  "search_tool": {
+    "bing": "Bing",
+    "google": "Google",
+    "baidu": "Baidu",
+    "sogou": "Sogou",
+    "youdao": "Youdao",
+    "360": "360",
+    "toutiao": "Toutiao",
+    "zhihu": "Zhihu",
+    "duckduckgo": "DuckDuckGo",
+    "yahoo": "Yahoo",
+    "yandex": "Yandex",
+    "naver": "Naver",
+    "you_com": "You.com",
+    "brave": "Brave"
+  },
+  "search_placeholder": "가치 있는 콘텐츠를 발견하세요",
+  "site_icon": "사이트 아이콘",
+  "qr_code_view": "QR코드 보기",
+  "need_vpn_desc": "VPN이 필요합니다",
+  "recommend_site": "추천 사이트",
+  "favorite_button": {
+    "cancel_favorite": "즐겨찾기됨",
+    "add_favorite": "즐겨찾기"
+  },
+  "no_description": "설명 없음",
+  "related_sites": "관련 사이트",
+  "related_sites_view": "보기",
+  "related_sites_detail": "상세",
+  "related_sites_view_more": "더 보기",
+  "tools": {
+    "nav-gen": {
+      "title": "내비게이션 데이터 생성기",
+      "description": "사이트 주소와 기본 정보를 입력하세요",
+      "guide": {
+        "title": "사용 가이드",
+        "step1": "등록할 웹사이트 주소를 입력하세요(http:// 또는 https://로 시작해야 합니다)",
+        "step2": "적절한 카테고리를 선택하고, '즐겨찾기' 또는 'VPN 필요'를 선택할 수 있습니다",
+        "step3": "아래의 '내비게이션 데이터 생성' 버튼을 클릭하세요",
+        "step4": "생성된 코드를 복사하여 navigation.ts 파일에 붙여넣으세요"
+      },
+      "form": {
+        "title": "사이트 정보",
+        "description": "사이트 주소와 기본 정보를 입력하세요",
+        "url": "사이트 주소 *",
+        "category": "카테고리",
+        "favorite": "즐겨찾기",
+        "needVPN": "VPN 필요",
+        "generate": "내비게이션 데이터 생성",
+        "loading": "생성 중...",
+        "success": "내비게이션 데이터가 성공적으로 생성되었습니다!",
+        "error": {
+          "url": "유효한 사이트 주소를 입력하세요(http:// 또는 https://로 시작해야 합니다)",
+          "url-format": "유효한 사이트 주소를 입력하세요(http:// 또는 https://로 시작해야 합니다)",
+          "generate-failed": "생성에 실패했습니다. 사이트 주소가 올바른지 확인하세요",
+          "copy-failed": "복사에 실패했습니다"
+        },
+        "meta-data": {
+          "title": "사이트 메타데이터",
+          "description": "자동으로 가져온 사이트 정보",
+          "favicon": "아이콘"
+        },
+        "generated-data": {
+          "title": "생성된 내비게이션 데이터",
+          "description": "바로 navigation.ts 파일에 복사할 수 있습니다",
+          "copy": "복사",
+          "json-format": "JSON 형식"
+        }
+      }
+    }
+  },
+  "lang": {
+    "en": "영어",
+    "zh_cn": "중국어(간체)",
+    "zh_tw": "중국어(번체)",
+    "ja": "일본어",
+    "ko": "한국어",
+    "fr": "프랑스어",
+    "de": "독일어",
+    "es": "스페인어",
+    "pt": "포르투갈어",
+    "ru": "러시아어",
+    "ar": "아랍어",
+    "it": "이탈리아어"
+  }
+} 

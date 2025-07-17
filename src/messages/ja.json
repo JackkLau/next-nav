@@ -1,0 +1,129 @@
+{
+  "greeting": "こんにちは",
+  "Metadata": {
+    "site_name": "価値ナビゲーション",
+    "title": "価値ナビゲーション | 価値を発見 | 発見ページ",
+    "description": "価値ナビゲーション（www.loverezhao.top）は、効率的で便利なワンストップウェブナビゲーションプラットフォームの構築に専念しています。技術、ツール、リソース、マーケティング、生活サービス、学習・オフィス、エンターテインメント、ショッピングなど、20以上の主要カテゴリの高品質なサイトを集約。人気サイトをインテリジェントに推薦し、安全なリンクをリアルタイムで更新。必要なコンテンツを素早く見つけ、面倒な検索とお別れ！毎日数百万人のユーザーに信頼されるインターネットの入り口で、より効率的でスムーズなブラウジング体験を提供します。",
+    "keywords": "価値ナビゲーション, 価値を発見, 発見ページ, 実用ウェブサイト集, 効率的なナビゲーション, マーケティングナビ, 学習リソース, 技術ツール, リソース共有, 人気サイト推薦"
+  },
+  "switch_language": "言語を切り替える",
+  "loading": "読み込み中...",
+  "site_name": "価値ナビゲーション",
+  "site_collection_name": "価値ナビゲーションサイトコレクション",
+  "site_collection_desc": "高品質なカテゴリ別サイトを集約したナビゲーションプラットフォーム",
+  "category": {
+    "common": "よく使うサイト",
+    "community": "優良コミュニティ",
+    "tools": "便利ツール",
+    "remote": "リモートチャンス",
+    "personal": "個人サイト",
+    "resources": "リソースコレクション",
+    "mirror": "ミラーサイト",
+    "navigation": "ナビゲーション発見",
+    "entertainment": "映画・エンタメ"
+  },
+  "category_count": "合計 {count} 件の優良サイトが見つかりました",
+  "back_home": "ホームに戻る",
+  "empty_state": "空の状態",
+  "empty_title": "サイトがありません",
+  "empty_desc": "このカテゴリにはまだサイトがありません",
+  "more": "もっと見る",
+  "navigation_menu": "ナビゲーションメニュー",
+  "home_title": "ナビゲーション価値",
+  "navigation_menu_desc": "高品質なカテゴリ別サイトを集約したナビゲーションプラットフォーム",
+  "need_vpn": "VPNが必要",
+  "direct_access": "直接アクセス",
+  "cancel_favorite": "お気に入り解除",
+  "add_favorite": "お気に入り",
+  "top_menu": {
+    "home": "ホーム",
+    "favorite": "お気に入り",
+    "follow_me": "フォローする",
+    "more_value_content": "さらに価値あるコンテンツを発見"
+  },
+  "search_tool": {
+    "bing": "Bing",
+    "google": "Google",
+    "baidu": "Baidu",
+    "sogou": "Sogou",
+    "youdao": "Youdao",
+    "360": "360",
+    "toutiao": "Toutiao",
+    "zhihu": "Zhihu",
+    "duckduckgo": "DuckDuckGo",
+    "yahoo": "Yahoo",
+    "yandex": "Yandex",
+    "naver": "Naver",
+    "you_com": "You.com",
+    "brave": "Brave"
+  },
+  "search_placeholder": "価値あるコンテンツを発見",
+  "site_icon": "サイトアイコン",
+  "qr_code_view": "QRコードで表示",
+  "need_vpn_desc": "VPNが必要です",
+  "recommend_site": "おすすめサイト",
+  "favorite_button": {
+    "cancel_favorite": "お気に入り済み",
+    "add_favorite": "お気に入り"
+  },
+  "no_description": "説明はありません",
+  "related_sites": "関連サイト",
+  "related_sites_view": "表示",
+  "related_sites_detail": "詳細",
+  "related_sites_view_more": "さらに表示",
+  "tools": {
+    "nav-gen": {
+      "title": "ナビゲーションデータジェネレーター",
+      "description": "サイトアドレスと基本情報を入力",
+      "guide": {
+        "title": "使用ガイド",
+        "step1": "登録したいウェブサイトのURLを入力してください（http:// または https:// で始まる必要があります）",
+        "step2": "適切なカテゴリを選択し、「お気に入り」または「VPNが必要」を選択できます",
+        "step3": "下の「ナビゲーションデータを生成」ボタンをクリック",
+        "step4": "生成されたコードをコピーして navigation.ts ファイルに貼り付けてください"
+      },
+      "form": {
+        "title": "サイト情報",
+        "description": "サイトアドレスと基本情報を入力",
+        "url": "サイトアドレス *",
+        "category": "カテゴリ",
+        "favorite": "お気に入り",
+        "needVPN": "VPNが必要",
+        "generate": "ナビゲーションデータを生成",
+        "loading": "生成中...",
+        "success": "ナビゲーションデータが正常に生成されました！",
+        "error": {
+          "url": "有効なサイトアドレスを入力してください（http:// または https:// で始まる必要があります）",
+          "url-format": "有効なサイトアドレスを入力してください（http:// または https:// で始まる必要があります）",
+          "generate-failed": "生成に失敗しました。サイトアドレスが正しいかご確認ください",
+          "copy-failed": "コピーに失敗しました"
+        },
+        "meta-data": {
+          "title": "サイトメタデータ",
+          "description": "自動取得されたサイト情報",
+          "favicon": "アイコン"
+        },
+        "generated-data": {
+          "title": "生成されたナビゲーションデータ",
+          "description": "そのまま navigation.ts ファイルにコピーできます",
+          "copy": "コピー",
+          "json-format": "JSON形式"
+        }
+      }
+    }
+  },
+  "lang": {
+    "en": "英語",
+    "zh_cn": "簡体字中国語",
+    "zh_tw": "繁体字中国語",
+    "ja": "日本語",
+    "ko": "韓国語",
+    "fr": "フランス語",
+    "de": "ドイツ語",
+    "es": "スペイン語",
+    "pt": "ポルトガル語",
+    "ru": "ロシア語",
+    "ar": "アラビア語",
+    "it": "イタリア語"
+  }
+}

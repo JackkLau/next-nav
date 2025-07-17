@@ -1,0 +1,129 @@
+{
+  "greeting": "Hallo",
+  "Metadata": {
+    "site_name": "Wert-Navigation",
+    "title": "Wert-Navigation | Wert entdecken | Entdeckungsseite",
+    "description": "Wert-Navigation (www.loverezhao.top) widmet sich dem Aufbau einer effizienten und benutzerfreundlichen All-in-One-Webseiten-Navigationsplattform, die hochwertige kategorisierte Seiten aus dem gesamten Web zusammenführt. Sie deckt über 20 Hauptkategorien ab, darunter Technik, Tools, Ressourcen, Marketing, Lebensdienste, Lernen & Büro, Unterhaltung und Shopping. Intelligente Empfehlung beliebter Websites, Echtzeit-Updates sicherer Links, damit Sie schnell finden, was Sie brauchen, und lästige Suchen vermeiden! Das von Millionen Nutzern täglich vertraute Internetportal für effizienteres und reibungsloseres Surfen.",
+    "keywords": "Wert-Navigation, Wert entdecken, Entdeckungsseite, Nützliche Webseiten, Effiziente Navigation, Marketing-Navigation, Lernressourcen, Technische Tools, Ressourcenteilung, Beliebte Webseiten-Empfehlung"
+  },
+  "switch_language": "Sprache wechseln",
+  "loading": "Lädt...",
+  "site_name": "Wert-Navigation",
+  "site_collection_name": "Wert-Navigation Webseiten-Sammlung",
+  "site_collection_desc": "Navigationsplattform mit hochwertigen kategorisierten Webseiten",
+  "category": {
+    "common": "Häufig genutzte Seiten",
+    "community": "Qualitäts-Communities",
+    "tools": "Nützliche Tools",
+    "remote": "Remote-Möglichkeiten",
+    "personal": "Persönliche Webseiten",
+    "resources": "Ressourcensammlung",
+    "mirror": "Spiegelseiten",
+    "navigation": "Navigation entdecken",
+    "entertainment": "Film & Unterhaltung"
+  },
+  "category_count": "Insgesamt {count} hochwertige Webseiten gefunden",
+  "back_home": "Zurück zur Startseite",
+  "empty_state": "Kein Inhalt",
+  "empty_title": "Noch keine Webseite",
+  "empty_desc": "In dieser Kategorie gibt es derzeit keine Webseiten",
+  "more": "Mehr",
+  "navigation_menu": "Navigationsmenü",
+  "home_title": "Navigationswert",
+  "navigation_menu_desc": "Navigationsplattform mit hochwertigen kategorisierten Webseiten",
+  "need_vpn": "VPN erforderlich",
+  "direct_access": "Direkter Zugriff",
+  "cancel_favorite": "Aus Favoriten entfernen",
+  "add_favorite": "Zu Favoriten hinzufügen",
+  "top_menu": {
+    "home": "Startseite",
+    "favorite": "Favoriten",
+    "follow_me": "Folgen Sie mir",
+    "more_value_content": "Mehr wertvolle Inhalte entdecken"
+  },
+  "search_tool": {
+    "bing": "Bing",
+    "google": "Google",
+    "baidu": "Baidu",
+    "sogou": "Sogou",
+    "youdao": "Youdao",
+    "360": "360",
+    "toutiao": "Toutiao",
+    "zhihu": "Zhihu",
+    "duckduckgo": "DuckDuckGo",
+    "yahoo": "Yahoo",
+    "yandex": "Yandex",
+    "naver": "Naver",
+    "you_com": "You.com",
+    "brave": "Brave"
+  },
+  "search_placeholder": "Entdecken Sie wertvolle Inhalte",
+  "site_icon": "Webseiten-Icon",
+  "qr_code_view": "QR-Code anzeigen",
+  "need_vpn_desc": "VPN erforderlich für den Zugriff",
+  "recommend_site": "Empfohlene Webseite",
+  "favorite_button": {
+    "cancel_favorite": "Bereits in Favoriten",
+    "add_favorite": "Zu Favoriten hinzufügen"
+  },
+  "no_description": "Keine Beschreibung",
+  "related_sites": "Verwandte Seiten",
+  "related_sites_view": "Anzeigen",
+  "related_sites_detail": "Details",
+  "related_sites_view_more": "Mehr anzeigen",
+  "tools": {
+    "nav-gen": {
+      "title": "Navigationsdaten-Generator",
+      "description": "Webseitenadresse und Basisinformationen eingeben",
+      "guide": {
+        "title": "Anleitung",
+        "step1": "Geben Sie die aufzunehmende Webseiten-URL ein (muss mit http:// oder https:// beginnen)",
+        "step2": "Wählen Sie die passende Kategorie, optional 'Favoriten' oder 'VPN erforderlich'",
+        "step3": "Klicken Sie unten auf 'Navigationsdaten generieren'",
+        "step4": "Kopieren Sie den generierten Code und fügen Sie ihn in die navigation.ts-Datei ein"
+      },
+      "form": {
+        "title": "Webseiten-Informationen",
+        "description": "Webseitenadresse und Basisinformationen eingeben",
+        "url": "Webseitenadresse *",
+        "category": "Kategorie",
+        "favorite": "Favoriten",
+        "needVPN": "VPN erforderlich",
+        "generate": "Navigationsdaten generieren",
+        "loading": "Generierung läuft...",
+        "success": "Navigationsdaten erfolgreich generiert!",
+        "error": {
+          "url": "Bitte geben Sie eine gültige Webseitenadresse ein (beginnend mit http:// oder https://)",
+          "url-format": "Bitte geben Sie eine gültige Webseitenadresse ein (beginnend mit http:// oder https://)",
+          "generate-failed": "Generierung fehlgeschlagen, bitte überprüfen Sie die Webseitenadresse",
+          "copy-failed": "Kopieren fehlgeschlagen"
+        },
+        "meta-data": {
+          "title": "Webseiten-Metadaten",
+          "description": "Automatisch abgerufene Webseiteninformationen",
+          "favicon": "Icon"
+        },
+        "generated-data": {
+          "title": "Generierte Navigationsdaten",
+          "description": "Kann direkt in die navigation.ts-Datei kopiert werden",
+          "copy": "Kopieren",
+          "json-format": "JSON-Format"
+        }
+      }
+    }
+  },
+  "lang": {
+    "en": "Englisch",
+    "zh_cn": "Vereinfachtes Chinesisch",
+    "zh_tw": "Traditionelles Chinesisch",
+    "ja": "Japanisch",
+    "ko": "Koreanisch",
+    "fr": "Französisch",
+    "de": "Deutsch",
+    "es": "Spanisch",
+    "pt": "Portugiesisch",
+    "ru": "Russisch",
+    "ar": "Arabisch",
+    "it": "Italienisch"
+  }
+} 

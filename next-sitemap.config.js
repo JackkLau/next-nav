@@ -1,3 +1,5 @@
+const { locales } = require('./next-intl.config');
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   // 推荐使用不带 www 的版本，更简洁且符合现代趋势
@@ -83,7 +85,7 @@ module.exports = {
   },
 
   i18n: {
-    locales: ['en', 'zh-CN', 'zh-TW'],
+    locales: locales,
     defaultLocale: 'en'
   },
 }

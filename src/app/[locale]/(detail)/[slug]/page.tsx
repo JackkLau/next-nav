@@ -23,6 +23,8 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';   
+
 export async function generateMetadata(
   { params }: Props,
 ): Promise<Metadata> {
@@ -31,14 +33,13 @@ export async function generateMetadata(
   const { slug } = (await params)
 
   const navItem = navigationData.find((post) => post.id === slug)
-  const baseUrl = 'https://loverezhao.top';
 
   if (!navItem) {
     return {
       title: t('title'),
       description: t('description'),
       alternates: {
-        canonical: baseUrl,
+        canonical: siteUrl,
       },
     }
   }
@@ -47,16 +48,16 @@ export async function generateMetadata(
     title: `${navItem.name} - ${DefaultMetaData.title}`,
     description: navItem.description,
     alternates: {
-      canonical: `${baseUrl}/${navItem.id}`,
+      canonical: `${siteUrl}/${navItem.id}`,
     },
     openGraph: {
       title: navItem.name,
       description: navItem.description,
-      url: `${baseUrl}/${navItem.id}`,
+      url: `${siteUrl}/${navItem.id}`,
       siteName: DefaultMetaData.title,
       images: navItem.imgUrl ? [
         {
-          url: navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${baseUrl}${navItem.imgUrl}`,
+          url: navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`,
           width: 1200,
           height: 630,
           alt: navItem.name,
@@ -70,7 +71,7 @@ export async function generateMetadata(
       title: navItem.name,
       description: navItem.description,
       images: navItem.imgUrl ? [
-        navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${baseUrl}${navItem.imgUrl}`
+        navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`
       ] : undefined,
     },
   }
@@ -143,11 +144,11 @@ export default async function Home({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "url": `https://loverezhao.top/${navItem.id}`,
+    "url": `${siteUrl}/${navItem.id}`,
     "name": navItem.name,
     "description": navItem.description,
     "inLanguage": "zh-CN",
-    "image": navItem.imgUrl ? (navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `https://loverezhao.top${navItem.imgUrl}`) : undefined,
+    "image": navItem.imgUrl ? (navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`) : undefined,
     "sameAs": navItem.url ? [navItem.url] : undefined,
     "category": navItem.category,
     "isAccessibleForFree": true,

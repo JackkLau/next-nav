@@ -2,31 +2,15 @@ import {CategoryType, navigationData} from '@/data/navigation';
 import NaviItem from '@/components/navi-item';
 import SearchBar from '@/components/search-bar';
 import {Suspense} from 'react';
-import {Metadata} from 'next';
-import {DefaultMetaData} from '@/constant/metaData';
 import { useTranslations } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({locale}));
 }
 
-export const metadata: Metadata = {
-  title: DefaultMetaData.title,
-  description: DefaultMetaData.description,
-  alternates: {
-    canonical: 'https://loverezhao.top',
-  },
-  openGraph: {
-    title: DefaultMetaData.title,
-    description: DefaultMetaData.description,
-    url: 'https://loverezhao.top',
-    siteName: '价值导航',
-    locale: 'zh_CN',
-    type: 'website',
-  },
-};
+
 
 function SearchParamsComponent({locale}: {locale: string}) {
   setRequestLocale(locale);
@@ -37,7 +21,7 @@ function SearchParamsComponent({locale}: {locale: string}) {
     "@type": "ItemList",
     "name": t('site_collection_name') ,
     "description": t('site_collection_desc'),
-    "url": "https://loverezhao.top",
+    "url": siteUrl,
     "numberOfItems": navigationData.length,
     "itemListElement": navigationData.slice(0, 10).map((item, index) => ({
       "@type": "ListItem",

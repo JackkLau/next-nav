@@ -8,10 +8,10 @@ import { ReactNode } from 'react';
 import { Toaster } from 'sonner';
 import '../globals.css';
 import { routing } from '@/i18n/routing';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 export function generateStaticParams() {
-    return [{ locale: 'en' }, { locale: 'zh-CN' }, { locale: 'zh-TW' }];
+    return routing.locales.map((locale) => ({ locale }));
 }
 
 const geistSans = Geist({
@@ -24,77 +24,81 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
-export const locales = ['en', 'zh-CN', 'zh-TW'];
+export const locales = routing.locales;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';
 
-export const metadata: Metadata = {
-    title: DefaultMetaData.title,
-    description: DefaultMetaData.description,
-    keywords: DefaultMetaData.keywords,
-    authors: [{ name: '价值导航' }],
-    creator: '价值导航',
-    publisher: '价值导航',
-    formatDetection: {
-        email: false,
-        address: false,
-        telephone: false,
-    },
-    metadataBase: new URL('https://loverezhao.top'),
-    alternates: {
-        canonical: 'https://loverezhao.top',
-    },
-    openGraph: {
-        type: 'website',
-        locale: 'zh_CN',
-        url: 'https://loverezhao.top',
-        title: DefaultMetaData.title,
-        description: DefaultMetaData.description,
-        siteName: '价值导航',
-        images: [
-            {
-                url: '/favicon.png',
-                width: 1200,
-                height: 630,
-                alt: '价值导航',
-            },
-        ],
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: DefaultMetaData.title,
-        description: DefaultMetaData.description,
-        images: ['/favicon.png'],
-    },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
+
+export async function generateMetadata({ params }: { params: { locale: string } }) {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: 'Metadata' });
+    const siteName = t('site_name');
+    const siteDescription = t('description');
+    const siteTitle = t('title');
+    const siteKeywords = t('keywords').split(',');
+    return {
+        title: siteTitle,
+        description: siteDescription,
+        keywords: siteKeywords,
+        authors: [{ name: siteName }],
+        creator: siteName,
+        publisher: siteName,
+        formatDetection: {
+            email: false,
+            address: false,
+            telephone: false,
+        },
+        metadataBase: new URL(siteUrl),
+        alternates: {
+            canonical: siteUrl,
+        },
+        openGraph: {
+            type: 'website',
+            locale: 'zh_CN',
+            url: siteUrl,
+            title: siteTitle,
+            description: siteDescription,
+            siteName: siteName,
+            images: [
+                {
+                    url: '/favicon.png',
+                    width: 1200,
+                    height: 630,
+                    alt: siteName,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: siteTitle,
+            description: siteDescription,
+            images: ['/favicon.png'],
+        },
+        robots: {
             index: true,
             follow: true,
-            'max-video-preview': -1,
-            'max-image-preview': 'large',
-            'max-snippet': -1,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-video-preview': -1,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
         },
-    },
-    verification: {
-        google: 'your-google-verification-code', // 替换为你的 Google Search Console 验证码
-        other: {
-            'msvalidate.01': DefaultMetaData.other['msvalidate.01'],
-        },
-    },
-    other: DefaultMetaData.other,
-};
+        other: DefaultMetaData.other,
+    };
+}
 
 
 export default async function LocaleLayout({ children, params }: { children: ReactNode, params: { locale: string } }) {
     let messages;
     const { locale } = await params;
-    
+
     if (!hasLocale(routing.locales, locale)) {
         notFound();
-      }
-     
-      // Enable static rendering
-      setRequestLocale(locale);
+    }
+
+    // Enable static rendering
+    setRequestLocale(locale);
 
     try {
         messages = (await import(`../../messages/${locale}.json`)).default;
@@ -115,13 +119,13 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                             "@context": "https://schema.org",
                             "@type": "WebSite",
                             "name": "价值导航",
-                            "url": "https://loverezhao.top",
+                            "url": siteUrl,
                             "description": DefaultMetaData.description,
                             "inLanguage": "zh-CN",
                             "isAccessibleForFree": true,
                             "potentialAction": {
                                 "@type": "SearchAction",
-                                "target": "https://loverezhao.top?search={search_term_string}",
+                                "target": `${siteUrl}?search={search_term_string}`,
                                 "query-input": "required name=search_term_string"
                             }
                         })

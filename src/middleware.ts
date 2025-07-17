@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { routing } from './i18n/routing';
 
 const PUBLIC_FILE = /\.(.*)$/;
-const locales = ['en', 'zh-CN', 'zh-TW'];
+const locales = routing.locales;
 const defaultLocale = 'en';
 
 export function middleware(request: NextRequest) {

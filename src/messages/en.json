@@ -1,8 +1,10 @@
 {
   "greeting": "Hello",
   "Metadata": {
+    "site_name": "Navigation To Value",
     "title": "Navigation To Value|Discover Value|Discovery Page",
-    "description": "Navigation To Value(www.loverezhao.top) focuses on creating an efficient and convenient一站式网址导航平台，汇集全网优质分类站点，涵盖技术、工具、资源、营销、生活服务、学习办公、娱乐购物等20+核心类目。智能推荐热门网站，实时更新安全链接，助您快速定位所需内容，告别繁琐搜索！每日百万用户信赖的上网入口，让浏览更高效，体验更流畅。"
+    "description": "Navigation To Value (www.loverezhao.top) is dedicated to building an efficient and convenient one-stop website navigation platform, aggregating high-quality categorized sites from across the web. It covers over 20 core categories including technology, tools, resources, marketing, life services, study & office, entertainment, and shopping. The platform intelligently recommends popular websites and updates secure links in real time, helping you quickly find what you need and say goodbye to tedious searching! Trusted by millions of users every day, it is your efficient and smooth gateway to the internet.",
+    "keywords": "Navigation To Value,Discovery Page,Hot Sites,Safe Links,Daily Updates,Navigation Website,Categorized Sites,Useful Websites,Efficient Navigation,Marketing Navigation,Learning Resources,Technical Tools,Resource Sharing,Hot Sites Recommendation"
   },
   "switch_language": "Switch Language",
   "loading": "Loading...",
@@ -112,7 +114,16 @@
   },
   "lang": {
     "en": "English",
-    "zh_CN": "Simplified Chinese",
-    "zh_TW": "Traditional Chinese"
+    "zh_cn": "Simplified Chinese",
+    "zh_tw": "Traditional Chinese",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "fr": "French",
+    "de": "German",
+    "it": "Italian",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "ar": "Arabic"
   }
 } 

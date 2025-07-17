@@ -539,7 +539,13 @@ export const navigationData: NavigationItem[] = [
     description: '输入网址一键生成导航数据代码，便于维护 navigation.ts',
     favorite: false
   },
-
+  {
+    name: '办公人导航-实用的办公生活导航网站！',
+    url: 'https://www.bgrdh.com/',
+    imgUrl: 'https://icons.duckduckgo.com/ip3/www.bgrdh.com.ico',
+    category: CategoryType.navigation,
+    description: '办公人导航是一个实用的办公生活导航网站,致力于分享优质的网站网址及软件资源等内容,帮助大家节省时间,提高办公生活效率!',
+  },
 
 
 

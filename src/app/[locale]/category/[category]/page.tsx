@@ -17,6 +17,7 @@ type Props = {
   params: Promise<{ category: string, locale: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';
 
 export async function generateMetadata(
   { params }: Props,
@@ -28,7 +29,6 @@ export async function generateMetadata(
   
   // 如果英文标识符不存在，尝试作为中文名称处理（向后兼容）
   const finalCategoryName = categoryName || category
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';
   
   // 验证分类是否存在
   const categoryExists = categoryName || Object.values(CategoryType).includes(finalCategoryName)

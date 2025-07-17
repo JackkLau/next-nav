@@ -1,6 +1,5 @@
 import GlobalLayout from '@/components/global-layout';
 import { DefaultMetaData } from '@/constant/metaData';
-import { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';

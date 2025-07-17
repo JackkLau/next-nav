@@ -8,6 +8,7 @@ import {MenuData} from '@/data/left-menu';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import { useTranslations } from 'next-intl';
 import { topMenuMapping } from '@/data/top-menu';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 function Index({topMenu, sheetTrigger}: { topMenu: MenuData[]; sheetTrigger?: React.ReactNode }) {
   const t = useTranslations();
@@ -52,6 +53,8 @@ function Index({topMenu, sheetTrigger}: { topMenu: MenuData[]; sheetTrigger?: Re
               }
             </li>
           ))}
+          {/* 语言切换按钮，放在最右侧 */}
+          <li className="flex items-center ml-auto"><LanguageSwitcher /></li>
         </ul>
       </nav>
     </header>

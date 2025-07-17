@@ -12,7 +12,9 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Copy, ExternalLink, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { CategoryType } from '@/data/navigation'
+import { CategoryMapping, CategoryType } from '@/data/navigation'
+import { useTranslations } from 'next-intl'
+  
 
 
 interface MetaData {
@@ -32,6 +34,7 @@ interface GeneratedNavItem {
 }
 
 export default function NavGenPage() {
+  const t = useTranslations()
   const [url, setUrl] = useState('')
   const [category, setCategory] = useState('common')
   const [favorite, setFavorite] = useState(false)
@@ -67,12 +70,12 @@ export default function NavGenPage() {
   // 生成导航数据
   const generateNavData = async () => {
     if (!url) {
-      toast.error('请输入网站地址')
+      toast.error(t('tools.nav-gen.error.url'))
       return
     }
 
     if (!url.startsWith('http')) {
-      toast.error('请输入有效的网站地址（以 http:// 或 https:// 开头）')
+      toast.error(t('tools.nav-gen.error.url-format'))
       return
     }
 
@@ -99,7 +102,7 @@ export default function NavGenPage() {
       }
 
       // 格式化为代码字符串，符合 navigation.ts 格式
-      const formattedData = `  {
+      const formattedData = `{
     name: '${navItem.name}',
     url: '${navItem.url}',
     ${navItem.imgUrl ? `imgUrl: '${navItem.imgUrl}',` : ''}
@@ -110,10 +113,10 @@ export default function NavGenPage() {
   },`
 
       setGeneratedData(formattedData)
-      toast.success('导航数据生成成功！')
+      toast.success(t('tools.nav-gen.success'))
     } catch (error) {
       console.error('Error generating nav data:', error)
-      toast.error('生成失败，请检查网站地址是否正确')
+      toast.error(t('tools.nav-gen.error.generate-failed'))
     } finally {
       setLoading(false)
     }
@@ -123,28 +126,28 @@ export default function NavGenPage() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generatedData)
-      toast.success('已复制到剪贴板')
+      toast.success(t('tools.nav-gen.success.copy'))
     } catch (error) {
       console.error('Failed to copy:', error)
-      toast.error('复制失败')
+      toast.error(t('tools.nav-gen.error.copy-failed'))
     }
   }
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">导航数据生成器</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('tools.nav-gen.title')}</h1>
         <p className="text-muted-foreground">
-          输入网站地址，自动生成符合格式的导航数据，方便添加到 navigation.ts 文件中
+          {t('tools.nav-gen.description')}
         </p>
         {/* 使用指南 */}
         <div className="rounded-md bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-800 mt-4">
-          <strong>使用指南：</strong>
+          <strong>{t('tools.nav-gen.guide.title')}</strong>
           <ol className="list-decimal list-inside mt-1 space-y-1">
-            <li>输入你要收录的网址（需以 <span className="font-mono">http://</span> 或 <span className="font-mono">https://</span> 开头）</li>
-            <li>选择合适的分类，可选“收藏”或“需梯子”</li>
-            <li>点击下方“生成导航数据”按钮</li>
-            <li>复制生成的代码，粘贴到 <span className="font-mono">navigation.ts</span> 文件中</li>
+            <li>{t('tools.nav-gen.guide.step1')}</li>
+            <li>{t('tools.nav-gen.guide.step2')}</li>
+            <li>{t('tools.nav-gen.guide.step3')}</li>
+            <li>{t('tools.nav-gen.guide.step4')}</li>
           </ol>
         </div>
       </div>
@@ -153,12 +156,12 @@ export default function NavGenPage() {
         {/* 输入区域 */}
         <Card>
           <CardHeader>
-            <CardTitle>网站信息</CardTitle>
-            <CardDescription>输入网站地址和基本信息</CardDescription>
+            <CardTitle>{t('tools.nav-gen.form.title')}</CardTitle>
+            <CardDescription>{t('tools.nav-gen.form.description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="url">网站地址 *</Label>
+              <Label htmlFor="url">{t('tools.nav-gen.form.url')}</Label>
               <Input
                 id="url"
                 type="url"
@@ -171,7 +174,7 @@ export default function NavGenPage() {
             {/* 分类、收藏、需梯子表单样式优化（PC端对齐） */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-4">
               <div className="flex flex-1 items-center gap-2">
-                <Label htmlFor="category" className="mb-0 whitespace-nowrap">分类</Label>
+                <Label htmlFor="category" className="mb-0 whitespace-nowrap">{t('tools.nav-gen.form.category')}</Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="w-full md:w-40">
                     <SelectValue />
@@ -179,7 +182,7 @@ export default function NavGenPage() {
                   <SelectContent>
                     {Object.entries(CategoryType).map(([key, value]) => (
                       <SelectItem key={key} value={key}>
-                        {value}
+                        {t(`category.${CategoryMapping[value as keyof typeof CategoryMapping]}`) }
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -191,7 +194,7 @@ export default function NavGenPage() {
                   checked={favorite}
                   onCheckedChange={setFavorite}
                 />
-                <Label htmlFor="favorite" className="mb-0 whitespace-nowrap">收藏</Label>
+                <Label htmlFor="favorite" className="mb-0 whitespace-nowrap">{t('tools.nav-gen.form.favorite')}</Label>
               </div>
               <div className="flex flex-1 items-center gap-2">
                 <Switch
@@ -199,7 +202,7 @@ export default function NavGenPage() {
                   checked={needVPN}
                   onCheckedChange={setNeedVPN}
                 />
-                <Label htmlFor="needVPN" className="mb-0 whitespace-nowrap">需梯子</Label>
+                <Label htmlFor="needVPN" className="mb-0 whitespace-nowrap">{t('tools.nav-gen.form.needVPN')}</Label>
               </div>
             </div>
 
@@ -211,12 +214,12 @@ export default function NavGenPage() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  生成中...
+                  {t('tools.nav-gen.form.loading')}
                 </>
               ) : (
                 <>
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  生成导航数据
+                  {t('tools.nav-gen.form.generate')}
                 </>
               )}
             </Button>
@@ -227,25 +230,25 @@ export default function NavGenPage() {
         {Object.keys(metaData).length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>网站元数据</CardTitle>
-              <CardDescription>自动获取的网站信息</CardDescription>
+              <CardTitle>{t('tools.nav-gen.form.meta-data.title')}</CardTitle>
+              <CardDescription>{t('tools.nav-gen.form.meta-data.description')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {metaData.title && (
                 <div>
-                  <Label className="text-sm font-medium">标题</Label>
+                  <Label className="text-sm font-medium">{t('tools.nav-gen.form.meta-data.title')}</Label>
                   <p className="text-sm text-muted-foreground">{metaData.title}</p>
                 </div>
               )}
               {metaData.description && (
                 <div>
-                  <Label className="text-sm font-medium">描述</Label>
+                  <Label className="text-sm font-medium">{t('tools.nav-gen.form.meta-data.description')}</Label>
                   <p className="text-sm text-muted-foreground">{metaData.description}</p>
                 </div>
               )}
               {metaData.favicon && (
                 <div>
-                  <Label className="text-sm font-medium">图标</Label>
+                  <Label className="text-sm font-medium">{t('tools.nav-gen.form.meta-data.favicon')}</Label>
                   <div className="flex items-center space-x-2">
                     <Image
                       width={16}
@@ -271,12 +274,12 @@ export default function NavGenPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>生成的导航数据</CardTitle>
-                  <CardDescription>可直接复制到 navigation.ts 文件中</CardDescription>
+                  <CardTitle>{t('tools.nav-gen.form.generated-data.title')}</CardTitle>
+                  <CardDescription>{t('tools.nav-gen.form.generated-data.description')}</CardDescription>
                 </div>
                 <Button variant="outline" size="sm" onClick={copyToClipboard}>
                   <Copy className="mr-2 h-4 w-4" />
-                  复制
+                  {t('tools.nav-gen.form.generated-data.copy')}
                 </Button>
               </div>
             </CardHeader>
@@ -289,7 +292,7 @@ export default function NavGenPage() {
                 />
                 <div className="absolute top-2 right-2">
                   <Badge variant="secondary" className="text-xs">
-                    JSON 格式
+                    {t('tools.nav-gen.form.generated-data.json-format')}
                   </Badge>
                 </div>
               </div>

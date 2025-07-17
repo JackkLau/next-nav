@@ -68,5 +68,51 @@
   "related_sites": "Related Sites",
   "related_sites_view": "View",
   "related_sites_detail": "Detail",
-  "related_sites_view_more": "View More"
+  "related_sites_view_more": "View More",
+  "tools": {
+    "nav-gen": {
+      "title": "Navigation Data Generator",
+      "description": "Enter the site address and basic information",
+      "guide": {
+        "title": "Usage Guide",
+        "step1": "Enter the URL of the site you want to add",
+        "step2": "Select the appropriate category",
+        "step3": "Click the 'Generate Navigation Data' button",
+        "step4": "Copy the generated code and paste it into the 'navigation.ts' file"
+      },
+      "form": {
+        "title": "Site Information",
+        "description": "Enter the site address and basic information",
+        "url": "Site Address *",
+        "category": "Category",
+        "favorite": "Favorite",
+        "needVPN": "Need VPN",
+        "generate": "Generate Navigation Data",
+        "loading": "Generating...",
+        "success": "Navigation data generated successfully!",
+        "error": {
+          "url": "Please enter a valid site address",
+          "url-format": "Please enter a valid site address (start with http:// or https://)",
+          "generate-failed": "Failed to generate navigation data, please check the site address",
+          "copy-failed": "Failed to copy"
+        },
+        "meta-data": {
+          "title": "Site Metadata",
+          "description": "Automatically obtained site information",
+          "favicon": "Favicon"
+        },
+        "generated-data": {
+          "title": "Generated Navigation Data",
+          "description": "Can be directly copied to the 'navigation.ts' file",
+          "copy": "Copy",
+          "json-format": "JSON Format"
+        }
+      }
+    }
+  },
+  "lang": {
+    "en": "English",
+    "zh_CN": "Simplified Chinese",
+    "zh_TW": "Traditional Chinese"
+  }
 } 

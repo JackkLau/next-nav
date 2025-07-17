@@ -67,5 +67,51 @@
   "related_sites": "相關推薦",
   "related_sites_view": "查看",
   "related_sites_detail": "詳情", 
-  "related_sites_view_more": "查看更多"
+  "related_sites_view_more": "查看更多",
+  "tools": {
+    "nav-gen": {
+      "title": "導航數據生成器",
+      "description": "輸入網站地址和基本信息",
+      "guide": {
+        "title": "使用指南",
+        "step1": "輸入要收錄的網址（需以 http:// 或 https:// 開頭）",
+        "step2": "選擇合適的分類，可選“收藏”或“需梯子”",
+        "step3": "點擊下方“生成導航數據”按鈕",
+        "step4": "複製生成的代碼，粘貼到 navigation.ts 文件中"
+      },
+      "form": {
+        "title": "網站信息",
+        "description": "輸入網站地址和基本信息",
+        "url": "網站地址 *",
+        "category": "分類",
+        "favorite": "收藏",
+        "needVPN": "需梯子",
+        "generate": "生成導航數據",
+        "loading": "生成中...",
+        "success": "導航數據生成成功！",
+        "error": {
+          "url": "請輸入有效的網站地址（以 http:// 或 https:// 開頭）",
+          "url-format": "請輸入有效的網站地址（以 http:// 或 https:// 開頭）",
+          "generate-failed": "生成失敗，請檢查網站地址是否正確",
+          "copy-failed": "複製失敗"
+        },
+        "meta-data": {
+          "title": "網站元數據",
+          "description": "自動獲取的網站信息",
+          "favicon": "圖標"
+        },
+        "generated-data": {
+          "title": "生成的導航數據",
+          "description": "可直接複製到 navigation.ts 文件中",
+          "copy": "複製",
+          "json-format": "JSON 格式"
+        }
+      }
+    }
+  },
+  "lang": {
+    "en": "英語",      
+    "zh_CN": "簡體中文",
+    "zh_TW": "繁體中文"
+  }
 } 

@@ -3,7 +3,7 @@
 import React from 'react';
 import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 import Link from 'next/link';
-import {NavigationItem} from '@/data/navigation';
+import {CategoryMapping, NavigationItem} from '@/data/navigation';
 import Image from 'next/image';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowAltCircleRight, faStar} from '@fortawesome/free-regular-svg-icons';
@@ -28,9 +28,9 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
     ? `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-${gridCols} gap-4`
     : 'flex flex-col gap-2 md:gap-3 md:flex-col md:overflow-visible';
   return (
-    <section aria-labelledby={title} className="w-full">
+    <section aria-labelledby={t(`category.${title}`)} className="w-full">
       <div className="flex items-center justify-between mb-2 pl-2 pr-2">
-        {!hideTitle && <h2 id={title} className="text-xl font-bold text-dark">{title}</h2>}
+        {!hideTitle && <h2 id={title} className="text-xl font-bold text-dark">{t(`category.${title}`)}</h2>}
         {!showAll && navItems.length > 5 && (
           <Link
             href={`/category/${getCategorySlug(title)}`}

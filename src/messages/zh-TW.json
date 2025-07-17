@@ -38,7 +38,8 @@
   "top_menu": {
     "home": "首頁",
     "favorite": "收藏",
-    "follow_me": "關注我",
+    "follow_me": "關注我",  
+    "submit_collection": "提交收錄",
     "more_value_content": "發現更多有價值內容"
   },
   "search_tool": {

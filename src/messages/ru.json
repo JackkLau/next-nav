@@ -38,7 +38,8 @@
   "top_menu": {
     "home": "Главная",
     "favorite": "Избранное",
-    "follow_me": "Подписаться",
+    "follow_me": "Подписаться", 
+    "submit_collection": "Отправить коллекцию",
     "more_value_content": "Откройте больше ценных материалов"
   },
   "search_tool": {

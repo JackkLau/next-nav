@@ -38,7 +38,8 @@
   "top_menu": {
     "home": "Início",
     "favorite": "Favoritos",
-    "follow_me": "Siga-me",
+    "follow_me": "Siga-me", 
+    "submit_collection": "Enviar coleção",
     "more_value_content": "Descubra mais conteúdo valioso"
   },
   "search_tool": {

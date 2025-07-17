@@ -59,12 +59,12 @@ export default function LanguageSwitcher() {
       >
         <span className="flex items-center">
           <CountryFlag countryCode={currentLang.country} svg style={{ width: 18, height: 18, marginRight: 6 }} />
-          {t(currentLang.labelKey)}
+          <span className="inline truncate">{t(currentLang.labelKey)}</span>
         </span>
         <svg className="ml-2 w-3 h-3" viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z" fill="currentColor" /></svg>
       </button>
       {open && (
-        <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-auto">
+        <ul className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow-lg max-h-60 overflow-hidden">
           {languages.map((lang) => (
             <li
               key={lang.code}
@@ -75,7 +75,7 @@ export default function LanguageSwitcher() {
               onClick={() => handleSelect(lang.code)}
             >
               <CountryFlag countryCode={lang.country} svg style={{ width: 18, height: 18, marginRight: 6 }} />
-              {t(lang.labelKey)}
+              <span className="inline truncate">{t(lang.labelKey)}</span>
             </li>
           ))}
         </ul>

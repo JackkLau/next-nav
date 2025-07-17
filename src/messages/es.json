@@ -39,6 +39,7 @@
     "home": "Inicio",
     "favorite": "Favoritos",
     "follow_me": "Sígueme",
+    "submit_collection": "Enviar colección",
     "more_value_content": "Descubre más contenido valioso"
   },
   "search_tool": {
@@ -118,7 +119,7 @@
     "zh_tw": "Chino tradicional",
     "ja": "Japonés",
     "ko": "Coreano",
-    "fr": "Francés",
+    "fr": "Francés",  
     "de": "Alemán",
     "es": "Español",
     "pt": "Portugués",

@@ -38,7 +38,8 @@
   "top_menu": {
     "home": "홈",
     "favorite": "즐겨찾기",
-    "follow_me": "팔로우하기",
+    "follow_me": "팔로우하기",  
+    "submit_collection": "콜렉션 제출",
     "more_value_content": "더 가치 있는 콘텐츠 발견"
   },
   "search_tool": {

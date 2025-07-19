@@ -9,6 +9,7 @@ export function getCategorySlug(categoryName: string): string {
     '镜像站': 'mirror',
     '导航发现': 'navigation',
     '影视娱乐': 'entertainment',
+    '游戏': 'game',
   };
   return categoryToSlug[categoryName] || categoryName;
 } 

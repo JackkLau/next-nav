@@ -20,7 +20,8 @@
     "resources": "Collection de ressources",
     "mirror": "Sites miroirs",
     "navigation": "Découverte de navigation",
-    "entertainment": "Divertissement vidéo"
+    "entertainment": "Divertissement vidéo",
+    "game": "Jeux"
   },
   "category_count": "{count} sites de qualité trouvés au total",
   "back_home": "Retour à l'accueil",
@@ -77,6 +78,7 @@
     "nav-gen": {
       "title": "Générateur de données de navigation",
       "description": "Saisissez l'adresse du site et les informations de base",
+      "success": "Données de navigation générées avec succès !",
       "guide": {
         "title": "Guide d'utilisation",
         "step1": "Saisissez l'URL du site à ajouter (doit commencer par http:// ou https://)",

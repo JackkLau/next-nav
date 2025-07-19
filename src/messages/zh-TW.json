@@ -20,7 +20,9 @@
     "resources": "資源收藏",
     "mirror": "鏡像站",
     "navigation": "導航發現",
-    "entertainment": "影視娛樂"
+    "entertainment": "影視娛樂",
+    "game": "遊戲"
+
   },
   "category_count": "共找到 {count} 個優質網站",
   "back_home": "返回首頁",
@@ -77,6 +79,7 @@
     "nav-gen": {
       "title": "導航數據生成器",
       "description": "輸入網站地址和基本信息",
+      "success": "導航數據生成成功！",
       "guide": {
         "title": "使用指南",
         "step1": "輸入要收錄的網址（需以 http:// 或 https:// 開頭）",

@@ -11,6 +11,7 @@ export const CategoryType: {
   mirror: '镜像站',
   navigation: '导航发现',
   entertainment: '影视娱乐',
+  game: '游戏',
 }
 
 // 分类映射表：中文名称 -> 英文标识符
@@ -26,6 +27,7 @@ export const CategoryMapping: {
   '镜像站': 'mirror',
   '导航发现': 'navigation',
   '影视娱乐': 'entertainment',
+  '游戏': 'game',
 }
 
 // 英文标识符 -> 中文名称映射
@@ -41,6 +43,7 @@ export const CategoryNameMapping: {
   'mirror': '镜像站',
   'navigation': '导航发现',
   'entertainment': '影视娱乐',
+  'game': '游戏',
 }
 
 export interface NavigationItem {
@@ -545,6 +548,21 @@ export const navigationData: NavigationItem[] = [
     imgUrl: 'https://icons.duckduckgo.com/ip3/www.bgrdh.com.ico',
     category: CategoryType.navigation,
     description: '办公人导航是一个实用的办公生活导航网站,致力于分享优质的网站网址及软件资源等内容,帮助大家节省时间,提高办公生活效率!',
+  },
+  {
+    name: 'Poki (宝玩) - 免费在线小游戏 - 马上玩！',
+    url: 'https://poki.com/',
+    imgUrl: 'https://a.poki-cdn.com/icons/favicon-32x32.png',
+    category: CategoryType.game,
+    description: '与Poki (宝玩)一起探索免费在线游戏的世界！即刻玩耍，无需下载，享受与所有设备兼容的游戏。',
+    
+  },
+  {
+    name: 'Sweetygame.com',
+    url: 'https://www.sweetygame.com/',
+    imgUrl: 'https://www.sweetygame.com/favicon.ico',
+    category: CategoryType.game,
+    description: 'Sweetygame is a professional game studio that mainly produces cute, fashion, and celebrity dress up games. We have about 11 years experience in creating high quality dress up games. And made many popular ones.        Now sweetygame.com brings princess dress up series. You can play the most fashionable and beautiful princess games here. Every girl has a princess dream, and we make your dreams come true.Every girl can be a princess! :) We also accept dress up and make up game commissions. If you have a site, and you want some great games, please contact us for more information. Please check the Commission Infos for more.',
   },
 
 

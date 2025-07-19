@@ -39,7 +39,7 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list">
         {relatedSites.map((site) => (
-          <article key={site.id} role="listitem" className="group block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+          <article key={site.id} role="listitem" className="relative group block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
             <Link
               href={`/${locale}/${site.id}`}
               

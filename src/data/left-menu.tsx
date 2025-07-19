@@ -7,7 +7,8 @@ import {
   faCompass,
   faPeopleGroup,
   faPersonChalkboard,
-  faScrewdriverWrench
+  faScrewdriverWrench,
+  faGamepad
 } from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
@@ -27,6 +28,7 @@ export const CategoryIconMap: {[key: string]: IconDefinition} = {
   '镜像站': faClone,
   '导航发现': faCompass,
   '影视娱乐': faCamera,
+  '游戏': faGamepad,
 }
 
 // 过滤数据，只保留 category，并且去除重复的 category

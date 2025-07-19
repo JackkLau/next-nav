@@ -1,18 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react';
-
-// 分类名称到英文标识符的映射
-const categoryToSlug: { [key: string]: string } = {
-  '常用网站': 'common',
-  '优质社区': 'community',
-  '实用工具': 'tools',
-  '远程机会': 'remote',
-  '个人网站': 'personal',
-  '资源收藏': 'resources',
-  '镜像站': 'mirror',
-  '导航发现': 'navigation',
-  '影视娱乐': 'entertainment',
-}
+import { CategoryMapping } from '@/data/navigation';
 
 /**
  * 将中文分类名称转换为英文标识符
@@ -20,7 +8,7 @@ const categoryToSlug: { [key: string]: string } = {
  * @returns 英文标识符
  */
 export function getCategorySlug(categoryName: string): string {
-  return categoryToSlug[categoryName] || categoryName
+  return CategoryMapping[categoryName] || categoryName 
 }
 
 const FAVORITE_KEY = 'favoriteSites';

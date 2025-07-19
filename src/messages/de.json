@@ -20,7 +20,8 @@
     "resources": "Ressourcensammlung",
     "mirror": "Spiegelseiten",
     "navigation": "Navigation entdecken",
-    "entertainment": "Film & Unterhaltung"
+    "entertainment": "Film & Unterhaltung",
+    "game": "Spiele"
   },
   "category_count": "Insgesamt {count} hochwertige Webseiten gefunden",
   "back_home": "Zurück zur Startseite",
@@ -77,6 +78,7 @@
     "nav-gen": {
       "title": "Navigationsdaten-Generator",
       "description": "Webseitenadresse und Basisinformationen eingeben",
+      "success": "Navigationsdaten erfolgreich generiert!",
       "guide": {
         "title": "Anleitung",
         "step1": "Geben Sie die aufzunehmende Webseiten-URL ein (muss mit http:// oder https:// beginnen)",

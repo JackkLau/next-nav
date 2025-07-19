@@ -20,7 +20,8 @@
     "resources": "Collezione di risorse",
     "mirror": "Siti mirror",
     "navigation": "Scoperta di navigazione",
-    "entertainment": "Intrattenimento video"
+    "entertainment": "Intrattenimento video",
+    "game": "Giochi"
   },
   "category_count": "Trovati in totale {count} siti di qualità",
   "back_home": "Torna alla home",
@@ -77,6 +78,7 @@
     "nav-gen": {
       "title": "Generatore di dati di navigazione",
       "description": "Inserisci l'indirizzo del sito e le informazioni di base",
+      "success": "Dati di navigazione generati con successo!",
       "guide": {
         "title": "Guida all'uso",
         "step1": "Inserisci l'URL del sito che desideri aggiungere (deve iniziare con http:// o https://)",

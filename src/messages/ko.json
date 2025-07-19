@@ -20,7 +20,8 @@
     "resources": "리소스 모음",
     "mirror": "미러 사이트",
     "navigation": "내비게이션 발견",
-    "entertainment": "영화/엔터테인먼트"
+    "entertainment": "영화/엔터테인먼트",
+    "game": "게임"
   },
   "category_count": "총 {count}개의 우수 사이트를 찾았습니다",
   "back_home": "홈으로 돌아가기",
@@ -77,6 +78,7 @@
     "nav-gen": {
       "title": "내비게이션 데이터 생성기",
       "description": "사이트 주소와 기본 정보를 입력하세요",
+      "success": "내비게이션 데이터가 성공적으로 생성되었습니다!",
       "guide": {
         "title": "사용 가이드",
         "step1": "등록할 웹사이트 주소를 입력하세요(http:// 또는 https://로 시작해야 합니다)",

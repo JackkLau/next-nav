@@ -20,7 +20,8 @@
     "resources": "Resources",
     "mirror": "Mirror Sites",
     "navigation": "Navigation Discovery",
-    "entertainment": "Entertainment"
+    "entertainment": "Entertainment",
+    "game": "Game"
   },
   "category_count": "Found {count} quality sites",
   "back_home": "Back to Home",
@@ -77,6 +78,7 @@
     "nav-gen": {
       "title": "Navigation Data Generator",
       "description": "Enter the site address and basic information",
+      "success": "Navigation data generated successfully!",
       "guide": {
         "title": "Usage Guide",
         "step1": "Enter the URL of the site you want to add",

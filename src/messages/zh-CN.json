@@ -20,7 +20,8 @@
     "resources": "资源收藏",
     "mirror": "镜像站",
     "navigation": "导航发现",
-    "entertainment": "影视娱乐"
+    "entertainment": "影视娱乐",
+    "game": "游戏"
   },
   "category_count": "共找到 {count} 个优质网站",
   "back_home": "返回首页",
@@ -77,6 +78,7 @@
     "nav-gen": {
       "title": "导航数据生成器",
       "description": "输入网站地址和基本信息",
+      "success": "导航数据生成成功！",
       "guide": {
         "title": "使用指南",
         "step1": "输入你要收录的网址（需以 http:// 或 https:// 开头）",

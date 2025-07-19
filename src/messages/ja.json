@@ -20,7 +20,8 @@
     "resources": "リソースコレクション",
     "mirror": "ミラーサイト",
     "navigation": "ナビゲーション発見",
-    "entertainment": "映画・エンタメ"
+    "entertainment": "映画・エンタメ",
+    "game": "ゲーム"
   },
   "category_count": "合計 {count} 件の優良サイトが見つかりました",
   "back_home": "ホームに戻る",
@@ -77,6 +78,7 @@
     "nav-gen": {
       "title": "ナビゲーションデータジェネレーター",
       "description": "サイトアドレスと基本情報を入力",
+      "success": "ナビゲーションデータが正常に生成されました！",
       "guide": {
         "title": "使用ガイド",
         "step1": "登録したいウェブサイトのURLを入力してください（http:// または https:// で始まる必要があります）",

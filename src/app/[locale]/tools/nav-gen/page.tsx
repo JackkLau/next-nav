@@ -43,10 +43,6 @@ export default function NavGenPage() {
   const [metaData, setMetaData] = useState<MetaData>({})
   const [generatedData, setGeneratedData] = useState<string>('')
 
-  // 生成图标路径
-  const generateIconPath = (domain: string) => {
-    return `https://icons.duckduckgo.com/ip3/${domain}.ico`
-  }
 
   // 获取网站元数据
   const fetchMetaData = async (url: string) => {
@@ -94,7 +90,7 @@ export default function NavGenPage() {
       const navItem: GeneratedNavItem = {
         name: siteName,
         url: url,
-        imgUrl: generateIconPath(domain),
+        imgUrl: meta.favicon || '',
         category: CategoryType[category as keyof typeof CategoryType],
         favorite: favorite,
         description: meta.description || '',

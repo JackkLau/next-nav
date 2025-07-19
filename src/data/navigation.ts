@@ -564,10 +564,27 @@ export const navigationData: NavigationItem[] = [
     category: CategoryType.game,
     description: 'Sweetygame is a professional game studio that mainly produces cute, fashion, and celebrity dress up games. We have about 11 years experience in creating high quality dress up games. And made many popular ones.        Now sweetygame.com brings princess dress up series. You can play the most fashionable and beautiful princess games here. Every girl has a princess dream, and we make your dreams come true.Every girl can be a princess! :) We also accept dress up and make up game commissions. If you have a site, and you want some great games, please contact us for more information. Please check the Commission Infos for more.',
   },
-
-
-
-
+  {
+    name: '适合所有年龄的免费线上游戏 - 今天就来体验！ - Y8.com',
+    url: 'https://zh.y8.com/',
+    imgUrl: 'https://img.y8.com/mobile_launch_icons/y8-192.png',
+    category: CategoryType.game,
+    description: '探索最佳在线免费游戏 - 沉浸在充满乐趣和冒险的世界中。探索数千款精彩游戏，现在就开始吧！',
+  },
+  {
+    name: '小霸王，其乐无穷 。红白机，FC在线游戏，街机游戏，街机在线，NES games，NES games online，Super Mario',
+    url: 'https://www.yikm.net/',
+    imgUrl: 'https://img.1990i.com/f.png',
+    category: CategoryType.game,
+    description: '魂斗罗，超级玛丽，热血足球，三国志，合金弹头，拳皇。这些小时候的回忆，黑白电视机前玩着小霸王游戏机的那种感觉令人怀念，希望大家可以找回童年的快乐',
+  },
+  {
+    name: 'slowroads',
+    url: 'https://slowroads.io/',
+    imgUrl: 'https://slowroads.io/favicon.svg',
+    category: CategoryType.game,
+    description: 'Endless driving zen',
+  },
 
 
 ].map((item, index) => ({...item, id: String(index + 1)}));

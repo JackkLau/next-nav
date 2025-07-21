@@ -5,7 +5,6 @@ import RelatedSites from '@/components/related-sites';
 import SiteIcon from '@/components/ui/site-icon';
 import {redirect} from 'next/navigation';
 import {Metadata} from 'next';
-import {DefaultMetaData} from '@/constant/metaData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faStar, 

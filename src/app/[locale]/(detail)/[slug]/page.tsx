@@ -45,16 +45,16 @@ export async function generateMetadata(
   }
 
   return {
-    title: `${navItem.name} - ${DefaultMetaData.title}`,
-    description: navItem.description,
+    title: `${navItem.name} - ${t('title')}`,
+    description: `${t('title')} ${navItem.description}`,
     alternates: {
       canonical: `${siteUrl}/${navItem.id}`,
     },
     openGraph: {
       title: navItem.name,
-      description: navItem.description,
+      description: `${t('title')} ${navItem.description}`,
       url: `${siteUrl}/${navItem.id}`,
-      siteName: DefaultMetaData.title,
+      siteName: t('title'),
       images: navItem.imgUrl ? [
         {
           url: navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`,
@@ -63,13 +63,13 @@ export async function generateMetadata(
           alt: navItem.name,
         }
       ] : undefined,
-      locale: 'zh_CN',
+      locale: 'en',
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: navItem.name,
-      description: navItem.description,
+      description: `${t('title')} ${navItem.description}`,
       images: navItem.imgUrl ? [
         navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`
       ] : undefined,

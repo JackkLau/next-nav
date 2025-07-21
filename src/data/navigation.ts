@@ -142,7 +142,7 @@ export const navigationData: NavigationItem[] = [
     url: 'https://gratisography.com/',
     imgUrl: 'https://gratisography.com/wp-content/themes/gratis-v3/favicon.png',
     category: CategoryType.resources,
-    description: 'The world's quirkiest collection of free high-resolution pictures you can use on your personal and commercial projects. All completely free of copyright restrictions. New photos added every week!',
+    description: `The world's quirkiest collection of free high-resolution pictures you can use on your personal and commercial projects. All completely free of copyright restrictions. New photos added every week!`,
     needVPN: true,
   },
   {

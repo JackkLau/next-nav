@@ -14,16 +14,17 @@ import { Copy, ExternalLink, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { CategoryMapping, CategoryType } from '@/data/navigation'
 import { useTranslations } from 'next-intl'
-  
+
 
 
 interface MetaData {
   title?: string
   description?: string
-  favicon?: string 
+  favicon?: string
 }
 
 interface GeneratedNavItem {
+  slug: string
   name: string
   url: string
   imgUrl?: string
@@ -31,6 +32,26 @@ interface GeneratedNavItem {
   favorite?: boolean
   description?: string
   needVPN?: boolean
+  sourceLocale: string
+  status: 'draft'
+  updatedAt: string
+}
+
+function createSlug(name: string, url: string) {
+  const fromName = name
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 64)
+
+  if (fromName) return fromName
+
+  return new URL(url).hostname
+    .replace(/^www\./, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
 }
 
 export default function NavGenPage() {
@@ -66,12 +87,12 @@ export default function NavGenPage() {
   // 生成导航数据
   const generateNavData = async () => {
     if (!url) {
-      toast.error(t('tools.nav-gen.error.url'))
+      toast.error(t('tools.nav-gen.form.error.url'))
       return
     }
 
     if (!url.startsWith('http')) {
-      toast.error(t('tools.nav-gen.error.url-format'))
+      toast.error(t('tools.nav-gen.form.error.url-format'))
       return
     }
 
@@ -88,31 +109,24 @@ export default function NavGenPage() {
 
       // 生成导航项
       const navItem: GeneratedNavItem = {
+        slug: createSlug(siteName, url),
         name: siteName,
         url: url,
         imgUrl: meta.favicon || '',
-        category: CategoryType[category as keyof typeof CategoryType],
+        category,
         favorite: favorite,
         description: meta.description || '',
         needVPN: needVPN,
+        sourceLocale: 'en',
+        status: 'draft',
+        updatedAt: new Date().toISOString().slice(0, 10),
       }
 
-      // 格式化为代码字符串，符合 navigation.ts 格式
-      const formattedData = `{
-    name: '${navItem.name}',
-    url: '${navItem.url}',
-    ${navItem.imgUrl ? `imgUrl: '${navItem.imgUrl}',` : ''}
-    category: CategoryType.${category},
-    ${navItem.favorite ? 'favorite: true,' : ''}
-    ${navItem.description ? `description: '${navItem.description}',` : ''}
-    ${navItem.needVPN ? 'needVPN: true,' : ''}
-  },`
-
-      setGeneratedData(formattedData)
+      setGeneratedData(JSON.stringify(navItem, null, 2))
       toast.success(t('tools.nav-gen.success'))
     } catch (error) {
       console.error('Error generating nav data:', error)
-      toast.error(t('tools.nav-gen.error.generate-failed'))
+      toast.error(t('tools.nav-gen.form.error.generate-failed'))
     } finally {
       setLoading(false)
     }
@@ -122,10 +136,10 @@ export default function NavGenPage() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generatedData)
-      toast.success(t('tools.nav-gen.success.copy'))
+      toast.success(t('tools.nav-gen.success'))
     } catch (error) {
       console.error('Failed to copy:', error)
-      toast.error(t('tools.nav-gen.error.copy-failed'))
+      toast.error(t('tools.nav-gen.form.error.copy-failed'))
     }
   }
 
@@ -202,8 +216,8 @@ export default function NavGenPage() {
               </div>
             </div>
 
-            <Button 
-              onClick={generateNavData} 
+            <Button
+              onClick={generateNavData}
               disabled={loading || !url}
               className="w-full"
             >
@@ -249,8 +263,8 @@ export default function NavGenPage() {
                     <Image
                       width={16}
                       height={16}
-                      src={metaData.favicon} 
-                      alt="favicon" 
+                      src={metaData.favicon}
+                      alt="favicon"
                       className="w-4 h-4"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none'
@@ -298,4 +312,4 @@ export default function NavGenPage() {
       </div>
     </div>
   )
-} 
+}

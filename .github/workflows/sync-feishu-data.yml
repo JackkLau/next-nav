@@ -1,0 +1,58 @@
+name: Sync navigation data from Feishu
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Import and validate Feishu records
+        run: npm run data:sync:feishu -- --write
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          FEISHU_BITABLE_APP_TOKEN: ${{ secrets.FEISHU_BITABLE_APP_TOKEN }}
+          FEISHU_BITABLE_TABLE_ID: ${{ secrets.FEISHU_BITABLE_TABLE_ID }}
+      - name: Detect data changes
+        run: |
+          if git diff --quiet -- src/data/sites.json; then
+            echo "has_data_changes=false" >> "$GITHUB_ENV"
+          else
+            echo "has_data_changes=true" >> "$GITHUB_ENV"
+          fi
+      - name: Verify imported data
+        if: env.has_data_changes == 'true'
+        run: |
+          npm run check
+          npm run lint
+          npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://loverezhao.top
+          INDEXABLE_LOCALES: en
+      - name: Create pull request
+        if: env.has_data_changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH_NAME: automation/feishu-sync-${{ github.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH_NAME"
+          git add src/data/sites.json
+          git commit -m "data: sync navigation records from Feishu"
+          git push --set-upstream origin "$BRANCH_NAME"
+          gh pr create --base "${{ github.event.repository.default_branch }}" --head "$BRANCH_NAME" --title "data: sync navigation records from Feishu" --body "Automated Feishu Base import. Data validation, lint, type checking, and production build all passed."
+      - name: Report no changes
+        if: env.has_data_changes == 'false'
+        run: echo "Feishu data already matches src/data/sites.json."

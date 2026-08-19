@@ -3,7 +3,7 @@
   "Metadata": {
     "site_name": "Navigation de Valeur",
     "title": "Navigation de Valeur | Découvrir la valeur | Page de découverte",
-    "description": "Navigation de Valeur (www.loverezhao.top) se consacre à la création d'une plateforme de navigation web tout-en-un, efficace et pratique, rassemblant des sites de haute qualité dans plus de 20 catégories principales, dont la technologie, les outils, les ressources, le marketing, les services de la vie, l'apprentissage et le bureau, le divertissement et le shopping. Recommandation intelligente de sites populaires, mise à jour en temps réel des liens sécurisés, vous aidant à trouver rapidement ce dont vous avez besoin et à éviter les recherches fastidieuses ! Portail de confiance pour des millions d'utilisateurs chaque jour, pour une navigation plus efficace et plus fluide.",
+    "description": "Navigation To Value classe des sites utiles, des outils en ligne, des ressources d'apprentissage et des communautés pour trouver plus vite le bon site.",
     "keywords": "Navigation de Valeur, Découvrir la valeur, Page de découverte, Annuaire de sites utiles, Navigation efficace, Navigation marketing, Ressources d'apprentissage, Outils techniques, Partage de ressources, Recommandation de sites populaires"
   },
   "switch_language": "Changer de langue",
@@ -47,12 +47,6 @@
   "search_tool": {
     "bing": "Bing",
     "google": "Google",
-    "baidu": "Baidu",
-    "sogou": "Sogou",
-    "youdao": "Youdao",
-    "360": "360",
-    "toutiao": "Toutiao",
-    "zhihu": "Zhihu",
     "duckduckgo": "DuckDuckGo",
     "yahoo": "Yahoo",
     "yandex": "Yandex",
@@ -84,7 +78,7 @@
         "step1": "Saisissez l'URL du site à ajouter (doit commencer par http:// ou https://)",
         "step2": "Choisissez la catégorie appropriée, vous pouvez sélectionner 'Favoris' ou 'VPN requis'",
         "step3": "Cliquez sur le bouton 'Générer les données de navigation' ci-dessous",
-        "step4": "Copiez le code généré et collez-le dans le fichier navigation.ts"
+        "step4": "Vérifiez le JSON, ajoutez-le à sites.json puis validez les données"
       },
       "form": {
         "title": "Informations sur le site",
@@ -109,7 +103,7 @@
         },
         "generated-data": {
           "title": "Données de navigation générées",
-          "description": "À copier directement dans le fichier navigation.ts",
+          "description": "Ajoutez-le à sites.json et publiez-le après vérification",
           "copy": "Copier",
           "json-format": "Format JSON"
         }
@@ -118,8 +112,6 @@
   },
   "lang": {
     "en": "Anglais",
-    "zh_cn": "Chinois simplifié",
-    "zh_tw": "Chinois traditionnel",
     "ja": "Japonais",
     "ko": "Coréen",
     "fr": "Français",
@@ -130,4 +122,4 @@
     "ar": "Arabe",
     "it": "Italien"
   }
-} 
+}

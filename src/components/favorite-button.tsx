@@ -11,13 +11,13 @@ export default function FavoriteButton({ id }: { id: string }) {
   const isFav = favorites.includes(id);
   return (
     <button
-      className={`ml-2 text-yellow-400 ${isFav ? '' : 'opacity-30'}`}
+      className={`flex size-11 shrink-0 items-center justify-center rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${isFav ? 'bg-amber-50 text-amber-400' : 'bg-slate-100 text-slate-400 hover:bg-amber-50 hover:text-amber-400'}`}
       onClick={() => toggleFavorite(id)}
       aria-label={isFav ? t('cancel_favorite') : t('add_favorite')}
       type="button"
     >
-      <FontAwesomeIcon icon={isFav ? faStarSolid : faStar} className="w-8 h-8" />
+      <FontAwesomeIcon icon={isFav ? faStarSolid : faStar} className="size-4" />
       <span className="hidden text-sm">{isFav ? t('favorite_button.cancel_favorite') : t('favorite_button.add_favorite')}</span>
     </button>
   );
-} 
+}

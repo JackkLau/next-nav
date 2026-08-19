@@ -3,7 +3,7 @@
   "Metadata": {
     "site_name": "Navigazione di Valore",
     "title": "Navigazione di Valore | Scopri il valore | Pagina di scoperta",
-    "description": "Navigazione di Valore (www.loverezhao.top) si dedica a creare una piattaforma di navigazione web efficiente e conveniente, che raccoglie siti di alta qualità in oltre 20 categorie principali, tra cui tecnologia, strumenti, risorse, marketing, servizi per la vita, studio e ufficio, intrattenimento e shopping. Raccomandazione intelligente di siti popolari, aggiornamento in tempo reale dei link sicuri, ti aiuta a trovare rapidamente ciò di cui hai bisogno e a dire addio alle ricerche noiose! Portale affidabile per milioni di utenti ogni giorno, per una navigazione più efficiente e fluida.",
+    "description": "Navigation To Value organizza siti utili, strumenti online, risorse di apprendimento e community per aiutarti a trovare più rapidamente il sito adatto.",
     "keywords": "Navigazione di Valore, Scopri il valore, Pagina di scoperta, Elenco di siti utili, Navigazione efficiente, Navigazione marketing, Risorse di apprendimento, Strumenti tecnici, Condivisione di risorse, Raccomandazione di siti popolari"
   },
   "switch_language": "Cambia lingua",
@@ -35,7 +35,7 @@
   "need_vpn": "VPN richiesta",
   "direct_access": "Accesso diretto",
   "cancel_favorite": "Rimuovi dai preferiti",
-  "add_favorite": "Aggiungi ai preferiti",  
+  "add_favorite": "Aggiungi ai preferiti",
   "open_menu": "Apri menu",
   "top_menu": {
     "home": "Home",
@@ -47,12 +47,6 @@
   "search_tool": {
     "bing": "Bing",
     "google": "Google",
-    "baidu": "Baidu",
-    "sogou": "Sogou",
-    "youdao": "Youdao",
-    "360": "360",
-    "toutiao": "Toutiao",
-    "zhihu": "Zhihu",
     "duckduckgo": "DuckDuckGo",
     "yahoo": "Yahoo",
     "yandex": "Yandex",
@@ -84,7 +78,7 @@
         "step1": "Inserisci l'URL del sito che desideri aggiungere (deve iniziare con http:// o https://)",
         "step2": "Scegli la categoria appropriata, puoi selezionare 'Preferiti' o 'VPN richiesta'",
         "step3": "Clicca sul pulsante 'Genera dati di navigazione' qui sotto",
-        "step4": "Copia il codice generato e incollalo nel file navigation.ts"
+        "step4": "Controlla il JSON, aggiungilo a sites.json e convalida i dati"
       },
       "form": {
         "title": "Informazioni sul sito",
@@ -109,7 +103,7 @@
         },
         "generated-data": {
           "title": "Dati di navigazione generati",
-          "description": "Può essere copiato direttamente nel file navigation.ts",
+          "description": "Aggiungilo a sites.json e pubblicalo dopo la verifica",
           "copy": "Copia",
           "json-format": "Formato JSON"
         }
@@ -118,8 +112,6 @@
   },
   "lang": {
     "en": "Inglese",
-    "zh_cn": "Cinese semplificato",
-    "zh_tw": "Cinese tradizionale",
     "ja": "Giapponese",
     "ko": "Coreano",
     "fr": "Francese",
@@ -130,4 +122,4 @@
     "ar": "Arabo",
     "it": "Italiano"
   }
-} 
+}

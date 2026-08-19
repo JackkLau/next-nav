@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "postbuild": "next-sitemap",
-    "generate-sitemap": "node scripts/generate-sitemap.mjs",
-    "validate-sitemap": "node scripts/validate-sitemap.js",
+    "data:validate": "node scripts/data/validate-sites.mjs",
+    "data:sync:feishu": "node scripts/data/sync-feishu.mjs",
+    "check": "npm run data:validate && tsc --noEmit",
+    "seo:verify": "node scripts/seo/verify-production-build.mjs",
     "start": "next start",
     "lint": "next lint"
   },
@@ -30,7 +31,6 @@
     "lucide-react": "^0.522.0",
     "next": "15.3.4",
     "next-intl": "^4.3.4",
-    "next-sitemap": "^4.2.3",
     "react": "^19.0.0",
     "react-country-flag": "^3.1.0",
     "react-dom": "^19.0.0",

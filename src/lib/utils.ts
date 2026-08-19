@@ -1,12 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react';
-import { CategoryMapping } from '@/data/navigation';
+import { CategoryMapping, legacyIdToSlug } from '@/data/navigation';
 
-/**
- * 将中文分类名称转换为英文标识符
- * @param categoryName 中文分类名称
- * @returns 英文标识符
- */
+/** Returns the stable category slug used by routes and data records. */
 export function getCategorySlug(categoryName: string): string {
   return CategoryMapping[categoryName] || categoryName 
 }
@@ -16,7 +12,9 @@ const FAVORITE_KEY = 'favoriteSites';
 export function getFavoriteSites(): string[] {
   if (typeof window === 'undefined') return [];
   try {
-    return JSON.parse(localStorage.getItem(FAVORITE_KEY) || '[]');
+    const savedIds = JSON.parse(localStorage.getItem(FAVORITE_KEY) || '[]');
+    if (!Array.isArray(savedIds)) return [];
+    return savedIds.map((id) => legacyIdToSlug[String(id)] || String(id));
   } catch {
     return [];
   }

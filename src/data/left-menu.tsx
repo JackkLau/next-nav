@@ -10,7 +10,9 @@ import {
   faScrewdriverWrench,
   faGamepad
 } from '@fortawesome/free-solid-svg-icons';
-import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
+import type {FontAwesomeIconProps} from '@fortawesome/react-fontawesome';
+
+type IconDefinition = FontAwesomeIconProps['icon'];
 
 export interface MenuData {
   id: string;
@@ -19,16 +21,16 @@ export interface MenuData {
 }
 
 export const CategoryIconMap: {[key: string]: IconDefinition} = {
-  '常用网站': faBook,
-  '优质社区': faPeopleGroup,
-  '实用工具': faScrewdriverWrench,
-  '远程机会': faPersonChalkboard,
-  '个人网站': faPersonChalkboard,
-  '资源收藏': faBoxArchive,
-  '镜像站': faClone,
-  '导航发现': faCompass,
-  '影视娱乐': faCamera,
-  '游戏': faGamepad,
+  common: faBook,
+  community: faPeopleGroup,
+  tools: faScrewdriverWrench,
+  remote: faPersonChalkboard,
+  personal: faPersonChalkboard,
+  resources: faBoxArchive,
+  mirror: faClone,
+  navigation: faCompass,
+  entertainment: faCamera,
+  game: faGamepad,
 }
 
 // 过滤数据，只保留 category，并且去除重复的 category

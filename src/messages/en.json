@@ -2,36 +2,35 @@
   "greeting": "Hello",
   "Metadata": {
     "site_name": "Navigation To Value",
-    "title": "Navigation To Value|Discover Value|Discovery Page",
-    "description": "Navigation To Value (www.loverezhao.top) is dedicated to building an efficient and convenient one-stop website navigation platform, aggregating high-quality categorized sites from across the web. It covers over 20 core categories including technology, tools, resources, marketing, life services, study & office, entertainment, and shopping. The platform intelligently recommends popular websites and updates secure links in real time, helping you quickly find what you need and say goodbye to tedious searching! Trusted by millions of users every day, it is your efficient and smooth gateway to the internet.",
-    "keywords": "Navigation To Value,Discovery Page,Hot Sites,Safe Links,Daily Updates,Navigation Website,Categorized Sites,Useful Websites,Efficient Navigation,Marketing Navigation,Learning Resources,Technical Tools,Resource Sharing,Hot Sites Recommendation"
+    "title": "Curated Website Directory | Useful Tools & Resources",
+    "description": "Discover a curated directory of useful websites, online tools, developer resources, communities, remote jobs, entertainment, and more—all organized by category."
   },
   "switch_language": "Switch Language",
   "loading": "Loading...",
   "site_name": "Navigation To Value",
-  "site_collection_name": "Site Collection",
-  "site_collection_desc": "A navigation platform aggregating high-quality categorized sites.",
+  "site_collection_name": "Curated Website Directory",
+  "site_collection_desc": "Discover useful websites, online tools, communities, remote jobs, and curated resources—all organized by category.",
   "category": {
-    "common": "Common Sites",
-    "community": "Communities",
-    "tools": "Tools",
+    "common": "Popular Websites",
+    "community": "Online Communities",
+    "tools": "Online Tools",
     "remote": "Remote Jobs",
-    "personal": "Personal Sites",
-    "resources": "Resources",
+    "personal": "Personal Websites",
+    "resources": "Useful Resources",
     "mirror": "Mirror Sites",
-    "navigation": "Navigation Discovery",
+    "navigation": "Web Directories",
     "entertainment": "Entertainment",
-    "game": "Game"
+    "game": "Online Games"
   },
-  "category_count": "Found {count} quality sites",
+  "category_count": "Browse {count} hand-picked websites",
   "back_home": "Back to Home",
   "empty_state": "Empty State",
   "empty_title": "No sites yet",
   "empty_desc": "No sites in this category yet",
   "more": "More",
   "navigation_menu": "Navigation Menu",
-  "home_title": "Navigation To Value",
-  "navigation_menu_desc": "A navigation platform aggregating high-quality categorized sites.",
+  "home_title": "Curated Website Directory",
+  "navigation_menu_desc": "Hand-picked useful websites, tools, and resources organized by category.",
   "need_vpn": "Need VPN",
   "direct_access": "Direct Access",
   "cancel_favorite": "Cancel Favorite",
@@ -47,12 +46,6 @@
   "search_tool": {
     "bing": "Bing",
     "google": "Google",
-    "baidu": "Baidu",
-    "sogou": "Sogou",
-    "youdao": "Youdao",
-    "360": "360",
-    "toutiao": "Toutiao",
-    "zhihu": "Zhihu",
     "duckduckgo": "DuckDuckGo",
     "yahoo": "Yahoo",
     "yandex": "Yandex",
@@ -60,7 +53,7 @@
     "you_com": "You.com",
     "brave": "Brave"
   },
-  "search_placeholder": "Find valuable content",
+  "search_placeholder": "Search useful websites and online tools",
   "site_icon": "Site Icon",
   "qr_code_view": "QR Code View",
   "need_vpn_desc": "Need VPN to access",
@@ -84,7 +77,7 @@
         "step1": "Enter the URL of the site you want to add",
         "step2": "Select the appropriate category",
         "step3": "Click the 'Generate Navigation Data' button",
-        "step4": "Copy the generated code and paste it into the 'navigation.ts' file"
+        "step4": "Review the generated JSON, add it to sites.json, and validate the data"
       },
       "form": {
         "title": "Site Information",
@@ -109,7 +102,7 @@
         },
         "generated-data": {
           "title": "Generated Navigation Data",
-          "description": "Can be directly copied to the 'navigation.ts' file",
+          "description": "Add it to sites.json and change the status to published after review",
           "copy": "Copy",
           "json-format": "JSON Format"
         }
@@ -118,8 +111,6 @@
   },
   "lang": {
     "en": "English",
-    "zh_cn": "Simplified Chinese",
-    "zh_tw": "Traditional Chinese",
     "ja": "Japanese",
     "ko": "Korean",
     "fr": "French",
@@ -130,4 +121,4 @@
     "ru": "Russian",
     "ar": "Arabic"
   }
-} 
+}

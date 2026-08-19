@@ -3,7 +3,7 @@
   "Metadata": {
     "site_name": "Navegación de Valor",
     "title": "Navegación de Valor | Descubre el valor | Página de descubrimiento",
-    "description": "Navegación de Valor (www.loverezhao.top) se dedica a crear una plataforma de navegación web eficiente y conveniente, reuniendo sitios de alta calidad en más de 20 categorías principales, incluyendo tecnología, herramientas, recursos, marketing, servicios de vida, estudio y oficina, entretenimiento y compras. Recomendación inteligente de sitios populares, actualización en tiempo real de enlaces seguros, ¡te ayuda a encontrar rápidamente lo que necesitas y a despedirte de las búsquedas tediosas! Portal de confianza para millones de usuarios cada día, para una navegación más eficiente y fluida.",
+    "description": "Navigation To Value organiza sitios útiles, herramientas en línea, recursos de aprendizaje y comunidades para ayudarte a encontrar antes el sitio adecuado.",
     "keywords": "Navegación de Valor, Descubre el valor, Página de descubrimiento, Directorio de sitios útiles, Navegación eficiente, Navegación de marketing, Recursos de aprendizaje, Herramientas técnicas, Compartir recursos, Recomendación de sitios populares"
   },
   "switch_language": "Cambiar idioma",
@@ -47,12 +47,6 @@
   "search_tool": {
     "bing": "Bing",
     "google": "Google",
-    "baidu": "Baidu",
-    "sogou": "Sogou",
-    "youdao": "Youdao",
-    "360": "360",
-    "toutiao": "Toutiao",
-    "zhihu": "Zhihu",
     "duckduckgo": "DuckDuckGo",
     "yahoo": "Yahoo",
     "yandex": "Yandex",
@@ -84,7 +78,7 @@
         "step1": "Introduce la URL del sitio que deseas agregar (debe comenzar con http:// o https://)",
         "step2": "Elige la categoría adecuada, puedes seleccionar 'Favoritos' o 'Se requiere VPN'",
         "step3": "Haz clic en el botón 'Generar datos de navegación' a continuación",
-        "step4": "Copia el código generado y pégalo en el archivo navigation.ts"
+        "step4": "Revisa el JSON, añádelo a sites.json y valida los datos"
       },
       "form": {
         "title": "Información del sitio",
@@ -109,7 +103,7 @@
         },
         "generated-data": {
           "title": "Datos de navegación generados",
-          "description": "Puedes copiarlo directamente en el archivo navigation.ts",
+          "description": "Añádelo a sites.json y publícalo después de revisarlo",
           "copy": "Copiar",
           "json-format": "Formato JSON"
         }
@@ -118,11 +112,9 @@
   },
   "lang": {
     "en": "Inglés",
-    "zh_cn": "Chino simplificado",
-    "zh_tw": "Chino tradicional",
     "ja": "Japonés",
     "ko": "Coreano",
-    "fr": "Francés",  
+    "fr": "Francés",
     "de": "Alemán",
     "es": "Español",
     "pt": "Portugués",
@@ -130,4 +122,4 @@
     "ar": "Árabe",
     "it": "Italiano"
   }
-} 
+}

@@ -1,5 +1,4 @@
 import GlobalLayout from '@/components/global-layout';
-import { DefaultMetaData } from '@/constant/metaData';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
@@ -8,6 +7,13 @@ import { Toaster } from 'sonner';
 import '../globals.css';
 import { routing } from '@/i18n/routing';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import {
+    isIndexableLocale,
+    languageAlternates,
+    localizedUrl,
+    openGraphLocale,
+    siteOrigin,
+} from '@/lib/seo';
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({ locale }));
@@ -24,20 +30,20 @@ const geistMono = Geist_Mono({
 });
 
 export const locales = routing.locales;
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';
 
 
-export async function generateMetadata({ params }: { params: { locale: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Metadata' });
     const siteName = t('site_name');
     const siteDescription = t('description');
     const siteTitle = t('title');
-    const siteKeywords = t('keywords').split(',');
+    const canonical = localizedUrl(locale);
+    const indexable = isIndexableLocale(locale);
+
     return {
         title: siteTitle,
         description: siteDescription,
-        keywords: siteKeywords,
         authors: [{ name: siteName }],
         creator: siteName,
         publisher: siteName,
@@ -46,14 +52,15 @@ export async function generateMetadata({ params }: { params: { locale: string } 
             address: false,
             telephone: false,
         },
-        metadataBase: new URL(siteUrl),
+        metadataBase: new URL(siteOrigin),
         alternates: {
-            canonical: siteUrl,
+            canonical,
+            languages: languageAlternates(),
         },
         openGraph: {
             type: 'website',
-            locale: 'zh_CN',
-            url: siteUrl,
+            locale: openGraphLocale(locale),
+            url: canonical,
             title: siteTitle,
             description: siteDescription,
             siteName: siteName,
@@ -73,22 +80,25 @@ export async function generateMetadata({ params }: { params: { locale: string } 
             images: ['/favicon.png'],
         },
         robots: {
-            index: true,
+            index: indexable,
             follow: true,
             googleBot: {
-                index: true,
+                index: indexable,
                 follow: true,
                 'max-video-preview': -1,
                 'max-image-preview': 'large',
                 'max-snippet': -1,
             },
         },
-        other: DefaultMetaData.other,
+        other: {
+            "google-adsense-account": "ca-pub-5653851953778502",
+            "msvalidate.01": "1CCA2B8229A0C45CAB754FE9BBB190BE",
+        },
     };
 }
 
 
-export default async function LocaleLayout({ children, params }: { children: ReactNode, params: { locale: string } }) {
+export default async function LocaleLayout({ children, params }: { children: ReactNode, params: Promise<{ locale: string }> }) {
     let messages;
     const { locale } = await params;
 
@@ -106,28 +116,26 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         notFound();
     }
 
+    const t = await getTranslations({ locale, namespace: 'Metadata' });
+    const canonical = localizedUrl(locale);
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: t('site_name'),
+        url: canonical,
+        description: t('description'),
+        inLanguage: locale,
+        isAccessibleForFree: true,
+    };
+
     return (
         <html lang={locale}>
 
             <head>
-                {/* 结构化数据 - 网站信息 */}
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
-                        __html: JSON.stringify({
-                            "@context": "https://schema.org",
-                            "@type": "WebSite",
-                            "name": "价值导航",
-                            "url": siteUrl,
-                            "description": DefaultMetaData.description,
-                            "inLanguage": "zh-CN",
-                            "isAccessibleForFree": true,
-                            "potentialAction": {
-                                "@type": "SearchAction",
-                                "target": `${siteUrl}?search={search_term_string}`,
-                                "query-input": "required name=search_term_string"
-                            }
-                        })
+                        __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c')
                     }}
                 />
             </head>
@@ -143,4 +151,4 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             </body>
         </html>
     );
-} 
+}

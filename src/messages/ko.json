@@ -3,7 +3,7 @@
   "Metadata": {
     "site_name": "가치 내비게이션",
     "title": "가치 내비게이션 | 가치를 발견하다 | 발견 페이지",
-    "description": "가치 내비게이션(www.loverezhao.top)은 효율적이고 편리한 원스톱 웹사이트 내비게이션 플랫폼 구축에 전념하고 있습니다. 기술, 도구, 리소스, 마케팅, 생활 서비스, 학습 및 사무, 엔터테인먼트, 쇼핑 등 20개 이상의 핵심 카테고리의 고품질 사이트를 모았습니다. 인기 사이트를 지능적으로 추천하고, 안전한 링크를 실시간으로 업데이트하여 필요한 콘텐츠를 빠르게 찾고 번거로운 검색에서 벗어나세요! 매일 수백만 명의 사용자가 신뢰하는 인터넷 입구로, 더 효율적이고 원활한 브라우징 경험을 제공합니다.",
+    "description": "Navigation To Value는 유용한 웹사이트, 온라인 도구, 학습 자료와 커뮤니티를 분류해 필요한 사이트를 더 빠르게 찾도록 돕습니다.",
     "keywords": "가치 내비게이션, 가치를 발견하다, 발견 페이지, 실용 웹사이트 모음, 효율적 내비게이션, 마케팅 내비게이션, 학습 리소스, 기술 도구, 리소스 공유, 인기 사이트 추천"
   },
   "switch_language": "언어 변경",
@@ -40,19 +40,13 @@
   "top_menu": {
     "home": "홈",
     "favorite": "즐겨찾기",
-    "follow_me": "팔로우하기",  
+    "follow_me": "팔로우하기",
     "submit_collection": "콜렉션 제출",
     "more_value_content": "더 가치 있는 콘텐츠 발견"
   },
   "search_tool": {
     "bing": "Bing",
     "google": "Google",
-    "baidu": "Baidu",
-    "sogou": "Sogou",
-    "youdao": "Youdao",
-    "360": "360",
-    "toutiao": "Toutiao",
-    "zhihu": "Zhihu",
     "duckduckgo": "DuckDuckGo",
     "yahoo": "Yahoo",
     "yandex": "Yandex",
@@ -84,7 +78,7 @@
         "step1": "등록할 웹사이트 주소를 입력하세요(http:// 또는 https://로 시작해야 합니다)",
         "step2": "적절한 카테고리를 선택하고, '즐겨찾기' 또는 'VPN 필요'를 선택할 수 있습니다",
         "step3": "아래의 '내비게이션 데이터 생성' 버튼을 클릭하세요",
-        "step4": "생성된 코드를 복사하여 navigation.ts 파일에 붙여넣으세요"
+        "step4": "생성된 JSON을 검토하고 sites.json에 추가한 뒤 데이터를 검증하세요"
       },
       "form": {
         "title": "사이트 정보",
@@ -109,7 +103,7 @@
         },
         "generated-data": {
           "title": "생성된 내비게이션 데이터",
-          "description": "바로 navigation.ts 파일에 복사할 수 있습니다",
+          "description": "검토 후 sites.json에 추가하고 게시 상태로 변경하세요",
           "copy": "복사",
           "json-format": "JSON 형식"
         }
@@ -118,8 +112,6 @@
   },
   "lang": {
     "en": "영어",
-    "zh_cn": "중국어(간체)",
-    "zh_tw": "중국어(번체)",
     "ja": "일본어",
     "ko": "한국어",
     "fr": "프랑스어",
@@ -130,4 +122,4 @@
     "ar": "아랍어",
     "it": "이탈리아어"
   }
-} 
+}

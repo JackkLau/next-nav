@@ -34,14 +34,14 @@ export default function SiteIcon({ src, alt, size = 'md', className = '' }: Site
           alt={`${alt} ${t('site_icon')}`}  
           width={size === 'lg' ? 96 : size === 'md' ? 48 : 32}
           height={size === 'lg' ? 96 : size === 'md' ? 48 : 32}
-          className={`${sizeClasses[size]} rounded-lg object-contain bg-white border border-gray-200 shadow-sm`}
+          className={`${sizeClasses[size]} rounded-xl border border-slate-200/80 bg-white object-contain p-1`}
           onError={handleImageError}
         />
       ) : (
-        <div className={`${sizeClasses[size]} rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center`}>
-          <FontAwesomeIcon icon={faImage} className="w-1/2 h-1/2 text-gray-400" />
+        <div className={`${sizeClasses[size]} flex items-center justify-center rounded-xl border border-slate-200/80 bg-slate-100`}>
+          <FontAwesomeIcon icon={faImage} className="h-1/2 w-1/2 text-slate-400" />
         </div>
       )}
     </div>
   )
-} 
+}

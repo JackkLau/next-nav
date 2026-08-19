@@ -1,9 +1,17 @@
-import {CategoryMapping, navigationData} from '@/data/navigation';
+import {
+  CategoryMapping,
+  findNavigationItem,
+  findNavigationItemByLegacyId,
+  findSiteRecord,
+  getLocalizedNavigationData,
+  hasLocalizedContent,
+  NavigationItem,
+} from '@/data/navigation';
 import Link from 'next/link';
 import QrBox from '@/components/qr-box';
 import RelatedSites from '@/components/related-sites';
 import SiteIcon from '@/components/ui/site-icon';
-import {redirect} from 'next/navigation';
+import {notFound, permanentRedirect} from 'next/navigation';
 import {Metadata} from 'next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -12,65 +20,79 @@ import {
   faTag, 
   faExternalLinkAlt 
 } from '@fortawesome/free-solid-svg-icons';
-import {NavigationItem} from '@/data/navigation';
 import FavoriteButtonWrapper from "@/components/favorite-button-wrapper";
 import { getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
+import {
+  indexableLocales,
+  isIndexableLocale,
+  languageAlternatesFor,
+  localizedPath,
+  localizedUrl,
+  openGraphLocale,
+  siteOrigin,
+} from '@/lib/seo';
 
 type Props = {
   params: Promise<{ slug: string, locale: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';   
-
 export async function generateMetadata(
   { params }: Props,
 ): Promise<Metadata> {
-  const {locale} = await params;
+  const {locale, slug} = await params;
   const t = await getTranslations({locale, namespace: 'Metadata'});
-  const { slug } = (await params)
+  const legacyItem = findNavigationItemByLegacyId(slug)
+  const navItem = findNavigationItem(legacyItem?.id || slug, locale)
+  const siteRecord = findSiteRecord(legacyItem?.id || slug)
 
-  const navItem = navigationData.find((post) => post.id === slug)
-
-  if (!navItem) {
+  if (!navItem || !siteRecord) {
     return {
       title: t('title'),
       description: t('description'),
-      alternates: {
-        canonical: siteUrl,
-      },
+      robots: { index: false, follow: false },
     }
   }
 
+  const canonical = localizedUrl(locale, `/${navItem.id}`)
+  const availableLocales = indexableLocales.filter(
+    (candidate) => hasLocalizedContent(siteRecord, candidate),
+  )
+  const indexable =
+    isIndexableLocale(locale) && availableLocales.includes(locale)
+  const description = navItem.description || t('description')
+
   return {
-    title: `${navItem.name} - ${t('title')}`,
-    description: `${t('title')} ${navItem.description}`,
+    title: `${navItem.name} | ${t('site_name')}`,
+    description,
     alternates: {
-      canonical: `${siteUrl}/${navItem.id}`,
+      canonical,
+      languages: languageAlternatesFor(`/${navItem.id}`, availableLocales),
     },
+    robots: { index: indexable, follow: true },
     openGraph: {
       title: navItem.name,
-      description: `${t('title')} ${navItem.description}`,
-      url: `${siteUrl}/${navItem.id}`,
-      siteName: t('title'),
+      description,
+      url: canonical,
+      siteName: t('site_name'),
       images: navItem.imgUrl ? [
         {
-          url: navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`,
+          url: navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteOrigin}${navItem.imgUrl}`,
           width: 1200,
           height: 630,
           alt: navItem.name,
         }
       ] : undefined,
-      locale: 'en',
+      locale: openGraphLocale(locale),
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: navItem.name,
-      description: `${t('title')} ${navItem.description}`,
+      description,
       images: navItem.imgUrl ? [
-        navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`
+        navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteOrigin}${navItem.imgUrl}`
       ] : undefined,
     },
   }
@@ -79,9 +101,9 @@ export async function generateMetadata(
 export function generateStaticParams() {
   const params = [];
   for (const locale of routing.locales) {
-    for (const navItem of navigationData) {
+    for (const navItem of getLocalizedNavigationData(locale)) {
       params.push({
-        slug: String(navItem.id),
+        slug: navItem.id,
         locale,
       });
     }
@@ -89,34 +111,19 @@ export function generateStaticParams() {
   return params;
 }
 
-// export function generateStaticParams() {
-//   return routing.locales.flatMap(locale =>
-//     navigationData.map(navItem => ({
-//       slug: String(navItem.id),
-//       locale,
-//     }))
-//   )
-// }
-
-// )智能推荐算法：获取同分类下的其他网站（排除当前网站）
 function getRelatedSites(currentSite: NavigationItem, allSites: NavigationItem[]) {
-  // 1. 首先获取同分类的网站
   const sameCategorySites = allSites.filter(site => 
     site.category === currentSite.category && 
     site.id !== currentSite.id
   );
 
-  // 2. 按优先级排序：推荐网站 > 普通网站
   const sortedSites = sameCategorySites.sort((a, b) => {
-    // 优先显示推荐网站
     if (a.favorite && !b.favorite) return -1;
     if (!a.favorite && b.favorite) return 1;
     
-    // 然后按名称排序
     return a.name.localeCompare(b.name);
   });
 
-  // 3. 返回前6个
   return sortedSites.slice(0, 6);
 }
 
@@ -127,47 +134,52 @@ export default async function Home({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 })
 {
-  const { locale } = await params;
+  const { locale, slug } = await params;
   const t = await getTranslations({locale});
-  const { slug: menuId } = await params
-  const navItem = navigationData.find((item) => item.id === menuId);
-  // 没找到对应导航的详情就重定向到首页
-  if (!navItem) {
-    return redirect('/');
+  const legacyItem = findNavigationItemByLegacyId(slug)
+  if (legacyItem) {
+    permanentRedirect(localizedPath(locale, `/${legacyItem.id}`))
   }
 
-  // 获取同分类下的其他网站
-  const relatedSites = getRelatedSites(navItem, navigationData);
+  const navItem = findNavigationItem(slug, locale)
+  if (!navItem) {
+    notFound()
+  }
 
-  // 结构化数据 (JSON-LD)
+  const navigationData = getLocalizedNavigationData(locale)
+  const relatedSites = getRelatedSites(navItem, navigationData);
+  const canonical = localizedUrl(locale, `/${navItem.id}`)
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "url": `${siteUrl}/${navItem.id}`,
+    "@type": "WebPage",
+    "url": canonical,
     "name": navItem.name,
     "description": navItem.description,
-    "inLanguage": "zh-CN",
-    "image": navItem.imgUrl ? (navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteUrl}${navItem.imgUrl}`) : undefined,
-    "sameAs": navItem.url ? [navItem.url] : undefined,
-    "category": navItem.category,
-    "isAccessibleForFree": true,
-    "potentialAction": {
-      "@type": "VisitAction",
-      "target": navItem.url
-    }
+    "inLanguage": locale,
+    "image": navItem.imgUrl ? (navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteOrigin}${navItem.imgUrl}`) : undefined,
+    "isPartOf": {
+      "@type": "WebSite",
+      "url": localizedUrl(locale),
+    },
+    "about": {
+      "@type": "WebSite",
+      "name": navItem.name,
+      "url": navItem.url,
+    },
   };
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
-      <main className="flex justify-center min-h-full py-4">
-        <div className="flex flex-col w-11/12 max-w-6xl">
+      <main className="flex min-h-full justify-center py-2 md:py-4">
+        <div className="flex w-full max-w-5xl flex-col px-1 sm:px-2">
           {/* 主要信息卡片 */}
-          <section className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200">
-            <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-6 space-y-4 md:space-y-0">
+          <section className="rounded-2xl border border-slate-200/80 bg-white/85 px-4 py-5 shadow-sm shadow-slate-950/[0.03] sm:px-6 md:py-6">
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-5">
               {/* 网站图标 */}
               <div className="flex-shrink-0 relative flex justify-center items-center">
                 <SiteIcon 
@@ -176,16 +188,16 @@ export default async function Home({
                   size="lg"
                 />
                 {navItem?.favorite && (
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow-md" aria-label={t('recommend_site')}>
-                    <FontAwesomeIcon icon={faStar} className="w-4 h-4 text-white" />
+                  <div className="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-amber-400 ring-4 ring-white" aria-label={t('recommend_site')}>
+                    <FontAwesomeIcon icon={faStar} className="size-3.5 text-white" />
                   </div>
                 )}
               </div>
 
               {/* 网站信息 */}
               <div className="flex-1 min-w-0 flex flex-col items-center md:items-start w-full">
-                <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-3 mb-3 w-full">
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 truncate text-center md:text-left w-full">
+                <div className="mb-2 flex w-full flex-col items-center gap-2 md:flex-row md:items-center">
+                  <h1 className="w-full break-words text-center text-xl font-bold tracking-[-0.02em] text-slate-950 md:text-left md:text-2xl">
                     {navItem?.name}
                   </h1>
                   {/* 收藏按钮 */}
@@ -195,38 +207,38 @@ export default async function Home({
                       href={'https://y-too.com/aff.php?aff=6690'} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="flex items-center  text-center  px-4 py-1 text-sm bg-red-100 text-red-700 rounded-full mt-2 md:mt-0"
+                      className="inline-flex min-h-8 items-center rounded-full bg-rose-50 px-3 text-xs font-medium text-rose-700 ring-1 ring-rose-100"
                       aria-label={t('need_vpn_desc')}
                     >
                       <FontAwesomeIcon icon={faShieldHalved} className="w-4 h-4 mr-1" />
-                      <span className=" w-12 text-center">{t('need_vpn')}</span>
+                      <span>{t('need_vpn')}</span>
                     </Link>
                   )}
                 </div>
-                <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-3 mb-4 w-full">
-                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full mb-2 md:mb-0">
-                    <FontAwesomeIcon icon={faTag} className="w-4 h-4 mr-1" />
+                <div className="mb-3 flex w-full items-center justify-center md:justify-start">
+                  <span className="inline-flex min-h-7 items-center rounded-lg bg-blue-50 px-2.5 text-xs font-medium text-blue-700 ring-1 ring-blue-100">
+                    <FontAwesomeIcon icon={faTag} className="mr-1.5 size-3" />
                     {t(`category.${CategoryMapping[navItem?.category as keyof typeof CategoryMapping]}`)}
                   </span>
                 </div>
                 {/* 描述 */}
-                <p className="text-gray-600 leading-relaxed mb-4 text-center md:text-left w-full">
+                <p className="mb-4 w-full text-center text-sm leading-6 text-slate-600 md:text-left">
                   {navItem?.description || t('no_description')}
                 </p>
                 {/* 操作按钮 */}
-                <div className="flex flex-col space-y-3 w-full md:flex-row md:space-y-0 md:space-x-3 md:justify-start items-center md:items-center">
+                <div className="flex w-full flex-col items-center gap-2 sm:flex-row md:justify-start">
                   <Link 
                     title={`${t('direct_access')} ${navItem?.name}`}
                     href={navItem?.url || `/${locale}`} 
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow-md"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:w-auto"
                     aria-label={`${t('direct_access')} ${navItem?.name}`}
                   >
                     <FontAwesomeIcon icon={faExternalLinkAlt} className="w-4 h-4 mr-2" />
                     {t('direct_access')}
                   </Link>
-                  <div className="inline-flex items-center justify-center w-full md:w-auto px-6 py-3 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors duration-200 shadow-sm hover:shadow-md">
+                  <div className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 sm:w-auto">
                     <QrBox url={navItem?.url || `/${locale}`} />
                   </div>
                 </div>

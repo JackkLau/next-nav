@@ -26,20 +26,22 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
   }
 
   return (
-    <section className="mt-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200" aria-labelledby="related-sites-heading">
-      <div className="flex items-center justify-between mb-6">
-        <h2 id="related-sites-heading" className="text-lg md:text-xl font-semibold text-gray-800 flex items-center">
-          <FontAwesomeIcon icon={faBolt} className="w-5 h-5 mr-2 text-blue-500" />
+    <section className="mt-5 px-1 py-1" aria-labelledby="related-sites-heading">
+      <div className="mb-3 flex items-center justify-between gap-2 px-0.5">
+        <h2 id="related-sites-heading" className="flex items-center text-base font-semibold tracking-tight text-slate-900 md:text-lg">
+          <span className="mr-2 flex size-7 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <FontAwesomeIcon icon={faBolt} className="size-3.5" />
+          </span>
           <span >{t('related_sites')}</span>
         </h2>
-        <span className="text-sm text-gray-500 bg-white px-4 py-1 rounded-full border">
+        <span className="truncate rounded-lg bg-white/70 px-2.5 py-1 text-xs text-slate-500 ring-1 ring-slate-200/70">
           {t(`category.${CategoryMapping[currentSite.category as keyof typeof CategoryMapping]}`)}
         </span>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3" role="list">
         {relatedSites.map((site) => (
-          <article key={site.id} role="listitem" className="relative group block p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+          <article key={site.id} role="listitem" className="group relative block rounded-xl border border-slate-200/80 bg-white/90 p-3 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg hover:shadow-slate-950/[0.05]">
             <Link
               href={`/${locale}/${site.id}`}
               
@@ -51,19 +53,19 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
                     src={site.imgUrl} 
                     alt={`${site.name} ${t('site_icon')}`}
                     size="md"
-                    className="group-hover:scale-110 transition-transform duration-200"
+                    className="transition-transform duration-200 group-hover:scale-105"
                   />
                   {site.favorite && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center" aria-label="推荐网站">
-                      <FontAwesomeIcon icon={faStar} className="w-3 h-3 text-white" />
+                    <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-amber-400 ring-2 ring-white" aria-label={t('recommend_site')}>
+                      <FontAwesomeIcon icon={faStar} className="size-2.5 text-white" />
                     </div>
                   )}
                 </div>
-                <div className=" flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-sm font-semibold text-slate-900 transition-colors group-hover:text-blue-700">
                     {site.name}
                   </h3>
-                  <p className="text-xs text-gray-500 truncate mt-1 leading-relaxed">
+                  <p className="mt-1 truncate text-xs leading-relaxed text-slate-500">
                     {site.description && site.description.length > 60 
                       ? `${site.description.substring(0, 60)}...` 
                       : site.description || t('no_description')}
@@ -77,7 +79,7 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
                         href={'https://y-too.com/aff.php?aff=6690'} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="absolute top-0 right-1 z-10 hover:bg-red-100 hover:text-red-700 inline-block mt-2 px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full"
+                        className="absolute right-2 top-2 z-10 inline-flex min-h-6 items-center rounded-md bg-rose-50 px-1.5 text-[10px] font-medium text-rose-600 ring-1 ring-rose-100 transition-colors hover:bg-rose-100"
                         aria-label={t('need_vpn_desc')}
                     >
                       <FontAwesomeIcon icon={faShieldHalved} className="w-3 h-3 mr-1" />
@@ -89,10 +91,10 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
       </div>
       
       {relatedSites.length >= 6 && (
-        <div className="mt-6 text-center">
+        <div className="mt-3 text-center">
           <Link
-            href={`/category/${getCategorySlug(currentSite.category)}`}
-            className="inline-flex items-center px-6 py-3 text-sm font-medium text-blue-600 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all duration-200 shadow-sm hover:shadow-md"
+            href={`/${locale}/category/${getCategorySlug(currentSite.category)}`}
+            className="inline-flex min-h-10 items-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
             aria-label={`${t('related_sites_view')} ${t(`category.${CategoryMapping[currentSite.category as keyof typeof CategoryMapping]}`)} ${t('related_sites_detail')}`}
           >
             <FontAwesomeIcon icon={faFolder} className="w-4 h-4 mr-2" />
@@ -102,4 +104,4 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
       )}
     </section>
   )
-} 
+}

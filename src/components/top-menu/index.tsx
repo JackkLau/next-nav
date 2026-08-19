@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,107 +10,141 @@ import { useTranslations } from 'next-intl';
 import { topMenuMapping } from '@/data/top-menu';
 import LanguageSwitcher from '../LanguageSwitcher';
 import * as Drawer from '@radix-ui/react-dialog';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { usePathname } from 'next/navigation';
 
-function Index({ topMenu, sheetTrigger }: { topMenu: MenuData[]; sheetTrigger?: React.ReactNode }) {
+function Index({ topMenu, sheetTrigger, scrolled = false }: { topMenu: MenuData[]; sheetTrigger?: React.ReactNode; scrolled?: boolean }) {
   const t = useTranslations();
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1];
+  const [mobileActionsOpen, setMobileActionsOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-30 w-full flex bg-transparent">
-      <nav className="md:w-11/12 w-full mx-auto bg-white/90 backdrop-blur rounded-xl shadow-md px-4 py-3 mt-4 mb-2 flex items-center justify-start">
-        <ul className="flex justify-start md:justify-between items-center w-full space-x-2">
-          <li className="flex items-center md:hidden">{sheetTrigger}</li>
-          <li className="flex-1 flex justify-center items-center md:hidden">
-            <Link href={'/'} className="flex items-center text-gray-500 hover:text-blue-700 font-semibold px-3 py-2 rounded-lg transition-colors">
-            <Image
-                src="/favicon.png"
-                alt="logo"
-                width={32}
-                height={32}
-                className={'w-9 h-9 mr-3'}
-              ></Image>
-              <span>{t('site_name')}</span>
+    <header className="flex w-full bg-transparent">
+      <nav
+        data-scrolled={scrolled}
+        className={`mb-2 mt-1 flex w-full items-center rounded-2xl border px-2 py-1.5 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 md:mt-2 md:px-3 ${
+          scrolled
+            ? 'border-slate-200/80 bg-white/85 shadow-sm shadow-slate-950/5 backdrop-blur-xl supports-[backdrop-filter]:bg-white/75'
+            : 'border-white/70 bg-white/55 shadow-none backdrop-blur-md supports-[backdrop-filter]:bg-white/45'
+        }`}
+      >
+        <div className="flex w-full items-center gap-1 lg:hidden">
+          <div className="flex shrink-0 items-center">{sheetTrigger}</div>
+          <div className="flex min-w-0 flex-1 items-center justify-center">
+            <Link href={`/${locale}`} className="flex min-w-0 items-center gap-2 rounded-xl px-2 py-1.5 text-slate-700 transition-colors hover:text-blue-700">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 ring-1 ring-blue-100">
+                <Image src="/favicon.png" alt="logo" width={24} height={24} className="size-6" />
+              </span>
+              <span className="truncate text-sm font-semibold tracking-tight sm:text-base">{t('site_name')}</span>
             </Link>
-          </li>
-          {/* 移动端菜单按钮（汉堡按钮） */}
-          <li className="flex items-center md:hidden">
-            <Drawer.Root>
+          </div>
+          <div className="flex shrink-0 items-center">
+            <Drawer.Root open={mobileActionsOpen} onOpenChange={setMobileActionsOpen}>
               <Drawer.Trigger asChild>
-                <button className="p-2 rounded hover:bg-gray-100" aria-label="Open menu">
-                  <FontAwesomeIcon icon={faHome} className="w-6 h-6" />
+                <button className="flex size-11 items-center justify-center rounded-xl text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" aria-label={t('open_menu')}>
+                  <FontAwesomeIcon icon={faEllipsisVertical} className="h-5 w-5" />
                 </button>
               </Drawer.Trigger>
               <Drawer.Portal >
-                <Drawer.Overlay className="fixed inset-0 bg-black/30 z-40" />
-                {/* 抽屉从右侧数显 */}
-                
-                <Drawer.Content    className="fixed top-0 right-0 h-full w-64 bg-white z-50 shadow-lg flex flex-col p-4 animate-in slide-in-from-right-32">
+                <Drawer.Overlay className="fixed inset-0 z-50 bg-slate-950/30 backdrop-blur-[2px]" />
+                <Drawer.Content className="fixed right-0 top-0 z-[60] flex h-dvh w-[min(20rem,88vw)] flex-col overflow-y-auto border-l border-slate-200 bg-white p-5 shadow-2xl shadow-slate-950/15 animate-in slide-in-from-right-32">
+                  <div className="mb-6 flex items-center justify-between">
+                    <div>
+                      <Drawer.Title className="text-base font-semibold text-slate-950">{t('navigation_menu')}</Drawer.Title>
+                      <Drawer.Description className="mt-1 text-xs text-slate-500">{t('navigation_menu_desc')}</Drawer.Description>
+                    </div>
                   <Drawer.Close asChild>
-                    <button className="self-end mb-4 p-2 rounded hover:bg-gray-100" aria-label="Close menu">
-                      <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                    <button className="flex size-11 items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950" aria-label="Close menu">
+                      <FontAwesomeIcon icon={faXmark} className="size-5" />
                     </button>
                   </Drawer.Close>
-                  <div className="flex flex-col space-y-2">
+                  </div>
+                  <div className="flex flex-col gap-1.5">
                     {topMenu.map((item) => (
-                      <TopMenuItem key={item.id} item={item} />
+                      <TopMenuItem
+                        key={item.id}
+                        item={item}
+                        locale={locale}
+                        mobile
+                        onNavigate={() => setMobileActionsOpen(false)}
+                      />
                     ))}
-                    <div className="flex items-center mt-4"><LanguageSwitcher /></div>
+                    <div className="mt-4 border-t border-slate-100 pt-4"><LanguageSwitcher fullWidth /></div>
                   </div>
                 </Drawer.Content>
               </Drawer.Portal>
             </Drawer.Root>
-          </li>
-          {/* PC端菜单 */}
-          <li className="hidden md:flex items-center w-full space-x-2">
-            {topMenu.map((item) => (
-              <TopMenuItem key={item.id} item={item} />
-            ))}
-            <div className="flex items-center ml-auto"><LanguageSwitcher /></div>
-          </li>
-        </ul>
+          </div>
+        </div>
+        <div className="hidden w-full items-center gap-1 lg:flex">
+          {topMenu.map((item) => (
+            <TopMenuItem key={item.id} item={item} locale={locale} />
+          ))}
+          <div className="ml-auto flex items-center"><LanguageSwitcher /></div>
+        </div>
       </nav>
     </header>
   );
 }
 
 
-function TopMenuItem({item}: {item: MenuData}) {
+function TopMenuItem({item, locale, mobile = false, onNavigate}: {item: MenuData, locale: string, mobile?: boolean, onNavigate?: () => void}) {
   const t = useTranslations();
+  const pathname = usePathname();
+  const isHome = pathname === `/${locale}`;
+  const isPrimary = item.name === 'submit_collection';
+  const itemClass = `inline-flex min-h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+    mobile ? 'w-full justify-start min-h-12' : ''
+  } ${
+    isPrimary
+      ? 'bg-slate-900 text-white hover:bg-slate-800'
+      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
+  }`;
+
   return (
-    <div key={item.id} className="flex items-center text-lg">
-    {item.name === '首页' &&
-      <Link href={'/'} className="flex items-center text-gray-500 hover:text-blue-700 font-semibold px-3 py-2 rounded-lg transition-colors">
-        <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-primary" />
+    <div key={item.id} className={mobile ? 'flex w-full' : 'flex items-center'}>
+    {item.name === 'home' &&
+      <Link href={`/${locale}`} onClick={onNavigate} aria-current={isHome ? 'page' : undefined} className={`${itemClass} ${isHome ? 'bg-blue-50 text-blue-700' : ''}`}>
+        <FontAwesomeIcon icon={item.icon} className="size-3.5" />
         <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
       </Link>}
-    {item.name === '收藏' &&
-      <div onClick={() => alert('欢迎添加收藏夹，请按 ctrl + D 或 command + D')}
-        className="flex items-center text-gray-500 hover:text-yellow-500 cursor-pointer font-semibold px-3 py-2 rounded-lg transition-colors">
-        <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-yellow-400" />
+    {item.name === 'favorite' &&
+      <button type="button" onClick={() => {
+        alert('Use Ctrl+D or Command+D to bookmark this page.');
+        onNavigate?.();
+      }}
+        className={itemClass}>
+        <FontAwesomeIcon icon={item.icon} className="size-3.5" />
         <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
-      </div>
+      </button>
     }
-    {item.name === '提交收录' &&
-      <div onClick={() => window.open('https://d4fj7h0wc7.feishu.cn/share/base/form/shrcnpuNuNCYDTqjqB47fbzz9yY', '_blank')}
-        className="flex items-center text-gray-500 hover:text-yellow-500 cursor-pointer font-semibold px-3 py-2 rounded-lg transition-colors">
-        <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-yellow-400" />
+    {item.name === 'submit_collection' &&
+      <button type="button" onClick={() => {
+        window.open('https://d4fj7h0wc7.feishu.cn/share/base/form/shrcnpuNuNCYDTqjqB47fbzz9yY', '_blank', 'noopener,noreferrer');
+        onNavigate?.();
+      }}
+        className={itemClass}>
+        <FontAwesomeIcon icon={item.icon} className="size-3.5" />
         <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
-      </div>
+      </button>
     }
-    {item.name === '关注我' &&
+    {item.name === 'follow_me' &&
       <Popover>
-        <PopoverTrigger>
-          <div className="flex items-center text-gray-500 hover:text-red-600 cursor-pointer font-semibold px-3 py-2 rounded-lg transition-colors">
-            <FontAwesomeIcon icon={item.icon} className="mr-1 w-4 text-red-600" />
+        <PopoverTrigger asChild>
+          <button type="button" className={itemClass}>
+            <FontAwesomeIcon icon={item.icon} className="size-3.5" />
             <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
-          </div>
+          </button>
         </PopoverTrigger>
-        <PopoverContent className={'w-50 h-55 flex flex-col items-center text-gray-500'}>
-          {t('top_menu.more_value_content')}
+        <PopoverContent align="end" className="z-[70] flex w-56 flex-col items-center rounded-2xl border-slate-200 p-3 text-sm text-slate-600 shadow-xl shadow-slate-950/10">
+          <p className="mb-2 font-medium text-slate-800">{t('top_menu.more_value_content')}</p>
           <Image
             src="/qrcode.png"
             alt="qrcode"
-            width={200}
-            height={200}
+            width={176}
+            height={176}
+            className="rounded-xl"
           />
         </PopoverContent>
       </Popover>

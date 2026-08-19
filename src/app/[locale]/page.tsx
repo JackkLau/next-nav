@@ -1,11 +1,11 @@
-import {CategoryType, navigationData} from '@/data/navigation';
+import {CategoryKey, CategoryType, getLocalizedNavigationData} from '@/data/navigation';
 import NaviItem from '@/components/navi-item';
 import SearchBar from '@/components/search-bar';
 import {Suspense} from 'react';
 import { useTranslations } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://loverezhao.top';
+import { localizedUrl } from '@/lib/seo';
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({locale}));
 }
@@ -15,21 +15,22 @@ export function generateStaticParams() {
 function SearchParamsComponent({locale}: {locale: string}) {
   setRequestLocale(locale);
   const t = useTranslations();
-  // 结构化数据 - 网站集合
+  const navigationData = getLocalizedNavigationData(locale);
+  const pageUrl = localizedUrl(locale);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": t('site_collection_name') ,
     "description": t('site_collection_desc'),
-    "url": siteUrl,
+    "url": pageUrl,
     "numberOfItems": navigationData.length,
     "itemListElement": navigationData.slice(0, 10).map((item, index) => ({
       "@type": "ListItem",
       "position": index + 1,
       "item": {
-        "@type": "WebSite",
+        "@type": "WebPage",
         "name": item.name,
-        "url": item.url,
+        "url": localizedUrl(locale, `/${item.id}`),
         "description": item.description,
         "category": item.category
       }
@@ -40,34 +41,43 @@ function SearchParamsComponent({locale}: {locale: string}) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
-      <div className="w-full flex  items-center min-h-screen bg-transparent">
-        <div className="w-full  mx-auto flex flex-col gap-3 px-2 md:px-0">
+      <main className="flex min-h-full w-full bg-transparent">
+        <div className="mx-auto flex w-full max-w-[1680px] flex-col px-0.5 pb-4 sm:px-1 md:pb-6">
+          <header className="px-3 pb-2 pt-3 text-center md:pb-3 md:pt-5">
+            <div className="mx-auto mb-2 h-1 w-8 rounded-full bg-blue-500/80" aria-hidden="true" />
+            <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 md:text-3xl">
+              {t('site_collection_name')}
+            </h1>
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-500 md:text-[15px]">
+              {t('site_collection_desc')}
+            </p>
+          </header>
           {/* 搜索栏卡片 */}
-          <section className="mb-0 flex flex-col items-center">
-            <div className="max-w-full md:w-1/2 w-full  bg-white/95 backdrop-blur rounded-2xl shadow-md px-6 py-5">
+          <section className="mb-4 flex flex-col items-center px-1 md:mb-5">
+            <div className="w-full max-w-2xl">
               <SearchBar />
             </div>
           </section>
-          {/* 分类导航多列平铺区块 */}
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 max-w-none">
+          {/* 每个分类独占一行，分类内的网站从左到右排列并自然换行 */}
+          <div className="flex w-full max-w-none flex-col gap-4 md:gap-5">
             {
-              Object.keys(CategoryType).map((type) => (
+              (Object.entries(CategoryType) as [CategoryKey, string][]).map(([type, categoryName]) => (
                 <section
                   key={type}
-                  id={CategoryType[type]}
-                  className="w-full bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-md border border-gray-200 p-3 scroll-mt-24"
+                  id={categoryName}
+                  className="w-full scroll-mt-24 px-1"
                   tabIndex={-1}
                 >
                   {/* title 不能国际化，会导致找不到路由 */}
-                  <NaviItem navItems={navigationData.filter(item => item.category === CategoryType[type])} title={type} />
+                  <NaviItem navItems={navigationData.filter(item => item.categoryKey === type)} title={type} />
                 </section>
               ))
             }
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

@@ -1,0 +1,28 @@
+name: Data and SEO quality
+
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run lint
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://loverezhao.top
+          INDEXABLE_LOCALES: en
+      - run: npm run seo:verify
+        env:
+          NEXT_PUBLIC_SITE_URL: https://loverezhao.top
+          INDEXABLE_LOCALES: en

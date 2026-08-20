@@ -1,5 +1,5 @@
 {
-  "id": "b07a6f34-8c90-46dd-96f4-86e84d0fe37e",
+  "id": "9c30e864-52a3-458b-94be-b7916a4c2952",
   "prevId": "1899ba14-a494-4129-ab53-4c8c47a3c269",
   "version": "7",
   "dialect": "postgresql",
@@ -204,6 +204,12 @@
           "notNull": true,
           "default": "now()"
         },
+        "blocked_until": {
+          "name": "blocked_until",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp with time zone",
@@ -246,7 +252,11 @@
     "public.site_status": {
       "name": "site_status",
       "schema": "public",
-      "values": ["draft", "published", "archived"]
+      "values": [
+        "draft",
+        "published",
+        "archived"
+      ]
     }
   },
   "schemas": {},

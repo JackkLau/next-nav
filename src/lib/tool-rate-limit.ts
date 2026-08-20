@@ -15,8 +15,9 @@ export interface ToolRateLimitResult {
 }
 
 /**
- * Consume one attempt using one atomic upsert. Blocked attempts do not extend
- * the current window, and the counter is capped to satisfy its DB constraint.
+ * Consume one attempt using one atomic upsert. The tenth accepted attempt
+ * starts a full 60-second cooldown. Blocked attempts do not extend it, and the
+ * counter is capped to satisfy its DB constraint.
  */
 export async function consumeToolSubmissionLimit(
   clientKey: string,
@@ -29,14 +30,32 @@ export async function consumeToolSubmissionLimit(
       target: toolSubmissionRateLimits.clientKey,
       set: {
         requestCount: sql`case
+          when ${toolSubmissionRateLimits.blockedUntil} > now()
+            then least(${toolSubmissionRateLimits.requestCount} + 1, ${BLOCKED_COUNT})
+          when ${toolSubmissionRateLimits.blockedUntil} is not null
+            then 1
           when ${toolSubmissionRateLimits.windowStartedAt} <= now() - interval '60 seconds'
             then 1
           else least(${toolSubmissionRateLimits.requestCount} + 1, ${BLOCKED_COUNT})
         end`,
         windowStartedAt: sql`case
+          when ${toolSubmissionRateLimits.blockedUntil} is not null
+            and ${toolSubmissionRateLimits.blockedUntil} <= now()
+            then now()
           when ${toolSubmissionRateLimits.windowStartedAt} <= now() - interval '60 seconds'
             then now()
           else ${toolSubmissionRateLimits.windowStartedAt}
+        end`,
+        blockedUntil: sql`case
+          when ${toolSubmissionRateLimits.blockedUntil} > now()
+            then ${toolSubmissionRateLimits.blockedUntil}
+          when ${toolSubmissionRateLimits.blockedUntil} is not null
+            then null
+          when ${toolSubmissionRateLimits.windowStartedAt} <= now() - interval '60 seconds'
+            then null
+          when ${toolSubmissionRateLimits.requestCount} + 1 >= ${TOOL_SUBMISSION_LIMIT}
+            then now() + interval '60 seconds'
+          else null
         end`,
         updatedAt: sql`now()`,
       },
@@ -44,15 +63,18 @@ export async function consumeToolSubmissionLimit(
     .returning({
       requestCount: toolSubmissionRateLimits.requestCount,
       windowStartedAt: toolSubmissionRateLimits.windowStartedAt,
+      blockedUntil: toolSubmissionRateLimits.blockedUntil,
     })
 
   if (!row) {
     throw new Error('Rate limit counter did not return a row')
   }
 
-  const resetAtDate = new Date(
-    row.windowStartedAt.getTime() + TOOL_SUBMISSION_WINDOW_SECONDS * 1000,
-  )
+  const resetAtDate =
+    row.blockedUntil ??
+    new Date(
+      row.windowStartedAt.getTime() + TOOL_SUBMISSION_WINDOW_SECONDS * 1000,
+    )
   const retryAfterSeconds = Math.max(
     1,
     Math.ceil((resetAtDate.getTime() - Date.now()) / 1000),

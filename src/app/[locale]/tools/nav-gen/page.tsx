@@ -23,7 +23,6 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import {
-  Clock3,
   Copy,
   ExternalLink,
   Loader2,
@@ -52,6 +51,7 @@ interface MetaApiResponse {
   message?: string
   metadata?: MetaData
   rateLimit?: RateLimitInfo
+  unlimited?: boolean
 }
 
 class ToolSubmissionError extends Error {
@@ -107,6 +107,7 @@ export default function NavGenPage() {
   const [remaining, setRemaining] = useState(10)
   const [retryUntil, setRetryUntil] = useState<number | null>(null)
   const [cooldownSeconds, setCooldownSeconds] = useState(0)
+  const [accessVerified, setAccessVerified] = useState(false)
 
   useEffect(() => {
     if (!retryUntil) return
@@ -136,7 +137,7 @@ export default function NavGenPage() {
     }
   }
 
-  // 获取网站元数据；密码与限流均由服务端强制执行。
+  // 获取网站元数据；正确密码无限调用，错误密码限流由服务端强制执行。
   const fetchMetaData = async (siteUrl: string) => {
     const response = await fetch('/api/meta', {
       method: 'POST',
@@ -144,7 +145,12 @@ export default function NavGenPage() {
       body: JSON.stringify({ password, url: siteUrl }),
     })
     const data = (await response.json().catch(() => ({}))) as MetaApiResponse
-    applyRateLimit(data.rateLimit)
+    if (data.unlimited) {
+      setAccessVerified(true)
+    } else {
+      setAccessVerified(false)
+      applyRateLimit(data.rateLimit)
+    }
 
     if (!response.ok) {
       throw new ToolSubmissionError(
@@ -160,15 +166,6 @@ export default function NavGenPage() {
   const generateNavData = async () => {
     if (!password) {
       toast.error(t('tools.nav-gen.form.error.password-required'))
-      return
-    }
-
-    if (cooldownSeconds > 0) {
-      toast.error(
-        t('tools.nav-gen.form.error.rate-limited', {
-          seconds: cooldownSeconds,
-        }),
-      )
       return
     }
 
@@ -287,14 +284,16 @@ export default function NavGenPage() {
                     {t('tools.nav-gen.form.security-note')}
                   </p>
                   <p className="mt-0.5" aria-live="polite">
-                    {cooldownSeconds > 0
-                      ? t('tools.nav-gen.form.cooldown', {
-                          seconds: cooldownSeconds,
-                        })
-                      : t('tools.nav-gen.form.rate-limit-status', {
-                          limit: 10,
-                          remaining,
-                        })}
+                    {accessVerified
+                      ? t('tools.nav-gen.form.unlimited-status')
+                      : cooldownSeconds > 0
+                        ? t('tools.nav-gen.form.cooldown', {
+                            seconds: cooldownSeconds,
+                          })
+                        : t('tools.nav-gen.form.rate-limit-status', {
+                            limit: 10,
+                            remaining,
+                          })}
                   </p>
                 </div>
               </div>
@@ -315,7 +314,10 @@ export default function NavGenPage() {
                 maxLength={256}
                 placeholder={t('tools.nav-gen.form.password-placeholder')}
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                  setPassword(event.target.value)
+                  setAccessVerified(false)
+                }}
               />
             </div>
 
@@ -375,17 +377,10 @@ export default function NavGenPage() {
 
             <Button
               onClick={generateNavData}
-              disabled={loading || cooldownSeconds > 0 || !password || !url}
+              disabled={loading || !password || !url}
               className="w-full"
             >
-              {cooldownSeconds > 0 ? (
-                <>
-                  <Clock3 className="mr-2 h-4 w-4" />
-                  {t('tools.nav-gen.form.cooldown', {
-                    seconds: cooldownSeconds,
-                  })}
-                </>
-              ) : loading ? (
+              {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {t('tools.nav-gen.form.loading')}

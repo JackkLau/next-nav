@@ -45,6 +45,13 @@ function responseWithRateLimit(
   )
 }
 
+function responseWithoutRateLimit(body: Record<string, unknown>, status = 200) {
+  return NextResponse.json(body, {
+    status,
+    headers: { 'Cache-Control': 'no-store' },
+  })
+}
+
 async function readSubmissionBody(request: Request): Promise<SubmissionBody> {
   const contentType = request.headers.get('content-type')?.toLowerCase() || ''
   if (!contentType.startsWith('application/json')) {
@@ -70,13 +77,13 @@ async function readSubmissionBody(request: Request): Promise<SubmissionBody> {
 
 export async function POST(request: Request) {
   const expectedPassword = process.env.TOOL_SUBMISSION_PASSWORD
-  if (!expectedPassword || !process.env.DATABASE_URL) {
-    return NextResponse.json(
+  if (!expectedPassword) {
+    return responseWithoutRateLimit(
       {
         error: 'SERVICE_NOT_CONFIGURED',
-        message: 'The submission service is not configured',
+        message: 'The submission password is not configured',
       },
-      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+      503,
     )
   }
 
@@ -91,51 +98,62 @@ export async function POST(request: Request) {
     )
   }
 
-  const clientKey = createRateLimitKey(
-    getClientIdentifier(request.headers),
-    expectedPassword,
-  )
-
-  let rateLimit: ToolRateLimitResult
-  try {
-    rateLimit = await consumeToolSubmissionLimit(clientKey)
-  } catch (error) {
-    console.error(
-      'Tool submission rate limiter unavailable:',
-      error instanceof Error ? error.message : 'Unknown database error',
-    )
-    return NextResponse.json(
-      {
-        error: 'SERVICE_UNAVAILABLE',
-        message: 'The submission service is temporarily unavailable',
-      },
-      { status: 503, headers: { 'Cache-Control': 'no-store' } },
-    )
-  }
-
-  if (!rateLimit.allowed) {
-    return NextResponse.json(
-      {
-        error: 'RATE_LIMITED',
-        message: 'Too many submissions. Try again after the cooldown.',
-        rateLimit,
-      },
-      {
-        status: 429,
-        headers: {
-          ...rateLimitHeaders(rateLimit),
-          'Retry-After': String(rateLimit.retryAfterSeconds),
-        },
-      },
-    )
-  }
-
   const candidatePassword =
     typeof body.password === 'string' ? body.password : ''
-  if (
-    candidatePassword.length > MAX_PASSWORD_LENGTH ||
-    !passwordMatches(candidatePassword, expectedPassword)
-  ) {
+  const isAuthorized =
+    candidatePassword.length <= MAX_PASSWORD_LENGTH &&
+    passwordMatches(candidatePassword, expectedPassword)
+
+  if (!isAuthorized) {
+    if (!process.env.DATABASE_URL) {
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_NOT_CONFIGURED',
+          message: 'Invalid-password rate limiting is not configured',
+        },
+        503,
+      )
+    }
+
+    const clientKey = createRateLimitKey(
+      getClientIdentifier(request.headers),
+      expectedPassword,
+    )
+
+    let rateLimit: ToolRateLimitResult
+    try {
+      rateLimit = await consumeToolSubmissionLimit(clientKey)
+    } catch (error) {
+      console.error(
+        'Tool submission rate limiter unavailable:',
+        error instanceof Error ? error.message : 'Unknown database error',
+      )
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_UNAVAILABLE',
+          message: 'Invalid-password rate limiting is temporarily unavailable',
+        },
+        503,
+      )
+    }
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: 'RATE_LIMITED',
+          message: 'Too many invalid password attempts. Try again later.',
+          rateLimit,
+        },
+        {
+          status: 429,
+          headers: {
+            ...rateLimitHeaders(rateLimit),
+            'Retry-After': String(rateLimit.retryAfterSeconds),
+          },
+        },
+      )
+    }
+
     return responseWithRateLimit(
       { error: 'INVALID_PASSWORD', message: 'Invalid access password' },
       401,
@@ -145,41 +163,46 @@ export async function POST(request: Request) {
 
   const url = typeof body.url === 'string' ? body.url.trim() : ''
   if (!url || url.length > MAX_URL_LENGTH) {
-    return responseWithRateLimit(
-      { error: 'INVALID_URL', message: 'Invalid site address' },
+    return responseWithoutRateLimit(
+      {
+        error: 'INVALID_URL',
+        message: 'Invalid site address',
+        unlimited: true,
+      },
       400,
-      rateLimit,
     )
   }
 
   try {
     const metadata = await fetchPublicSiteMetadata(url)
-    return responseWithRateLimit({ metadata }, 200, rateLimit)
+    return responseWithoutRateLimit({ metadata, unlimited: true })
   } catch (error) {
     if (error instanceof PublicUrlError) {
-      return responseWithRateLimit(
-        { error: 'INVALID_URL', message: error.message },
+      return responseWithoutRateLimit(
+        { error: 'INVALID_URL', message: error.message, unlimited: true },
         400,
-        rateLimit,
       )
     }
 
     if (error instanceof SiteMetadataError) {
-      return responseWithRateLimit(
-        { error: 'METADATA_FETCH_FAILED', message: error.message },
+      return responseWithoutRateLimit(
+        {
+          error: 'METADATA_FETCH_FAILED',
+          message: error.message,
+          unlimited: true,
+        },
         502,
-        rateLimit,
       )
     }
 
     if (error instanceof Error && error.name === 'TimeoutError') {
-      return responseWithRateLimit(
+      return responseWithoutRateLimit(
         {
           error: 'METADATA_FETCH_TIMEOUT',
           message: 'The site request timed out',
+          unlimited: true,
         },
         504,
-        rateLimit,
       )
     }
 
@@ -187,13 +210,13 @@ export async function POST(request: Request) {
       'Metadata fetch failed:',
       error instanceof Error ? error.message : 'Unknown metadata error',
     )
-    return responseWithRateLimit(
+    return responseWithoutRateLimit(
       {
         error: 'METADATA_FETCH_FAILED',
         message: 'Failed to fetch site metadata',
+        unlimited: true,
       },
       502,
-      rateLimit,
     )
   }
 }

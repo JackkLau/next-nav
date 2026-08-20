@@ -14,7 +14,7 @@ TOOL_SUBMISSION_PASSWORD=replace-with-a-long-random-password
 DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@REGION.pooler.supabase.com:6543/postgres
 ```
 
-提交密码只发送给同源的 `POST /api/meta`，服务端校验后才会抓取目标网站。不要把密码提交到 Git，也不要放进任何 `NEXT_PUBLIC_*` 变量。
+提交密码只发送给同源的 `POST /api/meta`，服务端校验后才会抓取目标网站。正确密码可以无限次调用，并且不会访问限流数据库。不要把密码提交到 Git，也不要放进任何 `NEXT_PUBLIC_*` 变量。
 
 部署前还需人工审查并执行 `drizzle/0001_tool_submission_rate_limit.sql`：
 
@@ -27,14 +27,14 @@ pnpm run db:migrate
 
 ## 限流规则
 
-- 按 Vercel 提供的客户端 IP 计数，少于 10 次时计数窗口会在首个请求 60 秒后自然重置；
-- 第 10 次请求仍会执行，但从该次提交开始强制进入完整的 60 秒冷却；
-- 冷却期内第 11 次及之后返回 HTTP `429` 和 `Retry-After`，且不会延长冷却；
-- 密码错误也计数，降低密码暴力尝试风险；
+- 正确密码不计数，可以无限次调用，也不依赖 `DATABASE_URL`；
+- 只有错误密码尝试才按 Vercel 提供的客户端 IP 计数；
+- 第 10 次错误尝试仍返回 `401`，并从该次尝试开始进入完整的 60 秒冷却；
+- 冷却期内的错误密码返回 HTTP `429` 和 `Retry-After`，且不会延长冷却；正确密码仍可立即使用；
 - 数据库只存储由服务端密钥 HMAC 生成的客户端标识，不存储原始 IP；
 - 计数使用 PostgreSQL 原子 upsert，多实例和 Serverless 并发下共用同一限制。
 
-限流表启用了 RLS，且不提供 `anon`/`authenticated` 策略。接口仅通过服务端 `DATABASE_URL` 访问。
+限流表启用了 RLS，且不提供 `anon`/`authenticated` 策略。只有错误密码尝试会通过服务端 `DATABASE_URL` 访问该表。
 
 ## 接口约定
 

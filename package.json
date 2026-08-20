@@ -18,7 +18,7 @@
     "check": "pnpm run data:validate && tsc --noEmit",
     "seo:verify": "node scripts/seo/verify-production-build.mjs",
     "start": "next start",
-    "test:security": "tsx --test src/lib/nav-gen-security.test.ts",
+    "test:security": "tsx --test src/lib/nav-gen-security.test.ts src/app/api/meta/route.test.ts",
     "lint": "eslint ."
   },
   "dependencies": {

@@ -4,7 +4,7 @@
 
 仓库已接入 Supabase PostgreSQL + Drizzle 的 schema、迁移和仓储接口，但当前线上仍由 JSON 读取，尚未连接、迁移或修改远程 Supabase 数据库。数据库命令和上线切换步骤见 [`docs/database.md`](./database.md)。
 
-需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成草稿 JSON；该工具只生成内容，不直接修改发布数据。部署配置与每分钟 10 次的限流规则见 [`docs/tool-submission.md`](./tool-submission.md)。
+需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成草稿 JSON；该工具只生成内容，不直接修改发布数据。正确密码可无限生成，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
 
 ## 日常维护
 

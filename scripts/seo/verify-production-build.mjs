@@ -126,9 +126,18 @@ async function verify() {
   assert(category.text.includes('Online Tools'), 'English category keyword is missing')
 
   const legacy = await read('/en/1', { redirect: 'manual' })
-  assert(legacy.response.status === 308, 'legacy detail URL must use a permanent redirect')
-  assert(legacy.response.headers.get('location') === '/en/github', 'legacy redirect target mismatch')
-
+  const legacyLocation = legacy.response.headers.get('location')
+  const legacyTarget = redirectUrl(legacy.response)
+  
+  assert(
+    legacy.response.status === 308,
+    `legacy detail URL must use a permanent redirect, received ${legacy.response.status}`,
+  )
+  
+  assert(
+    legacyTarget?.pathname === '/en/github',
+    `legacy redirect target mismatch: expected /en/github, received ${legacyLocation || 'none'}`,
+  )
   for (const retiredLocale of ['zh-CN', 'zh-TW']) {
     const retired = await read(`/${retiredLocale}/github`, { redirect: 'manual' })
     assert(retired.response.status === 308, `${retiredLocale} URL must use a permanent redirect`)

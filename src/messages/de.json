@@ -83,6 +83,11 @@
       "form": {
         "title": "Webseiten-Informationen",
         "description": "Webseitenadresse und Basisinformationen eingeben",
+        "password": "Zugangspasswort *",
+        "password-placeholder": "Server-Zugangspasswort eingeben",
+        "security-note": "Passwortgeschützte Übermittlung",
+        "rate-limit-status": "Noch {remaining} von {limit} Übermittlungen in dieser Minute",
+        "cooldown": "In {seconds} Sek. erneut versuchen",
         "url": "Webseitenadresse *",
         "category": "Kategorie",
         "favorite": "Favoriten",
@@ -91,6 +96,10 @@
         "loading": "Generierung läuft...",
         "success": "Navigationsdaten erfolgreich generiert!",
         "error": {
+          "password-required": "Bitte geben Sie das Zugangspasswort ein",
+          "password": "Das Zugangspasswort ist falsch",
+          "rate-limited": "Zu viele Übermittlungen. In {seconds} Sek. erneut versuchen",
+          "service-unavailable": "Der Übermittlungsdienst ist vorübergehend nicht verfügbar",
           "url": "Bitte geben Sie eine gültige Webseitenadresse ein (beginnend mit http:// oder https://)",
           "url-format": "Bitte geben Sie eine gültige Webseitenadresse ein (beginnend mit http:// oder https://)",
           "generate-failed": "Generierung fehlgeschlagen, bitte überprüfen Sie die Webseitenadresse",

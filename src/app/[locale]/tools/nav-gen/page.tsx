@@ -1,26 +1,66 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
-import { Copy, ExternalLink, Loader2 } from 'lucide-react'
+import {
+  Clock3,
+  Copy,
+  ExternalLink,
+  Loader2,
+  LockKeyhole,
+  ShieldCheck,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { CategoryMapping, CategoryType } from '@/data/navigation'
 import { useTranslations } from 'next-intl'
-
-
 
 interface MetaData {
   title?: string
   description?: string
   favicon?: string
+}
+
+interface RateLimitInfo {
+  limit: number
+  remaining: number
+  resetAt: string
+  retryAfterSeconds: number
+}
+
+interface MetaApiResponse {
+  error?: string
+  message?: string
+  metadata?: MetaData
+  rateLimit?: RateLimitInfo
+}
+
+class ToolSubmissionError extends Error {
+  constructor(
+    readonly code: string,
+    readonly retryAfterSeconds = 0,
+  ) {
+    super(code)
+  }
 }
 
 interface GeneratedNavItem {
@@ -56,6 +96,7 @@ function createSlug(name: string, url: string) {
 
 export default function NavGenPage() {
   const t = useTranslations()
+  const [password, setPassword] = useState('')
   const [url, setUrl] = useState('')
   const [category, setCategory] = useState('common')
   const [favorite, setFavorite] = useState(false)
@@ -63,29 +104,74 @@ export default function NavGenPage() {
   const [loading, setLoading] = useState(false)
   const [metaData, setMetaData] = useState<MetaData>({})
   const [generatedData, setGeneratedData] = useState<string>('')
+  const [remaining, setRemaining] = useState(10)
+  const [retryUntil, setRetryUntil] = useState<number | null>(null)
+  const [cooldownSeconds, setCooldownSeconds] = useState(0)
 
+  useEffect(() => {
+    if (!retryUntil) return
 
-  // 获取网站元数据
-  const fetchMetaData = async (url: string) => {
-    try {
-      const response = await fetch(`/api/meta?url=${encodeURIComponent(url)}&meta=title,description,favicon`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch meta data')
+    const updateCountdown = () => {
+      const seconds = Math.max(0, Math.ceil((retryUntil - Date.now()) / 1000))
+      setCooldownSeconds(seconds)
+
+      if (seconds === 0) {
+        setRetryUntil(null)
+        setRemaining(10)
       }
-      const data = await response.json()
-      return {
-        title: data.title || '',
-        description: data.description || '',
-        favicon: data.favicon || ''
-      }
-    } catch (error) {
-      console.error('Error fetching meta data:', error)
-      return {}
     }
+
+    updateCountdown()
+    const timer = window.setInterval(updateCountdown, 250)
+    return () => window.clearInterval(timer)
+  }, [retryUntil])
+
+  const applyRateLimit = (rateLimit?: RateLimitInfo) => {
+    if (!rateLimit) return
+
+    setRemaining(rateLimit.remaining)
+    if (rateLimit.remaining === 0) {
+      const resetAt = Date.parse(rateLimit.resetAt)
+      if (Number.isFinite(resetAt)) setRetryUntil(resetAt)
+    }
+  }
+
+  // 获取网站元数据；密码与限流均由服务端强制执行。
+  const fetchMetaData = async (siteUrl: string) => {
+    const response = await fetch('/api/meta', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, url: siteUrl }),
+    })
+    const data = (await response.json().catch(() => ({}))) as MetaApiResponse
+    applyRateLimit(data.rateLimit)
+
+    if (!response.ok) {
+      throw new ToolSubmissionError(
+        data.error || 'UNKNOWN_ERROR',
+        data.rateLimit?.retryAfterSeconds,
+      )
+    }
+
+    return data.metadata || {}
   }
 
   // 生成导航数据
   const generateNavData = async () => {
+    if (!password) {
+      toast.error(t('tools.nav-gen.form.error.password-required'))
+      return
+    }
+
+    if (cooldownSeconds > 0) {
+      toast.error(
+        t('tools.nav-gen.form.error.rate-limited', {
+          seconds: cooldownSeconds,
+        }),
+      )
+      return
+    }
+
     if (!url) {
       toast.error(t('tools.nav-gen.form.error.url'))
       return
@@ -125,8 +211,29 @@ export default function NavGenPage() {
       setGeneratedData(JSON.stringify(navItem, null, 2))
       toast.success(t('tools.nav-gen.success'))
     } catch (error) {
-      console.error('Error generating nav data:', error)
-      toast.error(t('tools.nav-gen.form.error.generate-failed'))
+      if (error instanceof ToolSubmissionError) {
+        if (error.code === 'INVALID_PASSWORD') {
+          toast.error(t('tools.nav-gen.form.error.password'))
+        } else if (error.code === 'RATE_LIMITED') {
+          toast.error(
+            t('tools.nav-gen.form.error.rate-limited', {
+              seconds: error.retryAfterSeconds || cooldownSeconds || 60,
+            }),
+          )
+        } else if (
+          error.code === 'SERVICE_NOT_CONFIGURED' ||
+          error.code === 'SERVICE_UNAVAILABLE'
+        ) {
+          toast.error(t('tools.nav-gen.form.error.service-unavailable'))
+        } else if (error.code === 'INVALID_URL') {
+          toast.error(t('tools.nav-gen.form.error.url-format'))
+        } else {
+          toast.error(t('tools.nav-gen.form.error.generate-failed'))
+        }
+      } else {
+        console.error('Error generating nav data:', error)
+        toast.error(t('tools.nav-gen.form.error.generate-failed'))
+      }
     } finally {
       setLoading(false)
     }
@@ -167,9 +274,51 @@ export default function NavGenPage() {
         <Card>
           <CardHeader>
             <CardTitle>{t('tools.nav-gen.form.title')}</CardTitle>
-            <CardDescription>{t('tools.nav-gen.form.description')}</CardDescription>
+            <CardDescription>
+              {t('tools.nav-gen.form.description')}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="rounded-xl bg-slate-100 px-4 py-3 text-sm text-slate-600">
+              <div className="flex items-start gap-2">
+                <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+                <div>
+                  <p className="font-medium text-slate-800">
+                    {t('tools.nav-gen.form.security-note')}
+                  </p>
+                  <p className="mt-0.5" aria-live="polite">
+                    {cooldownSeconds > 0
+                      ? t('tools.nav-gen.form.cooldown', {
+                          seconds: cooldownSeconds,
+                        })
+                      : t('tools.nav-gen.form.rate-limit-status', {
+                          limit: 10,
+                          remaining,
+                        })}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                htmlFor="tool-password"
+                className="flex items-center gap-2"
+              >
+                <LockKeyhole className="h-4 w-4" />
+                {t('tools.nav-gen.form.password')}
+              </Label>
+              <Input
+                id="tool-password"
+                type="password"
+                autoComplete="current-password"
+                maxLength={256}
+                placeholder={t('tools.nav-gen.form.password-placeholder')}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="url">{t('tools.nav-gen.form.url')}</Label>
               <Input
@@ -184,7 +333,9 @@ export default function NavGenPage() {
             {/* 分类、收藏、需梯子表单样式优化（PC端对齐） */}
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-4">
               <div className="flex flex-1 items-center gap-2">
-                <Label htmlFor="category" className="mb-0 whitespace-nowrap">{t('tools.nav-gen.form.category')}</Label>
+                <Label htmlFor="category" className="mb-0 whitespace-nowrap">
+                  {t('tools.nav-gen.form.category')}
+                </Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="w-full md:w-40">
                     <SelectValue />
@@ -192,7 +343,9 @@ export default function NavGenPage() {
                   <SelectContent>
                     {Object.entries(CategoryType).map(([key, value]) => (
                       <SelectItem key={key} value={key}>
-                        {t(`category.${CategoryMapping[value as keyof typeof CategoryMapping]}`) }
+                        {t(
+                          `category.${CategoryMapping[value as keyof typeof CategoryMapping]}`,
+                        )}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -204,7 +357,9 @@ export default function NavGenPage() {
                   checked={favorite}
                   onCheckedChange={setFavorite}
                 />
-                <Label htmlFor="favorite" className="mb-0 whitespace-nowrap">{t('tools.nav-gen.form.favorite')}</Label>
+                <Label htmlFor="favorite" className="mb-0 whitespace-nowrap">
+                  {t('tools.nav-gen.form.favorite')}
+                </Label>
               </div>
               <div className="flex flex-1 items-center gap-2">
                 <Switch
@@ -212,16 +367,25 @@ export default function NavGenPage() {
                   checked={needVPN}
                   onCheckedChange={setNeedVPN}
                 />
-                <Label htmlFor="needVPN" className="mb-0 whitespace-nowrap">{t('tools.nav-gen.form.needVPN')}</Label>
+                <Label htmlFor="needVPN" className="mb-0 whitespace-nowrap">
+                  {t('tools.nav-gen.form.needVPN')}
+                </Label>
               </div>
             </div>
 
             <Button
               onClick={generateNavData}
-              disabled={loading || !url}
+              disabled={loading || cooldownSeconds > 0 || !password || !url}
               className="w-full"
             >
-              {loading ? (
+              {cooldownSeconds > 0 ? (
+                <>
+                  <Clock3 className="mr-2 h-4 w-4" />
+                  {t('tools.nav-gen.form.cooldown', {
+                    seconds: cooldownSeconds,
+                  })}
+                </>
+              ) : loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {t('tools.nav-gen.form.loading')}
@@ -241,24 +405,36 @@ export default function NavGenPage() {
           <Card>
             <CardHeader>
               <CardTitle>{t('tools.nav-gen.form.meta-data.title')}</CardTitle>
-              <CardDescription>{t('tools.nav-gen.form.meta-data.description')}</CardDescription>
+              <CardDescription>
+                {t('tools.nav-gen.form.meta-data.description')}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {metaData.title && (
                 <div>
-                  <Label className="text-sm font-medium">{t('tools.nav-gen.form.meta-data.title')}</Label>
-                  <p className="text-sm text-muted-foreground">{metaData.title}</p>
+                  <Label className="text-sm font-medium">
+                    {t('tools.nav-gen.form.meta-data.title')}
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    {metaData.title}
+                  </p>
                 </div>
               )}
               {metaData.description && (
                 <div>
-                  <Label className="text-sm font-medium">{t('tools.nav-gen.form.meta-data.description')}</Label>
-                  <p className="text-sm text-muted-foreground">{metaData.description}</p>
+                  <Label className="text-sm font-medium">
+                    {t('tools.nav-gen.form.meta-data.description')}
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    {metaData.description}
+                  </p>
                 </div>
               )}
               {metaData.favicon && (
                 <div>
-                  <Label className="text-sm font-medium">{t('tools.nav-gen.form.meta-data.favicon')}</Label>
+                  <Label className="text-sm font-medium">
+                    {t('tools.nav-gen.form.meta-data.favicon')}
+                  </Label>
                   <div className="flex items-center space-x-2">
                     <Image
                       width={16}
@@ -270,7 +446,9 @@ export default function NavGenPage() {
                         e.currentTarget.style.display = 'none'
                       }}
                     />
-                    <span className="text-sm text-muted-foreground">{metaData.favicon}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {metaData.favicon}
+                    </span>
                   </div>
                 </div>
               )}
@@ -284,8 +462,12 @@ export default function NavGenPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>{t('tools.nav-gen.form.generated-data.title')}</CardTitle>
-                  <CardDescription>{t('tools.nav-gen.form.generated-data.description')}</CardDescription>
+                  <CardTitle>
+                    {t('tools.nav-gen.form.generated-data.title')}
+                  </CardTitle>
+                  <CardDescription>
+                    {t('tools.nav-gen.form.generated-data.description')}
+                  </CardDescription>
                 </div>
                 <Button variant="outline" size="sm" onClick={copyToClipboard}>
                   <Copy className="mr-2 h-4 w-4" />

@@ -1,19 +1,18 @@
 import rawSites from './sites.json'
+import {
+  CategoryType,
+  type CategoryKey,
+  type NavigationTranslation,
+  type SiteRecord,
+} from './site-model'
 
-export const CategoryType = {
-  common: 'common',
-  community: 'community',
-  tools: 'tools',
-  remote: 'remote',
-  personal: 'personal',
-  resources: 'resources',
-  mirror: 'mirror',
-  navigation: 'navigation',
-  entertainment: 'entertainment',
-  game: 'game',
-} as const
-
-export type CategoryKey = keyof typeof CategoryType
+export { CategoryType, siteCategories, siteStatuses } from './site-model'
+export type {
+  CategoryKey,
+  NavigationTranslation,
+  SiteRecord,
+  SiteStatus,
+} from './site-model'
 
 export const CategoryMapping = Object.fromEntries(
   Object.entries(CategoryType).map(([key, name]) => [name, key]),
@@ -22,27 +21,6 @@ export const CategoryMapping = Object.fromEntries(
 export const CategoryNameMapping = Object.fromEntries(
   Object.entries(CategoryType),
 ) as Record<CategoryKey, string>
-
-export interface NavigationTranslation {
-  name?: string
-  description?: string
-}
-
-export interface SiteRecord {
-  slug: string
-  legacyId?: string
-  name: string
-  url: string
-  imgUrl?: string
-  category: CategoryKey
-  favorite?: boolean
-  description?: string
-  needVPN?: boolean
-  sourceLocale: string
-  translations?: Record<string, NavigationTranslation>
-  status: 'draft' | 'published' | 'archived'
-  updatedAt: string
-}
 
 export interface NavigationItem {
   id: string

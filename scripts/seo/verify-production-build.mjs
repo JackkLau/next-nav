@@ -127,12 +127,29 @@ async function verify() {
 
   const legacy = await read('/en/1', { redirect: 'manual' })
   assert(legacy.response.status === 308, 'legacy detail URL must use a permanent redirect')
-  assert(legacy.response.headers.get('location') === '/en/github', 'legacy redirect target mismatch')
+  assert(
+    redirectUrl(legacy.response)?.pathname === '/en/github',
+    `legacy redirect target mismatch: ${legacy.response.headers.get('location') || 'none'}`,
+  )
+
+  const unprefixedLegacy = await read('/1', { redirect: 'manual' })
+  assert(unprefixedLegacy.response.status === 308, 'unprefixed legacy URL must use a permanent redirect')
+  assert(
+    redirectUrl(unprefixedLegacy.response)?.pathname === '/en/github',
+    'unprefixed legacy URL must resolve directly to the canonical detail URL',
+  )
 
   for (const retiredLocale of ['zh-CN', 'zh-TW']) {
     const retired = await read(`/${retiredLocale}/github`, { redirect: 'manual' })
     assert(retired.response.status === 308, `${retiredLocale} URL must use a permanent redirect`)
     assert(redirectUrl(retired.response)?.pathname === '/en/github', `${retiredLocale} redirect target mismatch`)
+
+    const retiredLegacy = await read(`/${retiredLocale}/1`, { redirect: 'manual' })
+    assert(retiredLegacy.response.status === 308, `${retiredLocale} legacy URL must use a permanent redirect`)
+    assert(
+      redirectUrl(retiredLegacy.response)?.pathname === '/en/github',
+      `${retiredLocale} legacy URL must resolve directly to the canonical detail URL`,
+    )
   }
 
   const invalid = await read('/en/not-a-real-site', { redirect: 'manual' })

@@ -83,6 +83,11 @@
       "form": {
         "title": "Información del sitio",
         "description": "Introduce la dirección del sitio y la información básica",
+        "password": "Contraseña de acceso *",
+        "password-placeholder": "Introduce la contraseña de acceso al servidor",
+        "security-note": "Envío protegido por contraseña",
+        "rate-limit-status": "Quedan {remaining} de {limit} envíos en este minuto",
+        "cooldown": "Vuelve a intentarlo en {seconds} s",
         "url": "Dirección del sitio *",
         "category": "Categoría",
         "favorite": "Favoritos",
@@ -91,6 +96,10 @@
         "loading": "Generando...",
         "success": "¡Datos de navegación generados con éxito!",
         "error": {
+          "password-required": "Introduce la contraseña de acceso",
+          "password": "La contraseña de acceso es incorrecta",
+          "rate-limited": "Demasiados envíos. Vuelve a intentarlo en {seconds} s",
+          "service-unavailable": "El servicio de envío no está disponible temporalmente",
           "url": "Por favor, introduce una dirección de sitio válida (que comience con http:// o https://)",
           "url-format": "Por favor, introduce una dirección de sitio válida (que comience con http:// o https://)",
           "generate-failed": "Error al generar, verifica la dirección del sitio",

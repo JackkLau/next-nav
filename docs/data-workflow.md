@@ -2,27 +2,31 @@
 
 `src/data/sites.json` 是唯一发布数据源。页面、旧 URL 重定向、分类列表和 sitemap 都从它生成，不再直接编辑 TypeScript 数组。
 
+仓库已接入 Supabase PostgreSQL + Drizzle 的 schema、迁移和仓储接口，但当前线上仍由 JSON 读取，尚未连接、迁移或修改远程 Supabase 数据库。数据库命令和上线切换步骤见 [`docs/database.md`](./database.md)。
+
+需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成草稿 JSON；该工具只生成内容，不直接修改发布数据。部署配置与每分钟 10 次的限流规则见 [`docs/tool-submission.md`](./tool-submission.md)。
+
 ## 日常维护
 
 1. 编辑 `src/data/sites.json`，或从飞书多维表格同步。
 2. 新记录必须设置永久不变的 `slug`；修改名称或排序时不要修改它。
 3. 新记录先使用 `draft`，人工检查描述、分类、图标和目标网址后改为 `published`。
 4. 内容发生实质变化时更新 `updatedAt`，格式为 `YYYY-MM-DD`。
-5. 运行 `npm run data:validate` 和 `npm run build`。
+5. 运行 `pnpm run data:validate` 和 `pnpm run build`。
 6. 提交 Pull Request；CI 会重复执行数据校验、类型检查、lint、生产构建和 SEO 路由验收。
 
 ## 字段
 
-| 字段 | 必填 | 说明 |
-|---|---:|---|
-| `slug` | 是 | 永久 URL 标识，只允许小写字母、数字和连字符 |
-| `legacyId` | 旧数据 | 原数字 URL，用于 308 重定向，不要复用 |
-| `name` / `url` / `category` | 是 | 站点基本信息 |
-| `description` | 发布时 | 人工审核的原始语言简介 |
-| `sourceLocale` | 是 | 简介所用语言，新记录默认 `en` |
-| `translations` | 否 | `{ "en": { "name": "...", "description": "..." } }` |
-| `status` | 是 | `draft`、`published` 或 `archived` |
-| `updatedAt` | 是 | 最后一次实质内容更新时间，供 sitemap 使用 |
+| 字段                        |   必填 | 说明                                                |
+| --------------------------- | -----: | --------------------------------------------------- |
+| `slug`                      |     是 | 永久 URL 标识，只允许小写字母、数字和连字符         |
+| `legacyId`                  | 旧数据 | 原数字 URL，用于 308 重定向，不要复用               |
+| `name` / `url` / `category` |     是 | 站点基本信息                                        |
+| `description`               | 发布时 | 人工审核的原始语言简介                              |
+| `sourceLocale`              |     是 | 简介所用语言，新记录默认 `en`                       |
+| `translations`              |     否 | `{ "en": { "name": "...", "description": "..." } }` |
+| `status`                    |     是 | `draft`、`published` 或 `archived`                  |
+| `updatedAt`                 |     是 | 最后一次实质内容更新时间，供 sitemap 使用           |
 
 ## 飞书多维表格同步
 
@@ -32,10 +36,10 @@
 
 ```bash
 # 只读取和规范化，不修改仓库
-npm run data:sync:feishu
+pnpm run data:sync:feishu
 
 # 确认字段映射后写入，并自动校验
-npm run data:sync:feishu -- --write
+pnpm run data:sync:feishu -- --write
 ```
 
 同步默认是 dry-run，防止字段映射错误时覆盖数据。密钥只放在本地或 CI Secrets，不提交到 Git。

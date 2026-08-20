@@ -83,6 +83,11 @@
       "form": {
         "title": "Informações do site",
         "description": "Insira o endereço do site e as informações básicas",
+        "password": "Senha de acesso *",
+        "password-placeholder": "Insira a senha de acesso ao servidor",
+        "security-note": "Envio protegido por senha",
+        "rate-limit-status": "Restam {remaining} de {limit} envios neste minuto",
+        "cooldown": "Tente novamente em {seconds}s",
         "url": "Endereço do site *",
         "category": "Categoria",
         "favorite": "Favoritos",
@@ -91,6 +96,10 @@
         "loading": "Gerando...",
         "success": "Dados de navegação gerados com sucesso!",
         "error": {
+          "password-required": "Insira a senha de acesso",
+          "password": "A senha de acesso está incorreta",
+          "rate-limited": "Muitos envios. Tente novamente em {seconds}s",
+          "service-unavailable": "O serviço de envio está temporariamente indisponível",
           "url": "Por favor, insira um endereço de site válido (começando com http:// ou https://)",
           "url-format": "Por favor, insira um endereço de site válido (começando com http:// ou https://)",
           "generate-failed": "Falha ao gerar, verifique o endereço do site",

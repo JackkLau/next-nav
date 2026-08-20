@@ -83,6 +83,11 @@
       "form": {
         "title": "Informazioni sul sito",
         "description": "Inserisci l'indirizzo del sito e le informazioni di base",
+        "password": "Password di accesso *",
+        "password-placeholder": "Inserisci la password di accesso al server",
+        "security-note": "Invio protetto da password",
+        "rate-limit-status": "Restano {remaining} invii su {limit} in questo minuto",
+        "cooldown": "Riprova tra {seconds} s",
         "url": "Indirizzo del sito *",
         "category": "Categoria",
         "favorite": "Preferiti",
@@ -91,6 +96,10 @@
         "loading": "Generazione...",
         "success": "Dati di navigazione generati con successo!",
         "error": {
+          "password-required": "Inserisci la password di accesso",
+          "password": "La password di accesso non è corretta",
+          "rate-limited": "Troppi invii. Riprova tra {seconds} s",
+          "service-unavailable": "Il servizio di invio è temporaneamente non disponibile",
           "url": "Per favore, inserisci un indirizzo di sito valido (che inizi con http:// o https://)",
           "url-format": "Per favore, inserisci un indirizzo di sito valido (che inizi con http:// o https://)",
           "generate-failed": "Errore nella generazione, controlla l'indirizzo del sito",

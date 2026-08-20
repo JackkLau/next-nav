@@ -30,11 +30,6 @@ const nextConfig: NextConfig = {
         destination: `${canonicalOrigin}/:path*`,
         permanent: true,
       })),
-      ...retiredLocales.map((locale) => ({
-        source: `/${locale}/:path*`,
-        destination: '/en/:path*',
-        permanent: true,
-      })),
     ]
   },
   images: {

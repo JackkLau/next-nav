@@ -82,6 +82,11 @@
       "form": {
         "title": "Site Information",
         "description": "Enter the site address and basic information",
+        "password": "Access Password *",
+        "password-placeholder": "Enter the server access password",
+        "security-note": "Password-protected submission",
+        "rate-limit-status": "{remaining} of {limit} submissions remaining in this minute",
+        "cooldown": "Try again in {seconds}s",
         "url": "Site Address *",
         "category": "Category",
         "favorite": "Favorite",
@@ -90,6 +95,10 @@
         "loading": "Generating...",
         "success": "Navigation data generated successfully!",
         "error": {
+          "password-required": "Please enter the access password",
+          "password": "The access password is incorrect",
+          "rate-limited": "Too many submissions. Try again in {seconds}s",
+          "service-unavailable": "The submission service is temporarily unavailable",
           "url": "Please enter a valid site address",
           "url-format": "Please enter a valid site address (start with http:// or https://)",
           "generate-failed": "Failed to generate navigation data, please check the site address",

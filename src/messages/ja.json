@@ -83,6 +83,11 @@
       "form": {
         "title": "サイト情報",
         "description": "サイトアドレスと基本情報を入力",
+        "password": "アクセスパスワード *",
+        "password-placeholder": "サーバーのアクセスパスワードを入力",
+        "security-note": "パスワードで保護された送信",
+        "rate-limit-status": "この1分間は残り{remaining}/{limit}回送信できます",
+        "cooldown": "{seconds}秒後に再試行できます",
         "url": "サイトアドレス *",
         "category": "カテゴリ",
         "favorite": "お気に入り",
@@ -91,6 +96,10 @@
         "loading": "生成中...",
         "success": "ナビゲーションデータが正常に生成されました！",
         "error": {
+          "password-required": "アクセスパスワードを入力してください",
+          "password": "アクセスパスワードが正しくありません",
+          "rate-limited": "送信回数が多すぎます。{seconds}秒後に再試行してください",
+          "service-unavailable": "送信サービスは一時的に利用できません",
           "url": "有効なサイトアドレスを入力してください（http:// または https:// で始まる必要があります）",
           "url-format": "有効なサイトアドレスを入力してください（http:// または https:// で始まる必要があります）",
           "generate-failed": "生成に失敗しました。サイトアドレスが正しいかご確認ください",

@@ -12,13 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       - name: Import and validate Feishu records
-        run: npm run data:sync:feishu -- --write
+        run: pnpm run data:sync:feishu -- --write
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
           FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
@@ -34,9 +35,9 @@ jobs:
       - name: Verify imported data
         if: env.has_data_changes == 'true'
         run: |
-          npm run check
-          npm run lint
-          npm run build
+          pnpm run check
+          pnpm run lint
+          pnpm run build
         env:
           NEXT_PUBLIC_SITE_URL: https://loverezhao.top
           INDEXABLE_LOCALES: en

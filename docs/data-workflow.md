@@ -8,7 +8,7 @@
 2. 新记录必须设置永久不变的 `slug`；修改名称或排序时不要修改它。
 3. 新记录先使用 `draft`，人工检查描述、分类、图标和目标网址后改为 `published`。
 4. 内容发生实质变化时更新 `updatedAt`，格式为 `YYYY-MM-DD`。
-5. 运行 `npm run data:validate` 和 `npm run build`。
+5. 运行 `npm run data:validate` 和 `npm run seo:verify`；SEO 校验会自动创建生产构建。
 6. 提交 Pull Request；CI 会重复执行数据校验、类型检查、lint、生产构建和 SEO 路由验收。
 
 ## 字段

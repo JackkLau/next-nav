@@ -18,10 +18,6 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run lint
-      - run: npm run build
-        env:
-          NEXT_PUBLIC_SITE_URL: https://loverezhao.top
-          INDEXABLE_LOCALES: en
       - run: npm run seo:verify
         env:
           NEXT_PUBLIC_SITE_URL: https://loverezhao.top

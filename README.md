@@ -23,9 +23,10 @@ npm run dev
 ```bash
 npm run check
 npm run lint
-npm run build
 npm run seo:verify
 ```
+
+`seo:verify` 会先创建全新的生产构建，再启动本地生产服务器检查 sitemap、canonical、重定向、noindex 和 404 行为。
 
 ## 数据维护
 

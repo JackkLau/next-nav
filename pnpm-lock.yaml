@@ -17,6 +17,9 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^0.2.2
         version: 0.2.6(@fortawesome/fontawesome-svg-core@7.3.1)(react@19.2.8)
+      '@next/env':
+        specifier: ^16.3.1
+        version: 16.3.1
       '@radix-ui/react-dialog':
         specifier: ^1.1.14
         version: 1.1.23(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

@@ -15,7 +15,7 @@ import { usePathname } from 'next/navigation';
 
 const previewItemCount = 8;
 
-function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: NavigationItem[], title: string, showAll?: boolean, hideTitle?: boolean, gridCols?: number }) {
+function Index({navItems, title, showAll, hideTitle, gridCols, hasMoreItems}: { navItems: NavigationItem[], title: string, showAll?: boolean, hideTitle?: boolean, gridCols?: number, hasMoreItems?: boolean }) {
   const pathname = usePathname();
   const locale = pathname.split('/')[1];
   const t = useTranslations();
@@ -42,7 +42,7 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
             {t(`category.${title}`)}
           </h2>
         )}
-        {!showAll && navItems.length > previewItemCount && (
+        {!showAll && (hasMoreItems ?? navItems.length > previewItemCount) && (
           <Link
             href={`/${locale}/category/${getCategorySlug(title)}`}
             className="ml-2 inline-flex min-h-8 items-center gap-1 rounded-lg px-2 text-xs font-medium text-slate-500 transition-colors hover:bg-white hover:text-blue-700"

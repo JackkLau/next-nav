@@ -16,6 +16,7 @@ function SearchParamsComponent({locale}: {locale: string}) {
   setRequestLocale(locale);
   const t = useTranslations();
   const navigationData = getLocalizedNavigationData(locale);
+  const databaseLoadMoreEnabled = Boolean(process.env.DATABASE_URL);
   const pageUrl = localizedUrl(locale);
   const jsonLd = {
     "@context": "https://schema.org",
@@ -71,7 +72,11 @@ function SearchParamsComponent({locale}: {locale: string}) {
                   tabIndex={-1}
                 >
                   {/* title 不能国际化，会导致找不到路由 */}
-                  <NaviItem navItems={navigationData.filter(item => item.categoryKey === type)} title={type} />
+                  <NaviItem
+                    navItems={navigationData.filter(item => item.categoryKey === type)}
+                    title={type}
+                    hasMoreItems={databaseLoadMoreEnabled || undefined}
+                  />
                 </section>
               ))
             }

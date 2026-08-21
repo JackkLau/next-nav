@@ -1,6 +1,7 @@
 import {
   CategoryType,
   CategoryNameMapping,
+  sortNavigationItems,
   getLocalizedNavigationData,
   hasLocalizedContent,
   publishedSiteRecords,
@@ -13,7 +14,7 @@ import {
   faArrowLeft,
   faFolder
 } from '@fortawesome/free-solid-svg-icons';
-import NaviItem from '@/components/navi-item';
+import SiteLoadMore from '@/components/site-load-more';
 import { getTranslations } from 'next-intl/server';
 import { CategoryIconMap } from '@/data/left-menu'
 import { routing } from '@/i18n/routing'
@@ -24,6 +25,9 @@ import {
   minimumIndexableLocalizedItems,
   openGraphLocale,
 } from '@/lib/seo'
+import { cursorFromNavigationItem } from '@/lib/site-pagination'
+
+const categoryInitialPageSize = 24
 
 type Props = {
   params: Promise<{ category: string, locale: string }>
@@ -109,12 +113,10 @@ export default async function CategoryPage({
     (site) => site.categoryKey === category,
   )
 
-  // 按优先级排序：推荐网站 > 普通网站
-  const sortedSites = categorySites.sort((a, b) => {
-    if (a.favorite && !b.favorite) return -1
-    if (!a.favorite && b.favorite) return 1
-    return a.name.localeCompare(b.name)
-  })
+  const sortedSites = sortNavigationItems(categorySites)
+  const initialSites = sortedSites.slice(0, categoryInitialPageSize)
+  const initialCursor = cursorFromNavigationItem(initialSites.at(-1))
+  const initialHasMore = sortedSites.length > categoryInitialPageSize
 
   // 结构化数据
   const jsonLd = {
@@ -172,8 +174,14 @@ export default async function CategoryPage({
             </div>
           </section>
 
-          {/* 网站列表（复用NaviItem） */}
-          <NaviItem navItems={sortedSites} title={category} showAll hideTitle gridCols={4} />
+          {/* 网站列表（首屏 JSON，翻页后查询数据库） */}
+          <SiteLoadMore
+            category={category as keyof typeof CategoryType}
+            initialCursor={initialCursor}
+            initialHasMore={initialHasMore}
+            initialItems={initialSites}
+            locale={locale}
+          />
 
           {/* 空状态 */}
           {sortedSites.length === 0 && (

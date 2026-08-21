@@ -39,6 +39,11 @@ export const sites = pgTable(
       jsonb('translations').$type<Record<string, NavigationTranslation>>(),
     status: siteStatusEnum('status').notNull().default('draft'),
     updatedAt: date('updated_at', { mode: 'string' }).notNull(),
+    removedAt: timestamp('removed_at', {
+      withTimezone: true,
+      mode: 'string',
+    }),
+    removalReason: text('removal_reason'),
     sortOrder: integer('sort_order').notNull().default(0),
     createdAt: timestamp('created_at', { withTimezone: true })
       .notNull()
@@ -55,6 +60,9 @@ export const sites = pgTable(
       table.category,
       table.sortOrder,
     ),
+    index('sites_active_published_category_page_idx')
+      .on(table.category, table.favorite.desc(), table.name, table.slug)
+      .where(sql`${table.status} = 'published' and ${table.removedAt} is null`),
   ],
 ).enableRLS()
 

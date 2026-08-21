@@ -78,7 +78,7 @@
         "step1": "Introduce la URL del sitio que deseas agregar (debe comenzar con http:// o https://)",
         "step2": "Elige la categoría adecuada, puedes seleccionar 'Favoritos' o 'Se requiere VPN'",
         "step3": "Haz clic en el botón 'Generar datos de navegación' a continuación",
-        "step4": "Revisa el JSON, añádelo a sites.json y valida los datos"
+        "step4": "Revisa el JSON generado y envíalo como borrador a la base de datos o cópialo para el flujo de datos"
       },
       "form": {
         "title": "Información del sitio",
@@ -104,7 +104,9 @@
           "url": "Por favor, introduce una dirección de sitio válida (que comience con http:// o https://)",
           "url-format": "Por favor, introduce una dirección de sitio válida (que comience con http:// o https://)",
           "generate-failed": "Error al generar, verifica la dirección del sitio",
-          "copy-failed": "Error al copiar"
+          "copy-failed": "Error al copiar",
+          "duplicate": "Este sitio ya existe en la base de datos",
+          "invalid-data": "Los datos generados no son válidos. Genéralos de nuevo e inténtalo otra vez"
         },
         "meta-data": {
           "title": "Metadatos del sitio",
@@ -113,9 +115,13 @@
         },
         "generated-data": {
           "title": "Datos de navegación generados",
-          "description": "Añádelo a sites.json y publícalo después de revisarlo",
+          "description": "Envíalo como borrador a la base de datos tras revisarlo, o cópialo para flujos manuales",
           "copy": "Copiar",
-          "json-format": "Formato JSON"
+          "json-format": "Formato JSON",
+          "submit": "Enviar a DB",
+          "submitting": "Enviando...",
+          "submit-success": "Borrador {slug} guardado en la base de datos",
+          "submitted": "El borrador {slug} está guardado en la base de datos"
         }
       }
     }
@@ -131,5 +137,9 @@
     "ru": "Ruso",
     "ar": "Árabe",
     "it": "Italiano"
-  }
+  },
+  "load_more": "Cargar más",
+  "loading_more": "Cargando...",
+  "no_more_sites": "No hay más sitios",
+  "load_more_failed": "No se pudieron cargar más sitios"
 }

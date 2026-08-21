@@ -5,7 +5,7 @@ import postgres from 'postgres'
 import { sites, type SiteRow } from './schema'
 import type { SiteQuery, SiteRepository } from './site-repository'
 
-function toSiteRecord(row: SiteRow): SiteRecord {
+export function toSiteRecord(row: SiteRow): SiteRecord {
   return {
     slug: row.slug,
     legacyId: row.legacyId ?? undefined,
@@ -20,6 +20,8 @@ function toSiteRecord(row: SiteRow): SiteRecord {
     translations: row.translations ?? undefined,
     status: row.status,
     updatedAt: row.updatedAt,
+    removedAt: row.removedAt ?? undefined,
+    removalReason: row.removalReason ?? undefined,
   }
 }
 

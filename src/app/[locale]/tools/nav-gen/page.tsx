@@ -24,6 +24,7 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import {
   Copy,
+  Database,
   ExternalLink,
   Loader2,
   LockKeyhole,
@@ -50,6 +51,19 @@ interface MetaApiResponse {
   error?: string
   message?: string
   metadata?: MetaData
+  rateLimit?: RateLimitInfo
+  unlimited?: boolean
+}
+
+interface SiteSubmitApiResponse {
+  error?: string
+  message?: string
+  site?: {
+    slug: string
+    url: string
+    status: string
+    updatedAt: string
+  }
   rateLimit?: RateLimitInfo
   unlimited?: boolean
 }
@@ -102,8 +116,13 @@ export default function NavGenPage() {
   const [favorite, setFavorite] = useState(false)
   const [needVPN, setNeedVPN] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [metaData, setMetaData] = useState<MetaData>({})
   const [generatedData, setGeneratedData] = useState<string>('')
+  const [generatedItem, setGeneratedItem] = useState<GeneratedNavItem | null>(
+    null,
+  )
+  const [submittedSlug, setSubmittedSlug] = useState('')
   const [remaining, setRemaining] = useState(10)
   const [retryUntil, setRetryUntil] = useState<number | null>(null)
   const [cooldownSeconds, setCooldownSeconds] = useState(0)
@@ -206,6 +225,8 @@ export default function NavGenPage() {
       }
 
       setGeneratedData(JSON.stringify(navItem, null, 2))
+      setGeneratedItem(navItem)
+      setSubmittedSlug('')
       toast.success(t('tools.nav-gen.success'))
     } catch (error) {
       if (error instanceof ToolSubmissionError) {
@@ -244,6 +265,76 @@ export default function NavGenPage() {
     } catch (error) {
       console.error('Failed to copy:', error)
       toast.error(t('tools.nav-gen.form.error.copy-failed'))
+    }
+  }
+
+  const submitToDatabase = async () => {
+    if (!password) {
+      toast.error(t('tools.nav-gen.form.error.password-required'))
+      return
+    }
+
+    if (!generatedItem) {
+      toast.error(t('tools.nav-gen.form.error.invalid-data'))
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      const response = await fetch('/api/sites/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, site: generatedItem }),
+      })
+      const data = (await response.json().catch(() => ({}))) as SiteSubmitApiResponse
+
+      if (data.unlimited) {
+        setAccessVerified(true)
+      } else {
+        setAccessVerified(false)
+        applyRateLimit(data.rateLimit)
+      }
+
+      if (!response.ok) {
+        throw new ToolSubmissionError(
+          data.error || 'UNKNOWN_ERROR',
+          data.rateLimit?.retryAfterSeconds,
+        )
+      }
+
+      const slug = data.site?.slug || generatedItem.slug
+      setSubmittedSlug(slug)
+      toast.success(
+        t('tools.nav-gen.form.generated-data.submit-success', { slug }),
+      )
+    } catch (error) {
+      if (error instanceof ToolSubmissionError) {
+        if (error.code === 'INVALID_PASSWORD') {
+          toast.error(t('tools.nav-gen.form.error.password'))
+        } else if (error.code === 'RATE_LIMITED') {
+          toast.error(
+            t('tools.nav-gen.form.error.rate-limited', {
+              seconds: error.retryAfterSeconds || cooldownSeconds || 60,
+            }),
+          )
+        } else if (error.code === 'DUPLICATE_SITE') {
+          toast.error(t('tools.nav-gen.form.error.duplicate'))
+        } else if (error.code === 'INVALID_SITE') {
+          toast.error(t('tools.nav-gen.form.error.invalid-data'))
+        } else if (
+          error.code === 'SERVICE_NOT_CONFIGURED' ||
+          error.code === 'SERVICE_UNAVAILABLE'
+        ) {
+          toast.error(t('tools.nav-gen.form.error.service-unavailable'))
+        } else {
+          toast.error(t('tools.nav-gen.form.error.generate-failed'))
+        }
+      } else {
+        console.error('Failed to submit navigation data:', error)
+        toast.error(t('tools.nav-gen.form.error.generate-failed'))
+      }
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -455,7 +546,7 @@ export default function NavGenPage() {
         {generatedData && (
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <CardTitle>
                     {t('tools.nav-gen.form.generated-data.title')}
@@ -464,10 +555,26 @@ export default function NavGenPage() {
                     {t('tools.nav-gen.form.generated-data.description')}
                   </CardDescription>
                 </div>
-                <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                  <Copy className="mr-2 h-4 w-4" />
-                  {t('tools.nav-gen.form.generated-data.copy')}
-                </Button>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button variant="outline" size="sm" onClick={copyToClipboard}>
+                    <Copy className="mr-2 h-4 w-4" />
+                    {t('tools.nav-gen.form.generated-data.copy')}
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={submitToDatabase}
+                    disabled={submitting || !password || !generatedItem}
+                  >
+                    {submitting ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Database className="mr-2 h-4 w-4" />
+                    )}
+                    {submitting
+                      ? t('tools.nav-gen.form.generated-data.submitting')
+                      : t('tools.nav-gen.form.generated-data.submit')}
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
@@ -483,6 +590,13 @@ export default function NavGenPage() {
                   </Badge>
                 </div>
               </div>
+              {submittedSlug && (
+                <p className="mt-3 text-sm text-emerald-700" aria-live="polite">
+                  {t('tools.nav-gen.form.generated-data.submitted', {
+                    slug: submittedSlug,
+                  })}
+                </p>
+              )}
             </CardContent>
           </Card>
         )}

@@ -9,6 +9,7 @@ export const jsonSiteRepository: SiteRepository = {
   async list(query?: SiteQuery) {
     return records.filter(
       (site) =>
+        !site.removedAt &&
         (!query?.category || site.category === query.category) &&
         (!query?.status || site.status === query.status),
     )

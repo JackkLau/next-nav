@@ -78,7 +78,7 @@
         "step1": "Saisissez l'URL du site à ajouter (doit commencer par http:// ou https://)",
         "step2": "Choisissez la catégorie appropriée, vous pouvez sélectionner 'Favoris' ou 'VPN requis'",
         "step3": "Cliquez sur le bouton 'Générer les données de navigation' ci-dessous",
-        "step4": "Vérifiez le JSON, ajoutez-le à sites.json puis validez les données"
+        "step4": "Vérifiez le JSON généré, puis envoyez-le comme brouillon en base ou copiez-le pour le workflow de données"
       },
       "form": {
         "title": "Informations sur le site",
@@ -104,7 +104,9 @@
           "url": "Veuillez saisir une adresse de site valide (commençant par http:// ou https://)",
           "url-format": "Veuillez saisir une adresse de site valide (commençant par http:// ou https://)",
           "generate-failed": "Échec de la génération, veuillez vérifier l'adresse du site",
-          "copy-failed": "Échec de la copie"
+          "copy-failed": "Échec de la copie",
+          "duplicate": "Ce site existe déjà dans la base de données",
+          "invalid-data": "Les données générées sont invalides. Regénérez-les puis réessayez"
         },
         "meta-data": {
           "title": "Métadonnées du site",
@@ -113,9 +115,13 @@
         },
         "generated-data": {
           "title": "Données de navigation générées",
-          "description": "Ajoutez-le à sites.json et publiez-le après vérification",
+          "description": "Envoyez-le comme brouillon en base après vérification, ou copiez-le pour les workflows manuels",
           "copy": "Copier",
-          "json-format": "Format JSON"
+          "json-format": "Format JSON",
+          "submit": "Envoyer en DB",
+          "submitting": "Envoi...",
+          "submit-success": "Brouillon {slug} enregistré dans la base",
+          "submitted": "Le brouillon {slug} est enregistré dans la base"
         }
       }
     }
@@ -131,5 +137,9 @@
     "ru": "Russe",
     "ar": "Arabe",
     "it": "Italien"
-  }
+  },
+  "load_more": "Charger plus",
+  "loading_more": "Chargement...",
+  "no_more_sites": "Plus aucun site",
+  "load_more_failed": "Impossible de charger plus de sites"
 }

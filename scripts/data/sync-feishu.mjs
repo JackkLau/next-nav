@@ -32,6 +32,8 @@ const fieldNames = {
   translations: process.env.FEISHU_FIELD_TRANSLATIONS || '翻译 JSON',
   status: process.env.FEISHU_FIELD_STATUS || '状态',
   updatedAt: process.env.FEISHU_FIELD_UPDATED_AT || '更新时间',
+  removedAt: process.env.FEISHU_FIELD_REMOVED_AT || '移除时间',
+  removalReason: process.env.FEISHU_FIELD_REMOVAL_REASON || '移除原因',
 }
 
 function fieldValue(value) {
@@ -116,6 +118,8 @@ const sites = rows.map((row) => {
   const previous = existingBySlug.get(slug) || existingByUrl.get(url)
   const translationsValue = fieldValue(fields[fieldNames.translations])
   const updatedAtValue = fieldValue(fields[fieldNames.updatedAt])
+  const removedAtValue = fieldValue(fields[fieldNames.removedAt])
+  const removalReasonValue = fieldValue(fields[fieldNames.removalReason])
 
   return {
     slug,
@@ -139,6 +143,16 @@ const sites = rows.map((row) => {
     updatedAt: /^\d{4}-\d{2}-\d{2}$/.test(String(updatedAtValue))
       ? String(updatedAtValue)
       : previous?.updatedAt || today,
+    ...(removedAtValue || previous?.removedAt
+      ? { removedAt: String(removedAtValue || previous?.removedAt).trim() }
+      : {}),
+    ...(removalReasonValue || previous?.removalReason
+      ? {
+          removalReason: String(
+            removalReasonValue || previous?.removalReason,
+          ).trim(),
+        }
+      : {}),
   }
 })
 

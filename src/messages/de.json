@@ -78,7 +78,7 @@
         "step1": "Geben Sie die aufzunehmende Webseiten-URL ein (muss mit http:// oder https:// beginnen)",
         "step2": "Wählen Sie die passende Kategorie, optional 'Favoriten' oder 'VPN erforderlich'",
         "step3": "Klicken Sie unten auf 'Navigationsdaten generieren'",
-        "step4": "Prüfen Sie das JSON, fügen Sie es zu sites.json hinzu und validieren Sie die Daten"
+        "step4": "Prüfen Sie das generierte JSON und senden Sie es als Datenbankentwurf oder kopieren Sie es für den Datenworkflow"
       },
       "form": {
         "title": "Webseiten-Informationen",
@@ -104,7 +104,9 @@
           "url": "Bitte geben Sie eine gültige Webseitenadresse ein (beginnend mit http:// oder https://)",
           "url-format": "Bitte geben Sie eine gültige Webseitenadresse ein (beginnend mit http:// oder https://)",
           "generate-failed": "Generierung fehlgeschlagen, bitte überprüfen Sie die Webseitenadresse",
-          "copy-failed": "Kopieren fehlgeschlagen"
+          "copy-failed": "Kopieren fehlgeschlagen",
+          "duplicate": "Diese Website existiert bereits in der Datenbank",
+          "invalid-data": "Die generierten Daten sind ungültig. Bitte neu erzeugen und erneut versuchen"
         },
         "meta-data": {
           "title": "Webseiten-Metadaten",
@@ -113,9 +115,13 @@
         },
         "generated-data": {
           "title": "Generierte Navigationsdaten",
-          "description": "Nach der Prüfung zu sites.json hinzufügen und veröffentlichen",
+          "description": "Nach der Prüfung als Datenbankentwurf senden oder für manuelle Workflows kopieren",
           "copy": "Kopieren",
-          "json-format": "JSON-Format"
+          "json-format": "JSON-Format",
+          "submit": "An DB senden",
+          "submitting": "Wird gesendet...",
+          "submit-success": "Entwurf {slug} wurde in der Datenbank gespeichert",
+          "submitted": "Entwurf {slug} ist in der Datenbank gespeichert"
         }
       }
     }
@@ -131,5 +137,9 @@
     "ru": "Russisch",
     "ar": "Arabisch",
     "it": "Italienisch"
-  }
+  },
+  "load_more": "Mehr laden",
+  "loading_more": "Wird geladen...",
+  "no_more_sites": "Keine weiteren Webseiten",
+  "load_more_failed": "Weitere Webseiten konnten nicht geladen werden"
 }

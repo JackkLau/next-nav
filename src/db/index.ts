@@ -8,4 +8,7 @@ export {
 } from './schema'
 export type { NewSiteRow, SiteRow, ToolSubmissionRateLimitRow } from './schema'
 export type { SiteQuery, SiteRepository } from './site-repository'
-export { createSupabaseSiteRepository } from './supabase-site-repository'
+export {
+  createSupabaseSiteRepository,
+  toSiteRecord,
+} from './supabase-site-repository'

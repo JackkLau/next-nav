@@ -77,7 +77,7 @@
         "step1": "Enter the URL of the site you want to add",
         "step2": "Select the appropriate category",
         "step3": "Click the 'Generate Navigation Data' button",
-        "step4": "Review the generated JSON, add it to sites.json, and validate the data"
+        "step4": "Review the generated JSON, then submit it as a database draft or copy it for the data workflow"
       },
       "form": {
         "title": "Site Information",
@@ -103,7 +103,9 @@
           "url": "Please enter a valid site address",
           "url-format": "Please enter a valid site address (start with http:// or https://)",
           "generate-failed": "Failed to generate navigation data, please check the site address",
-          "copy-failed": "Failed to copy"
+          "copy-failed": "Failed to copy",
+          "duplicate": "This site already exists in the database",
+          "invalid-data": "Generated data is invalid. Regenerate and try again"
         },
         "meta-data": {
           "title": "Site Metadata",
@@ -112,9 +114,13 @@
         },
         "generated-data": {
           "title": "Generated Navigation Data",
-          "description": "Add it to sites.json and change the status to published after review",
+          "description": "Submit it as a database draft after review, or copy it for manual workflows",
           "copy": "Copy",
-          "json-format": "JSON Format"
+          "json-format": "JSON Format",
+          "submit": "Submit to DB",
+          "submitting": "Submitting...",
+          "submit-success": "Saved draft {slug} to database",
+          "submitted": "Draft {slug} is saved in the database"
         }
       }
     }
@@ -130,5 +136,9 @@
     "pt": "Portuguese",
     "ru": "Russian",
     "ar": "Arabic"
-  }
+  },
+  "load_more": "Load more",
+  "loading_more": "Loading more...",
+  "no_more_sites": "No more sites",
+  "load_more_failed": "Failed to load more sites"
 }

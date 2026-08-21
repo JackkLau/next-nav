@@ -1,6 +1,8 @@
 # Tool JSON 提交页
 
-`/[locale]/tools/nav-gen` 用于读取目标网站元数据并生成可审核的导航 JSON。页面不会直接写入 `sites.json` 或数据库，生成结果仍需人工检查后进入现有数据工作流。
+`/[locale]/tools/nav-gen` 用于读取目标网站元数据并生成可审核的导航 JSON。生成后可以选择复制 JSON 进入现有数据工作流，也可以通过受保护的 `POST /api/sites/submit` 直接写入 `sites` 数据库表。
+
+数据库提交只创建 `draft` 记录；遇到已有 `slug` 或 URL 会返回 `409 DUPLICATE_SITE`，不会覆盖现有记录。当前首屏仍从 `src/data/sites.json` 读取；数据库里的 draft 不会自动出现在导航页，只有审核后改为 `published` 且未设置 `removed_at` 的记录，才会在分类页“加载更多”时返回。
 
 ## 部署配置
 
@@ -14,9 +16,9 @@ TOOL_SUBMISSION_PASSWORD=replace-with-a-long-random-password
 DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@REGION.pooler.supabase.com:6543/postgres
 ```
 
-提交密码只发送给同源的 `POST /api/meta`，服务端校验后才会抓取目标网站。正确密码可以无限次调用，并且不会访问限流数据库。不要把密码提交到 Git，也不要放进任何 `NEXT_PUBLIC_*` 变量。
+提交密码只发送给同源的服务端接口。`POST /api/meta` 校验后抓取目标网站元数据；`POST /api/sites/submit` 校验后把生成结果写入数据库。正确密码可以无限次调用，并且不会访问限流数据库。不要把密码提交到 Git，也不要放进任何 `NEXT_PUBLIC_*` 变量。
 
-部署前还需人工审查并执行 `drizzle/0001_tool_submission_rate_limit.sql`：
+部署前还需人工审查并执行 `drizzle/` 中尚未应用的迁移：
 
 ```bash
 pnpm run db:check
@@ -46,3 +48,23 @@ Content-Type: application/json
 ```
 
 接口拒绝私有网络地址、非 HTTP(S) 协议、带账号信息的 URL、超大或非 HTML 响应，并逐跳验证重定向，以降低服务端请求伪造风险。接口响应不缓存；旧的公开 `GET /api/meta` 不再可用。
+
+```http
+POST /api/sites/submit
+Content-Type: application/json
+
+{
+  "password": "...",
+  "site": {
+    "slug": "example",
+    "name": "Example",
+    "url": "https://example.com",
+    "category": "common",
+    "favorite": false,
+    "description": "Example description",
+    "needVPN": false
+  }
+}
+```
+
+提交接口同样拒绝私有网络和非 HTTP(S) URL，并在写库前检查重复 `slug` 和 URL。服务端会强制写入 `status: "draft"`、`sourceLocale: "en"` 和当天 `updatedAt`。

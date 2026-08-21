@@ -78,7 +78,7 @@
         "step1": "Insira a URL do site que deseja adicionar (deve começar com http:// ou https://)",
         "step2": "Escolha a categoria apropriada, você pode selecionar 'Favoritos' ou 'VPN necessário'",
         "step3": "Clique no botão 'Gerar dados de navegação' abaixo",
-        "step4": "Revise o JSON, adicione-o ao sites.json e valide os dados"
+        "step4": "Revise o JSON gerado e envie como rascunho para o banco de dados ou copie para o fluxo de dados"
       },
       "form": {
         "title": "Informações do site",
@@ -104,7 +104,9 @@
           "url": "Por favor, insira um endereço de site válido (começando com http:// ou https://)",
           "url-format": "Por favor, insira um endereço de site válido (começando com http:// ou https://)",
           "generate-failed": "Falha ao gerar, verifique o endereço do site",
-          "copy-failed": "Falha ao copiar"
+          "copy-failed": "Falha ao copiar",
+          "duplicate": "Este site já existe no banco de dados",
+          "invalid-data": "Os dados gerados são inválidos. Gere novamente e tente outra vez"
         },
         "meta-data": {
           "title": "Metadados do site",
@@ -113,9 +115,13 @@
         },
         "generated-data": {
           "title": "Dados de navegação gerados",
-          "description": "Adicione ao sites.json e publique após a revisão",
+          "description": "Envie como rascunho para o banco de dados após revisar, ou copie para fluxos manuais",
           "copy": "Copiar",
-          "json-format": "Formato JSON"
+          "json-format": "Formato JSON",
+          "submit": "Enviar ao DB",
+          "submitting": "Enviando...",
+          "submit-success": "Rascunho {slug} salvo no banco de dados",
+          "submitted": "O rascunho {slug} está salvo no banco de dados"
         }
       }
     }
@@ -131,5 +137,9 @@
     "ru": "Russo",
     "ar": "Árabe",
     "it": "Italiano"
-  }
+  },
+  "load_more": "Carregar mais",
+  "loading_more": "Carregando...",
+  "no_more_sites": "Não há mais sites",
+  "load_more_failed": "Falha ao carregar mais sites"
 }

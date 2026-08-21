@@ -40,4 +40,6 @@ export interface SiteRecord {
   translations?: Record<string, NavigationTranslation>
   status: SiteStatus
   updatedAt: string
+  removedAt?: string
+  removalReason?: string
 }

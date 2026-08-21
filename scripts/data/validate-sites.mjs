@@ -37,6 +37,7 @@ const allowedSourceLocales = new Set([
   'zh-TW',
 ])
 const allowedStatuses = new Set(['draft', 'published', 'archived'])
+const removedAtPattern = /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z)?$/
 
 function validate() {
   const sites = JSON.parse(fs.readFileSync(dataPath, 'utf8'))
@@ -80,6 +81,12 @@ function validate() {
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(site.updatedAt || '')) {
       errors.push(`${label}: updatedAt must use YYYY-MM-DD`)
+    }
+    if (site.removedAt && !removedAtPattern.test(site.removedAt)) {
+      errors.push(`${label}: removedAt must use YYYY-MM-DD or ISO UTC datetime`)
+    }
+    if (site.removalReason && !site.removedAt) {
+      errors.push(`${label}: removalReason requires removedAt`)
     }
     if (site.status === 'published' && !site.description?.trim()) {
       errors.push(`${label}: published records require a description`)

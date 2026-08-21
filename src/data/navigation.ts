@@ -40,7 +40,7 @@ export interface NavigationItem {
 
 export const siteRecords = rawSites as SiteRecord[]
 export const publishedSiteRecords = siteRecords.filter(
-  (site) => site.status === 'published',
+  (site) => site.status === 'published' && !site.removedAt,
 )
 
 const EAST_ASIAN_SCRIPT_PATTERN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u
@@ -52,7 +52,10 @@ function hasEnglishSourceCopy(site: SiteRecord) {
     !EAST_ASIAN_SCRIPT_PATTERN.test(copy)
 }
 
-function toNavigationItem(site: SiteRecord, locale?: string): NavigationItem {
+export function toNavigationItem(
+  site: SiteRecord,
+  locale?: string,
+): NavigationItem {
   const translation = locale ? site.translations?.[locale] : undefined
   const canUseSourceDescription =
     !locale ||
@@ -76,6 +79,14 @@ function toNavigationItem(site: SiteRecord, locale?: string): NavigationItem {
     translations: site.translations,
     updatedAt: site.updatedAt,
   }
+}
+
+export function sortNavigationItems<T extends NavigationItem>(items: T[]) {
+  return [...items].sort((a, b) => {
+    if (a.favorite && !b.favorite) return -1
+    if (!a.favorite && b.favorite) return 1
+    return a.name.localeCompare(b.name) || a.id.localeCompare(b.id)
+  })
 }
 
 export const navigationData = publishedSiteRecords.map((site) =>

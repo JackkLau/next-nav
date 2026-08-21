@@ -32,6 +32,7 @@ import {
   openGraphLocale,
   siteOrigin,
 } from '@/lib/seo';
+import { findPublishedSiteFromDatabase } from '@/lib/database-sites';
 
 type Props = {
   params: Promise<{ slug: string, locale: string }>
@@ -44,8 +45,15 @@ export async function generateMetadata(
   const {locale, slug} = await params;
   const t = await getTranslations({locale, namespace: 'Metadata'});
   const legacyItem = findNavigationItemByLegacyId(slug)
-  const navItem = findNavigationItem(legacyItem?.id || slug, locale)
-  const siteRecord = findSiteRecord(legacyItem?.id || slug)
+  const resolvedSlug = legacyItem?.id || slug
+  const jsonNavItem = findNavigationItem(resolvedSlug, locale)
+  const jsonSiteRecord = findSiteRecord(resolvedSlug)
+  const databaseSite =
+    jsonNavItem && jsonSiteRecord
+      ? undefined
+      : await findPublishedSiteFromDatabase(resolvedSlug, locale)
+  const navItem = jsonNavItem || databaseSite?.navItem
+  const siteRecord = jsonSiteRecord || databaseSite?.siteRecord
 
   if (!navItem || !siteRecord) {
     return {
@@ -141,7 +149,9 @@ export default async function Home({
     permanentRedirect(localizedPath(locale, `/${legacyItem.id}`))
   }
 
-  const navItem = findNavigationItem(slug, locale)
+  const navItem =
+    findNavigationItem(slug, locale) ||
+    (await findPublishedSiteFromDatabase(slug, locale))?.navItem
   if (!navItem) {
     notFound()
   }

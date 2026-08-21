@@ -1,10 +1,12 @@
 # 导航数据维护工作流
 
-`src/data/sites.json` 是唯一发布数据源。页面、旧 URL 重定向、分类列表和 sitemap 都从它生成，不再直接编辑 TypeScript 数组。
+`src/data/sites.json` 仍保留为首屏、SEO、旧 URL 重定向和构建兜底数据源，不再直接编辑 TypeScript 数组。数据库保存同一份站点数据，并用于分类页翻页后的增量查询。
 
-仓库已接入 Supabase PostgreSQL + Drizzle 的 schema、迁移和仓储接口，但当前线上仍由 JSON 读取，尚未连接、迁移或修改远程 Supabase 数据库。数据库命令和上线切换步骤见 [`docs/database.md`](./database.md)。
+仓库已接入 Supabase PostgreSQL + Drizzle 的 schema、迁移、JSON 导入脚本和分页查询 API。数据库命令和上线切换步骤见 [`docs/database.md`](./database.md)。
 
-需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成草稿 JSON；该工具只生成内容，不直接修改发布数据。正确密码可无限生成，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
+需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成草稿 JSON，并选择提交为数据库 `draft` 记录。正确密码可无限生成和提交，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
+
+当前首屏发布数据仍以 `src/data/sites.json` 为准；数据库 `published` 且未移除的记录会在用户加载更多时返回。数据库 draft 记录用于后续审核，不会仅凭提交动作自动上线。
 
 ## 日常维护
 
@@ -12,8 +14,9 @@
 2. 新记录必须设置永久不变的 `slug`；修改名称或排序时不要修改它。
 3. 新记录先使用 `draft`，人工检查描述、分类、图标和目标网址后改为 `published`。
 4. 内容发生实质变化时更新 `updatedAt`，格式为 `YYYY-MM-DD`。
-5. 运行 `pnpm run data:validate` 和 `pnpm run build`。
-6. 提交 Pull Request；CI 会重复执行数据校验、类型检查、lint、生产构建和 SEO 路由验收。
+5. 需要下架无法访问的网站时，设置 `removedAt`，可选填写 `removalReason`；已移除记录不会出现在 JSON 首屏或数据库分页结果中。
+6. 运行 `pnpm run data:validate` 和 `pnpm run build`。
+7. 提交 Pull Request；CI 会重复执行数据校验、类型检查、lint、生产构建和 SEO 路由验收。
 
 ## 字段
 
@@ -27,10 +30,26 @@
 | `translations`              |     否 | `{ "en": { "name": "...", "description": "..." } }` |
 | `status`                    |     是 | `draft`、`published` 或 `archived`                  |
 | `updatedAt`                 |     是 | 最后一次实质内容更新时间，供 sitemap 使用           |
+| `removedAt`                 |     否 | 软移除时间，格式 `YYYY-MM-DD` 或 ISO UTC datetime   |
+| `removalReason`             |     否 | 软移除原因；必须和 `removedAt` 一起使用             |
+
+## 数据库导入
+
+JSON 仍保留在仓库中，但需要定期同步进数据库，供用户翻页时查询：
+
+```bash
+# dry-run，只统计将要导入的数据
+pnpm run data:import:db
+
+# 确认 DATABASE_URL 指向正确项目后执行 upsert
+pnpm run data:import:db -- --write
+```
+
+导入以 `slug` 为主键 upsert，并写入 `sortOrder`。脚本不会清空数据库里已有的 `removedAt` / `removalReason`；如果 JSON 明确带了移除标记，也会同步到数据库。
 
 ## 飞书多维表格同步
 
-表格默认列名为：`slug`、`名称`、`网址`、`图标`、`分类`、`推荐`、`描述`、`需梯子`、`原始语言`、`翻译 JSON`、`状态`、`更新时间`。列名不同可用 `FEISHU_FIELD_*` 环境变量覆盖。
+表格默认列名为：`slug`、`名称`、`网址`、`图标`、`分类`、`推荐`、`描述`、`需梯子`、`原始语言`、`翻译 JSON`、`状态`、`更新时间`、`移除时间`、`移除原因`。列名不同可用 `FEISHU_FIELD_*` 环境变量覆盖。
 
 在飞书开放平台创建企业自建应用，授予读取多维表格的权限，并将应用加入目标表格的协作者。然后配置 `.env.local` 中的四个必填变量（参考 `.env.example`）。
 

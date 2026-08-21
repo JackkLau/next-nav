@@ -78,7 +78,7 @@
         "step1": "Inserisci l'URL del sito che desideri aggiungere (deve iniziare con http:// o https://)",
         "step2": "Scegli la categoria appropriata, puoi selezionare 'Preferiti' o 'VPN richiesta'",
         "step3": "Clicca sul pulsante 'Genera dati di navigazione' qui sotto",
-        "step4": "Controlla il JSON, aggiungilo a sites.json e convalida i dati"
+        "step4": "Controlla il JSON generato, poi invialo come bozza al database o copialo per il workflow dati"
       },
       "form": {
         "title": "Informazioni sul sito",
@@ -104,7 +104,9 @@
           "url": "Per favore, inserisci un indirizzo di sito valido (che inizi con http:// o https://)",
           "url-format": "Per favore, inserisci un indirizzo di sito valido (che inizi con http:// o https://)",
           "generate-failed": "Errore nella generazione, controlla l'indirizzo del sito",
-          "copy-failed": "Errore nella copia"
+          "copy-failed": "Errore nella copia",
+          "duplicate": "Questo sito esiste già nel database",
+          "invalid-data": "I dati generati non sono validi. Rigenerali e riprova"
         },
         "meta-data": {
           "title": "Metadati del sito",
@@ -113,9 +115,13 @@
         },
         "generated-data": {
           "title": "Dati di navigazione generati",
-          "description": "Aggiungilo a sites.json e pubblicalo dopo la verifica",
+          "description": "Invialo come bozza al database dopo la revisione, oppure copialo per i workflow manuali",
           "copy": "Copia",
-          "json-format": "Formato JSON"
+          "json-format": "Formato JSON",
+          "submit": "Invia al DB",
+          "submitting": "Invio...",
+          "submit-success": "Bozza {slug} salvata nel database",
+          "submitted": "La bozza {slug} è salvata nel database"
         }
       }
     }
@@ -131,5 +137,9 @@
     "ru": "Russo",
     "ar": "Arabo",
     "it": "Italiano"
-  }
+  },
+  "load_more": "Carica altro",
+  "loading_more": "Caricamento...",
+  "no_more_sites": "Nessun altro sito",
+  "load_more_failed": "Impossibile caricare altri siti"
 }

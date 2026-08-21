@@ -29,7 +29,6 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
-export const locales = routing.locales;
 
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {

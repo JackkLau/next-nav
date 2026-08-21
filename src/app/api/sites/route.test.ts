@@ -50,6 +50,18 @@ test('site pagination rejects invalid cursors before requiring a database', asyn
   })
 })
 
+test('site pagination rejects invalid excluded site ids before requiring a database', async () => {
+  await withDatabaseUrl(undefined, async () => {
+    const response = await GET(
+      new Request('http://localhost/api/sites?exclude=valid-id,Bad%20Id'),
+    )
+    const body = (await response.json()) as { error?: string }
+
+    assert.equal(response.status, 400)
+    assert.equal(body.error, 'INVALID_EXCLUDE')
+  })
+})
+
 test('site pagination requires a configured database for valid requests', async () => {
   await withDatabaseUrl(undefined, async () => {
     const cursor = encodeSiteCursor({

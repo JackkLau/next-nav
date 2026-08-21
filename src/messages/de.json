@@ -78,7 +78,7 @@
         "step1": "Geben Sie die aufzunehmende Webseiten-URL ein (muss mit http:// oder https:// beginnen)",
         "step2": "Wählen Sie die passende Kategorie, optional 'Favoriten' oder 'VPN erforderlich'",
         "step3": "Klicken Sie unten auf 'Navigationsdaten generieren'",
-        "step4": "Prüfen Sie das generierte JSON und senden Sie es als Datenbankentwurf oder kopieren Sie es für den Datenworkflow"
+        "step4": "Prüfen Sie das generierte JSON und senden Sie es an die Datenbank oder kopieren Sie es für den Datenworkflow"
       },
       "form": {
         "title": "Webseiten-Informationen",
@@ -115,13 +115,13 @@
         },
         "generated-data": {
           "title": "Generierte Navigationsdaten",
-          "description": "Nach der Prüfung als Datenbankentwurf senden oder für manuelle Workflows kopieren",
+          "description": "Nach der Prüfung an die Datenbank senden oder für manuelle Workflows kopieren",
           "copy": "Kopieren",
           "json-format": "JSON-Format",
           "submit": "An DB senden",
           "submitting": "Wird gesendet...",
-          "submit-success": "Entwurf {slug} wurde in der Datenbank gespeichert",
-          "submitted": "Entwurf {slug} ist in der Datenbank gespeichert"
+          "submit-success": "{slug} wurde in der Datenbank gespeichert",
+          "submitted": "{slug} ist in der Datenbank gespeichert"
         }
       }
     }

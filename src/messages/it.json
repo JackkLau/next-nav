@@ -78,7 +78,7 @@
         "step1": "Inserisci l'URL del sito che desideri aggiungere (deve iniziare con http:// o https://)",
         "step2": "Scegli la categoria appropriata, puoi selezionare 'Preferiti' o 'VPN richiesta'",
         "step3": "Clicca sul pulsante 'Genera dati di navigazione' qui sotto",
-        "step4": "Controlla il JSON generato, poi invialo come bozza al database o copialo per il workflow dati"
+        "step4": "Controlla il JSON generato, poi invialo al database o copialo per il workflow dati"
       },
       "form": {
         "title": "Informazioni sul sito",
@@ -115,13 +115,13 @@
         },
         "generated-data": {
           "title": "Dati di navigazione generati",
-          "description": "Invialo come bozza al database dopo la revisione, oppure copialo per i workflow manuali",
+          "description": "Invialo al database dopo la revisione, oppure copialo per i workflow manuali",
           "copy": "Copia",
           "json-format": "Formato JSON",
           "submit": "Invia al DB",
           "submitting": "Invio...",
-          "submit-success": "Bozza {slug} salvata nel database",
-          "submitted": "La bozza {slug} è salvata nel database"
+          "submit-success": "{slug} salvato nel database",
+          "submitted": "{slug} è salvato nel database"
         }
       }
     }

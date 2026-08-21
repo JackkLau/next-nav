@@ -77,7 +77,7 @@
         "step1": "Enter the URL of the site you want to add",
         "step2": "Select the appropriate category",
         "step3": "Click the 'Generate Navigation Data' button",
-        "step4": "Review the generated JSON, then submit it as a database draft or copy it for the data workflow"
+        "step4": "Review the generated JSON, then submit it to the database or copy it for the data workflow"
       },
       "form": {
         "title": "Site Information",
@@ -114,13 +114,13 @@
         },
         "generated-data": {
           "title": "Generated Navigation Data",
-          "description": "Submit it as a database draft after review, or copy it for manual workflows",
+          "description": "Submit it to the database after review, or copy it for manual workflows",
           "copy": "Copy",
           "json-format": "JSON Format",
           "submit": "Submit to DB",
           "submitting": "Submitting...",
-          "submit-success": "Saved draft {slug} to database",
-          "submitted": "Draft {slug} is saved in the database"
+          "submit-success": "Saved {slug} to database",
+          "submitted": "{slug} is saved in the database"
         }
       }
     }

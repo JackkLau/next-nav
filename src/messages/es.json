@@ -78,7 +78,7 @@
         "step1": "Introduce la URL del sitio que deseas agregar (debe comenzar con http:// o https://)",
         "step2": "Elige la categoría adecuada, puedes seleccionar 'Favoritos' o 'Se requiere VPN'",
         "step3": "Haz clic en el botón 'Generar datos de navegación' a continuación",
-        "step4": "Revisa el JSON generado y envíalo como borrador a la base de datos o cópialo para el flujo de datos"
+        "step4": "Revisa el JSON generado y envíalo a la base de datos o cópialo para el flujo de datos"
       },
       "form": {
         "title": "Información del sitio",
@@ -115,13 +115,13 @@
         },
         "generated-data": {
           "title": "Datos de navegación generados",
-          "description": "Envíalo como borrador a la base de datos tras revisarlo, o cópialo para flujos manuales",
+          "description": "Envíalo a la base de datos tras revisarlo, o cópialo para flujos manuales",
           "copy": "Copiar",
           "json-format": "Formato JSON",
           "submit": "Enviar a DB",
           "submitting": "Enviando...",
-          "submit-success": "Borrador {slug} guardado en la base de datos",
-          "submitted": "El borrador {slug} está guardado en la base de datos"
+          "submit-success": "{slug} guardado en la base de datos",
+          "submitted": "{slug} está guardado en la base de datos"
         }
       }
     }

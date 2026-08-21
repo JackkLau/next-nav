@@ -78,7 +78,7 @@
         "step1": "Saisissez l'URL du site à ajouter (doit commencer par http:// ou https://)",
         "step2": "Choisissez la catégorie appropriée, vous pouvez sélectionner 'Favoris' ou 'VPN requis'",
         "step3": "Cliquez sur le bouton 'Générer les données de navigation' ci-dessous",
-        "step4": "Vérifiez le JSON généré, puis envoyez-le comme brouillon en base ou copiez-le pour le workflow de données"
+        "step4": "Vérifiez le JSON généré, puis envoyez-le en base ou copiez-le pour le workflow de données"
       },
       "form": {
         "title": "Informations sur le site",
@@ -115,13 +115,13 @@
         },
         "generated-data": {
           "title": "Données de navigation générées",
-          "description": "Envoyez-le comme brouillon en base après vérification, ou copiez-le pour les workflows manuels",
+          "description": "Envoyez-le en base après vérification, ou copiez-le pour les workflows manuels",
           "copy": "Copier",
           "json-format": "Format JSON",
           "submit": "Envoyer en DB",
           "submitting": "Envoi...",
-          "submit-success": "Brouillon {slug} enregistré dans la base",
-          "submitted": "Le brouillon {slug} est enregistré dans la base"
+          "submit-success": "{slug} enregistré dans la base",
+          "submitted": "{slug} est enregistré dans la base"
         }
       }
     }

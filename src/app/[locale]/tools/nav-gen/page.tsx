@@ -87,7 +87,7 @@ interface GeneratedNavItem {
   description?: string
   needVPN?: boolean
   sourceLocale: string
-  status: 'draft'
+  status: 'published'
   updatedAt: string
 }
 
@@ -220,7 +220,7 @@ export default function NavGenPage() {
         description: meta.description || '',
         needVPN: needVPN,
         sourceLocale: 'en',
-        status: 'draft',
+        status: 'published',
         updatedAt: new Date().toISOString().slice(0, 10),
       }
 

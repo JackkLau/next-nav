@@ -4,6 +4,7 @@ import {
   decodeOptionalSiteCursor,
   listPublishedSitesFromDatabase,
   normalizeSitePageLimit,
+  parseExcludedSiteIds,
 } from '@/lib/database-sites'
 
 export const runtime = 'nodejs'
@@ -25,6 +26,8 @@ export async function GET(request: Request) {
   const limit = normalizeSitePageLimit(url.searchParams.get('limit'))
   const cursorValue = url.searchParams.get('cursor')
   const cursor = decodeOptionalSiteCursor(cursorValue)
+  const excludeValue = url.searchParams.get('exclude')
+  const excludeSlugs = parseExcludedSiteIds(excludeValue)
 
   if (category && !allowedCategories.has(category)) {
     return response(
@@ -46,6 +49,16 @@ export async function GET(request: Request) {
     )
   }
 
+  if (excludeValue && !excludeSlugs) {
+    return response(
+      {
+        error: 'INVALID_EXCLUDE',
+        message: 'The excluded site list is invalid',
+      },
+      400,
+    )
+  }
+
   if (!process.env.DATABASE_URL) {
     return response(
       {
@@ -60,6 +73,7 @@ export async function GET(request: Request) {
     const page = await listPublishedSitesFromDatabase({
       category: category as CategoryKey | undefined,
       cursor,
+      excludeSlugs,
       limit,
       locale,
     })

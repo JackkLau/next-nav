@@ -289,7 +289,7 @@ function normalizeSiteSubmission(input: unknown): NormalizedSiteSubmission | Res
       ...(description ? { description } : {}),
       needVPN: payload.needVPN === true,
       sourceLocale: 'en',
-      status: 'draft',
+      status: 'published',
       updatedAt: new Date().toISOString().slice(0, 10),
       sortOrder: 0,
     },
@@ -363,6 +363,28 @@ export async function POST(request: Request) {
         inArray(sites.url, urlConflictCandidates(normalized.rawUrl, publicUrl)),
       ),
     })
+
+    if (existingSite?.status === 'draft' && !existingSite.removedAt) {
+      const [updatedSite] = await database
+        .update(sites)
+        .set({
+          ...siteToInsert,
+          slug: existingSite.slug,
+          modifiedAt: new Date(),
+        })
+        .where(eq(sites.slug, existingSite.slug))
+        .returning({
+          slug: sites.slug,
+          url: sites.url,
+          status: sites.status,
+          updatedAt: sites.updatedAt,
+        })
+
+      return responseWithoutRateLimit(
+        { site: updatedSite, unlimited: true },
+        200,
+      )
+    }
 
     if (existingSite) {
       return responseWithoutRateLimit(

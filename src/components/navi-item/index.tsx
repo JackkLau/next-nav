@@ -13,6 +13,8 @@ import { useFavoriteSites } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 
+const previewItemCount = 8;
+
 function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: NavigationItem[], title: string, showAll?: boolean, hideTitle?: boolean, gridCols?: number }) {
   const pathname = usePathname();
   const locale = pathname.split('/')[1];
@@ -26,11 +28,11 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
     if (!aFav && bFav) return 1;
     return 0;
   });
-  const itemsToShow = showAll ? sortedNavItems : sortedNavItems.slice(0, 5);
+  const itemsToShow = showAll ? sortedNavItems : sortedNavItems.slice(0, previewItemCount);
   const usesGridLayout = Boolean(gridCols && gridCols > 1);
   const ulClass = usesGridLayout
     ? 'grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'
-    : 'grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5';
+    : 'grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4';
   return (
     <section aria-labelledby={title} className="w-full">
       <div className="mb-2 flex items-center justify-between px-0.5">
@@ -40,7 +42,7 @@ function Index({navItems, title, showAll, hideTitle, gridCols}: { navItems: Navi
             {t(`category.${title}`)}
           </h2>
         )}
-        {!showAll && navItems.length > 5 && (
+        {!showAll && navItems.length > previewItemCount && (
           <Link
             href={`/${locale}/category/${getCategorySlug(title)}`}
             className="ml-2 inline-flex min-h-8 items-center gap-1 rounded-lg px-2 text-xs font-medium text-slate-500 transition-colors hover:bg-white hover:text-blue-700"

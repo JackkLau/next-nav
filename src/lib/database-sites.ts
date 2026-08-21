@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gt, isNull, or } from 'drizzle-orm'
+import { and, asc, desc, eq, gt, isNull, notInArray, or } from 'drizzle-orm'
 import {
   toNavigationItem,
   type NavigationItem,
@@ -13,10 +13,13 @@ import {
 
 export const DEFAULT_SITE_PAGE_SIZE = 24
 export const MAX_SITE_PAGE_SIZE = 48
+const MAX_EXCLUDED_SITE_IDS = 200
+const siteIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 interface ListPublishedSitesOptions {
   category?: CategoryKey
   cursor?: SiteCursor
+  excludeSlugs?: string[]
   limit?: number
   locale?: string
 }
@@ -55,9 +58,28 @@ export function decodeOptionalSiteCursor(value: string | null) {
   return decodeSiteCursor(value)
 }
 
+export function parseExcludedSiteIds(value: string | null) {
+  if (!value) return []
+
+  const ids = value
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+
+  if (
+    ids.length > MAX_EXCLUDED_SITE_IDS ||
+    ids.some((item) => !siteIdPattern.test(item))
+  ) {
+    return undefined
+  }
+
+  return Array.from(new Set(ids))
+}
+
 export async function listPublishedSitesFromDatabase({
   category,
   cursor,
+  excludeSlugs = [],
   limit = DEFAULT_SITE_PAGE_SIZE,
   locale,
 }: ListPublishedSitesOptions): Promise<PublishedSitePage> {
@@ -67,6 +89,7 @@ export async function listPublishedSitesFromDatabase({
       eq(sites.status, 'published'),
       isNull(sites.removedAt),
       category ? eq(sites.category, category) : undefined,
+      excludeSlugs.length ? notInArray(sites.slug, excludeSlugs) : undefined,
       cursor ? cursorFilter(cursor) : undefined,
     ),
     orderBy: [desc(sites.favorite), asc(sites.name), asc(sites.slug)],

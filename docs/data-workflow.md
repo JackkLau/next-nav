@@ -4,15 +4,15 @@
 
 仓库已接入 Supabase PostgreSQL + Drizzle 的 schema、迁移、JSON 导入脚本和分页查询 API。数据库命令和上线切换步骤见 [`docs/database.md`](./database.md)。
 
-需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成草稿 JSON，并选择提交为数据库 `draft` 记录。正确密码可无限生成和提交，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
+需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成导航 JSON，并直接提交到数据库。正确密码可无限生成和提交，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
 
-当前首屏发布数据仍以 `src/data/sites.json` 为准；数据库 `published` 且未移除的记录会在用户加载更多时返回。数据库 draft 记录用于后续审核，不会仅凭提交动作自动上线。
+当前首屏发布数据仍以 `src/data/sites.json` 为准；数据库 `published` 且未移除的记录会在用户加载更多时返回。
 
 ## 日常维护
 
 1. 编辑 `src/data/sites.json`，或从飞书多维表格同步。
 2. 新记录必须设置永久不变的 `slug`；修改名称或排序时不要修改它。
-3. 新记录先使用 `draft`，人工检查描述、分类、图标和目标网址后改为 `published`。
+3. 从 `nav-gen` 提交的数据会直接写入数据库并标记为 `published`；手动维护 JSON 时仍可按需要使用 `draft` 做审核缓冲。
 4. 内容发生实质变化时更新 `updatedAt`，格式为 `YYYY-MM-DD`。
 5. 需要下架无法访问的网站时，设置 `removedAt`，可选填写 `removalReason`；已移除记录不会出现在 JSON 首屏或数据库分页结果中。
 6. 运行 `pnpm run data:validate` 和 `pnpm run build`。

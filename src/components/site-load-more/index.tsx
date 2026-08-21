@@ -36,17 +36,22 @@ export default function SiteLoadMore({
   const [error, setError] = useState('')
 
   const loadMore = async () => {
-    if (!cursor || loading) return
+    if (loading) return
 
     setLoading(true)
     setError('')
 
     try {
+      const visibleItems = items
       const requestUrl = new URL('/api/sites', window.location.origin)
       requestUrl.searchParams.set('category', category)
       requestUrl.searchParams.set('locale', locale)
       requestUrl.searchParams.set('limit', '24')
-      requestUrl.searchParams.set('cursor', cursor)
+      requestUrl.searchParams.set(
+        'exclude',
+        visibleItems.map((item) => item.id).join(','),
+      )
+      if (cursor) requestUrl.searchParams.set('cursor', cursor)
 
       const response = await fetch(requestUrl)
       const payload = (await response.json().catch(() => ({}))) as SitePageResponse
@@ -55,7 +60,7 @@ export default function SiteLoadMore({
         throw new Error(payload.error || 'SITE_PAGE_FAILED')
       }
 
-      const existingIds = new Set(items.map((item) => item.id))
+      const existingIds = new Set(visibleItems.map((item) => item.id))
       const nextItems = (payload.items || []).filter(
         (item) => !existingIds.has(item.id),
       )
@@ -90,7 +95,7 @@ export default function SiteLoadMore({
           <button
             type="button"
             onClick={loadMore}
-            disabled={loading || !cursor}
+            disabled={loading}
             className="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 bg-white/85 px-4 text-sm font-medium text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

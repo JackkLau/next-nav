@@ -1,6 +1,6 @@
 # Supabase PostgreSQL 数据库基建
 
-项目数据库已选定 Supabase PostgreSQL，并使用 Drizzle ORM 管理 schema、迁移与查询。配置 `DATABASE_URL` 后，受保护的工具提交接口可以写入 `sites` 表中的 draft 记录，分类页翻页可以从数据库读取 published 记录。
+项目数据库已选定 Supabase PostgreSQL，并使用 Drizzle ORM 管理 schema、迁移与查询。配置 `DATABASE_URL` 后，受保护的工具提交接口可以写入 `sites` 表中的 published 记录，分类页翻页可以从数据库读取 published 记录。
 
 ## 当前运行边界
 
@@ -31,7 +31,7 @@ DIRECT_URL=postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postgr
 - `src/db/client.ts`：Serverless 运行时复用的小型 PostgreSQL 连接池；
 - `src/db/supabase-site-repository.ts`：Supabase PostgreSQL 只读仓储适配器；
 - `src/app/api/sites/route.ts`：分类页翻页读取 published 且未移除的数据库记录；
-- `src/app/api/sites/submit/route.ts`：受密码保护的 draft 站点提交接口；
+- `src/app/api/sites/submit/route.ts`：受密码保护的站点提交接口；
 - `scripts/data/import-sites-to-db.ts`：把 `src/data/sites.json` 幂等 upsert 到数据库；
 - `src/db/json-site-repository.ts`：当前生产使用的 JSON 适配器；
 - `src/db/site-repository.ts`：页面与存储实现之间的统一接口；

@@ -25,7 +25,6 @@ import {
   minimumIndexableLocalizedItems,
   openGraphLocale,
 } from '@/lib/seo'
-import { cursorFromNavigationItem } from '@/lib/site-pagination'
 
 const categoryInitialPageSize = 24
 
@@ -114,9 +113,10 @@ export default async function CategoryPage({
   )
 
   const sortedSites = sortNavigationItems(categorySites)
-  const initialSites = sortedSites.slice(0, categoryInitialPageSize)
-  const initialCursor = cursorFromNavigationItem(initialSites.at(-1))
-  const initialHasMore = sortedSites.length > categoryInitialPageSize
+  const databaseLoadMoreEnabled = Boolean(process.env.DATABASE_URL)
+  const initialSites = databaseLoadMoreEnabled
+    ? sortedSites.slice(0, categoryInitialPageSize)
+    : sortedSites
 
   // 结构化数据
   const jsonLd = {
@@ -177,8 +177,8 @@ export default async function CategoryPage({
           {/* 网站列表（首屏 JSON，翻页后查询数据库） */}
           <SiteLoadMore
             category={category as keyof typeof CategoryType}
-            initialCursor={initialCursor}
-            initialHasMore={initialHasMore}
+            initialCursor={null}
+            initialHasMore={databaseLoadMoreEnabled}
             initialItems={initialSites}
             locale={locale}
           />

@@ -47,10 +47,6 @@ export default function SiteLoadMore({
       requestUrl.searchParams.set('category', category)
       requestUrl.searchParams.set('locale', locale)
       requestUrl.searchParams.set('limit', '24')
-      requestUrl.searchParams.set(
-        'exclude',
-        visibleItems.map((item) => item.id).join(','),
-      )
       if (cursor) requestUrl.searchParams.set('cursor', cursor)
 
       const response = await fetch(requestUrl)

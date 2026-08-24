@@ -71,36 +71,48 @@ async function main() {
 
   try {
     const rows = records.map((site, index) => toNewSiteRow(site, index))
+    const persistedSlugs = new Set<string>()
 
-    for (const chunk of chunkRows(rows, 100)) {
-      await database
-        .insert(sites)
-        .values(chunk)
-        .onConflictDoUpdate({
-          target: sites.slug,
-          set: {
-            legacyId: sql`excluded.legacy_id`,
-            name: sql`excluded.name`,
-            url: sql`excluded.url`,
-            imgUrl: sql`excluded.image_url`,
-            category: sql`excluded.category`,
-            favorite: sql`excluded.favorite`,
-            description: sql`excluded.description`,
-            needVPN: sql`excluded.need_vpn`,
-            sourceLocale: sql`excluded.source_locale`,
-            translations: sql`excluded.translations`,
-            status: sql`excluded.status`,
-            updatedAt: sql`excluded.updated_at`,
-            removedAt: sql`coalesce(${sites.removedAt}, excluded.removed_at)`,
-            removalReason: sql`coalesce(${sites.removalReason}, excluded.removal_reason)`,
-            sortOrder: sql`excluded.sort_order`,
-            modifiedAt: sql`now()`,
-          },
-        })
-    }
+    await database.transaction(async (transaction) => {
+      for (const chunk of chunkRows(rows, 100)) {
+        const persisted = await transaction
+          .insert(sites)
+          .values(chunk)
+          .onConflictDoUpdate({
+            target: sites.slug,
+            set: {
+              legacyId: sql`excluded.legacy_id`,
+              name: sql`excluded.name`,
+              url: sql`excluded.url`,
+              imgUrl: sql`excluded.image_url`,
+              category: sql`excluded.category`,
+              favorite: sql`excluded.favorite`,
+              description: sql`excluded.description`,
+              needVPN: sql`excluded.need_vpn`,
+              sourceLocale: sql`excluded.source_locale`,
+              translations: sql`excluded.translations`,
+              status: sql`excluded.status`,
+              updatedAt: sql`excluded.updated_at`,
+              removedAt: sql`coalesce(${sites.removedAt}, excluded.removed_at)`,
+              removalReason: sql`coalesce(${sites.removalReason}, excluded.removal_reason)`,
+              sortOrder: sql`excluded.sort_order`,
+              modifiedAt: sql`now()`,
+            },
+          })
+          .returning({ slug: sites.slug })
+
+        for (const row of persisted) persistedSlugs.add(row.slug)
+      }
+
+      if (persistedSlugs.size !== rows.length) {
+        throw new Error(
+          `Database reconciliation failed: expected ${rows.length} records, received ${persistedSlugs.size}`,
+        )
+      }
+    })
 
     console.log(
-      `Upserted ${rows.length} JSON site records into the database (${publishedCount} active published, ${removedCount} removed).`,
+      `Atomically upserted and verified ${rows.length} JSON site records (${publishedCount} active published, ${removedCount} removed).`,
     )
   } finally {
     await client.end()

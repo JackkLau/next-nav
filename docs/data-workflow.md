@@ -1,12 +1,12 @@
 # 导航数据维护工作流
 
-`src/data/sites.json` 仍保留为首屏、SEO、旧 URL 重定向和构建兜底数据源，不再直接编辑 TypeScript 数组。数据库保存同一份站点数据，并用于分类页翻页后的增量查询。
+Supabase PostgreSQL 与版本化 JSON 快照共同形成线上发布目录：`src/data/sites.json` 提供完整基线，数据库按 slug 覆盖、追加或软移除记录。数据库未配置或暂时不可用时使用完整 JSON 回退；旧数字 URL 重定向仍使用这份快照。
 
 仓库已接入 Supabase PostgreSQL + Drizzle 的 schema、迁移、JSON 导入脚本和分页查询 API。数据库命令和上线切换步骤见 [`docs/database.md`](./database.md)。
 
 需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成导航 JSON，并直接提交到数据库。正确密码可无限生成和提交，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
 
-当前首屏发布数据仍以 `src/data/sites.json` 为准；数据库 `published` 且未移除的记录会在用户加载更多时返回。
+数据库中 `published` 且未移除的记录会出现在首页、分类、详情、相关推荐、结构化数据和 sitemap。生产构建使用已校验的 JSON 快照，部署后的请求再合并数据库。nav-gen 成功提交后会立即失效发布目录及相关页面缓存；数据库被外部脚本更新时，页面最迟在 5 分钟缓存周期内刷新。
 
 ## 日常维护
 
@@ -14,9 +14,10 @@
 2. 新记录必须设置永久不变的 `slug`；修改名称或排序时不要修改它。
 3. 从 `nav-gen` 提交的数据会直接写入数据库并标记为 `published`；手动维护 JSON 时仍可按需要使用 `draft` 做审核缓冲。
 4. 内容发生实质变化时更新 `updatedAt`，格式为 `YYYY-MM-DD`。
-5. 需要下架无法访问的网站时，设置 `removedAt`，可选填写 `removalReason`；已移除记录不会出现在 JSON 首屏或数据库分页结果中。
-6. 运行 `pnpm run data:validate` 和 `pnpm run build`。
-7. 提交 Pull Request；CI 会重复执行数据校验、类型检查、lint、生产构建和 SEO 路由验收。
+5. 需要下架无法访问的网站时，设置 `removedAt`，可选填写 `removalReason`；已移除记录不会出现在数据库发布目录或 JSON 回退结果中。
+6. 运行 `pnpm run data:validate`、`pnpm test` 和 `pnpm run build`。
+7. 提交 Pull Request；CI 会重复执行数据校验、测试、类型检查、lint、生产构建和 SEO 路由验收。
+8. 合并到 `main` 或 `master` 后，`Publish site data to database` 工作流会在单一数据库事务中 upsert 并核对全部 JSON 记录。
 
 ## 字段
 
@@ -45,7 +46,7 @@ pnpm run data:import:db
 pnpm run data:import:db -- --write
 ```
 
-导入以 `slug` 为主键 upsert，并写入 `sortOrder`。脚本不会清空数据库里已有的 `removedAt` / `removalReason`；如果 JSON 明确带了移除标记，也会同步到数据库。
+导入以 `slug` 为主键，在单一事务中分批 upsert 并核对返回记录数；任意批次失败时整次导入回滚。脚本不会清空数据库里已有的 `removedAt` / `removalReason`；如果 JSON 明确带了移除标记，也会同步到数据库。
 
 ## 飞书多维表格同步
 
@@ -61,7 +62,7 @@ pnpm run data:sync:feishu
 pnpm run data:sync:feishu -- --write
 ```
 
-同步默认是 dry-run，防止字段映射错误时覆盖数据。密钥只放在本地或 CI Secrets，不提交到 Git。
+同步默认是 dry-run，防止字段映射错误时覆盖数据。脚本会自动加载 `.env.local`；`--write` 模式先把结果写入临时文件并完整校验，成功后再原子替换 `sites.json`。密钥只放在本地或 CI Secrets，不提交到 Git。
 
 仓库还提供了 GitHub Actions 工作流 `Sync navigation data from Feishu`。在仓库的 Actions 页面手动运行后，它会：
 
@@ -70,7 +71,7 @@ pnpm run data:sync:feishu -- --write
 3. 仅在 `sites.json` 有变化时新建分支并创建 Pull Request；
 4. 不直接写入主分支，仍由维护者审核后合并。
 
-使用前在 GitHub 仓库的 Actions secrets 中添加：`FEISHU_APP_ID`、`FEISHU_APP_SECRET`、`FEISHU_BITABLE_APP_TOKEN` 和 `FEISHU_BITABLE_TABLE_ID`。
+使用前在 GitHub 仓库的 Actions secrets 中添加：`FEISHU_APP_ID`、`FEISHU_APP_SECRET`、`FEISHU_BITABLE_APP_TOKEN` 和 `FEISHU_BITABLE_TABLE_ID`。此外添加 `DATABASE_URL`，供 JSON PR 合并后的 `Publish site data to database` 工作流同步生产数据库。
 
 ## 语言与收录发布
 

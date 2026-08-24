@@ -1,0 +1,33 @@
+name: Publish site data to database
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - src/data/sites.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-site-data-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run data:validate
+      - run: pnpm run db:check
+      - name: Atomically reconcile JSON records into Postgres
+        run: pnpm run data:import:db -- --write
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

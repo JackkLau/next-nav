@@ -50,31 +50,43 @@ test('site pagination rejects invalid cursors before requiring a database', asyn
   })
 })
 
-test('site pagination rejects invalid excluded site ids before requiring a database', async () => {
+test('site pagination falls back to the JSON snapshot without a database', async () => {
   await withDatabaseUrl(undefined, async () => {
     const response = await GET(
-      new Request('http://localhost/api/sites?exclude=valid-id,Bad%20Id'),
+      new Request('http://localhost/api/sites?category=common&limit=2'),
     )
-    const body = (await response.json()) as { error?: string }
+    const body = (await response.json()) as {
+      items?: unknown[]
+      hasMore?: boolean
+      nextCursor?: string | null
+      source?: string
+    }
 
-    assert.equal(response.status, 400)
-    assert.equal(body.error, 'INVALID_EXCLUDE')
+    assert.equal(response.status, 200)
+    assert.equal(body.source, 'json')
+    assert.equal(body.items?.length, 2)
+    assert.equal(body.hasMore, true)
+    assert.equal(typeof body.nextCursor, 'string')
   })
 })
 
-test('site pagination requires a configured database for valid requests', async () => {
+test('site pagination accepts a valid cursor when using the JSON fallback', async () => {
   await withDatabaseUrl(undefined, async () => {
     const cursor = encodeSiteCursor({
-      favorite: false,
-      name: 'Example',
-      slug: 'example',
+      favorite: true,
+      name: 'GitHub',
+      slug: 'github',
     })
     const response = await GET(
       new Request(`http://localhost/api/sites?category=common&cursor=${cursor}`),
     )
-    const body = (await response.json()) as { error?: string }
+    const body = (await response.json()) as {
+      items?: Array<{ id?: string }>
+      source?: string
+    }
 
-    assert.equal(response.status, 503)
-    assert.equal(body.error, 'SERVICE_NOT_CONFIGURED')
+    assert.equal(response.status, 200)
+    assert.equal(body.source, 'json')
+    assert.equal(body.items?.some((item) => item.id === 'github'), false)
   })
 })

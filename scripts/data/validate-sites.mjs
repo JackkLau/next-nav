@@ -4,7 +4,13 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
-const dataPath = path.join(projectRoot, 'src/data/sites.json')
+const fileFlagIndex = process.argv.indexOf('--file')
+if (fileFlagIndex !== -1 && !process.argv[fileFlagIndex + 1]) {
+  throw new Error('--file requires a path')
+}
+const dataPath = fileFlagIndex === -1
+  ? path.join(projectRoot, 'src/data/sites.json')
+  : path.resolve(projectRoot, process.argv[fileFlagIndex + 1])
 const publicRoot = path.join(projectRoot, 'public')
 const allowedCategories = new Set([
   'common',

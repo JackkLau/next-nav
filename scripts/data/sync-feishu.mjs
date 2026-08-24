@@ -3,10 +3,14 @@ import path from 'node:path'
 import process from 'node:process'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import nextEnv from '@next/env'
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const dataPath = path.join(projectRoot, 'src/data/sites.json')
 const shouldWrite = process.argv.includes('--write')
+const { loadEnvConfig } = nextEnv
+
+loadEnvConfig(projectRoot)
 
 const requiredEnvironment = [
   'FEISHU_APP_ID',
@@ -158,11 +162,26 @@ const sites = rows.map((row) => {
 
 const serialized = `${JSON.stringify(sites, null, 2)}\n`
 if (shouldWrite) {
-  fs.writeFileSync(dataPath, serialized)
-  execFileSync(process.execPath, ['scripts/data/validate-sites.mjs'], {
-    cwd: projectRoot,
-    stdio: 'inherit',
-  })
+  const temporaryPath = path.join(
+    path.dirname(dataPath),
+    `.sites.json.${process.pid}.${Date.now()}.tmp`,
+  )
+
+  try {
+    fs.writeFileSync(temporaryPath, serialized)
+    execFileSync(
+      process.execPath,
+      ['scripts/data/validate-sites.mjs', '--file', temporaryPath],
+      {
+        cwd: projectRoot,
+        stdio: 'inherit',
+      },
+    )
+    fs.renameSync(temporaryPath, dataPath)
+  } finally {
+    if (fs.existsSync(temporaryPath)) fs.unlinkSync(temporaryPath)
+  }
+
   console.log(`Synchronized ${sites.length} Feishu records to src/data/sites.json.`)
 } else {
   console.log(`Fetched and normalized ${sites.length} Feishu records.`)

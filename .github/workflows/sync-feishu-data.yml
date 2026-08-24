@@ -36,8 +36,10 @@ jobs:
         if: env.has_data_changes == 'true'
         run: |
           pnpm run check
+          pnpm test
           pnpm run lint
-          pnpm run build
+          pnpm run db:check
+          pnpm run seo:verify
         env:
           NEXT_PUBLIC_SITE_URL: https://loverezhao.top
           INDEXABLE_LOCALES: en
@@ -53,7 +55,7 @@ jobs:
           git add src/data/sites.json
           git commit -m "data: sync navigation records from Feishu"
           git push --set-upstream origin "$BRANCH_NAME"
-          gh pr create --base "${{ github.event.repository.default_branch }}" --head "$BRANCH_NAME" --title "data: sync navigation records from Feishu" --body "Automated Feishu Base import. Data validation, lint, type checking, production build, and SEO verification all passed."
+          gh pr create --base "${{ github.event.repository.default_branch }}" --head "$BRANCH_NAME" --title "data: sync navigation records from Feishu" --body "Automated Feishu Base import. Data validation, tests, lint, type checking, migration checks, production build, and SEO verification all passed."
       - name: Report no changes
         if: env.has_data_changes == 'false'
         run: echo "Feishu data already matches src/data/sites.json."

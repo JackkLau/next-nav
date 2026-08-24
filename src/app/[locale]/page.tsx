@@ -1,22 +1,23 @@
-import {CategoryKey, CategoryType, getLocalizedNavigationData} from '@/data/navigation';
+import {CategoryKey, CategoryType} from '@/data/navigation';
 import NaviItem from '@/components/navi-item';
 import SearchBar from '@/components/search-bar';
 import {Suspense} from 'react';
-import { useTranslations } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { localizedUrl } from '@/lib/seo';
+import { getPublishedSiteDirectory } from '@/lib/published-sites';
+
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({locale}));
 }
 
 
 
-function SearchParamsComponent({locale}: {locale: string}) {
-  setRequestLocale(locale);
-  const t = useTranslations();
-  const navigationData = getLocalizedNavigationData(locale);
-  const databaseLoadMoreEnabled = Boolean(process.env.DATABASE_URL);
+async function SearchParamsComponent({locale}: {locale: string}) {
+  const t = await getTranslations({locale});
+  const {items: navigationData} = await getPublishedSiteDirectory(locale);
   const pageUrl = localizedUrl(locale);
   const jsonLd = {
     "@context": "https://schema.org",
@@ -64,21 +65,24 @@ function SearchParamsComponent({locale}: {locale: string}) {
           {/* 每个分类独占一行，分类内的网站从左到右排列并自然换行 */}
           <div className="flex w-full max-w-none flex-col gap-4 md:gap-5">
             {
-              (Object.entries(CategoryType) as [CategoryKey, string][]).map(([type, categoryName]) => (
-                <section
-                  key={type}
-                  id={categoryName}
-                  className="w-full scroll-mt-24 px-1"
-                  tabIndex={-1}
-                >
-                  {/* title 不能国际化，会导致找不到路由 */}
-                  <NaviItem
-                    navItems={navigationData.filter(item => item.categoryKey === type)}
-                    title={type}
-                    hasMoreItems={databaseLoadMoreEnabled || undefined}
-                  />
-                </section>
-              ))
+              (Object.entries(CategoryType) as [CategoryKey, string][]).map(([type, categoryName]) => {
+                const categoryItems = navigationData.filter(item => item.categoryKey === type);
+                return (
+                  <section
+                    key={type}
+                    id={categoryName}
+                    className="w-full scroll-mt-24 px-1"
+                    tabIndex={-1}
+                  >
+                    {/* title 不能国际化，会导致找不到路由 */}
+                    <NaviItem
+                      navItems={categoryItems}
+                      title={type}
+                      hasMoreItems={categoryItems.length > 8}
+                    />
+                  </section>
+                );
+              })
             }
           </div>
         </div>
@@ -89,6 +93,7 @@ function SearchParamsComponent({locale}: {locale: string}) {
 
 export default async function Page({params}: {params: Promise<{locale: string}>}) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations({locale});
 
   return (

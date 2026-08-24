@@ -2,7 +2,7 @@
 
 `/[locale]/tools/nav-gen` 用于读取目标网站元数据并生成可审核的导航 JSON。生成后可以选择复制 JSON 进入现有数据工作流，也可以通过受保护的 `POST /api/sites/submit` 直接写入 `sites` 数据库表。
 
-数据库提交会创建 `published` 记录；遇到已有 `slug` 或 URL 会返回 `409 DUPLICATE_SITE`，不会覆盖已发布、已归档或已移除记录。如果同一站点之前以 `draft` 存在，再次提交会更新为 `published`。当前首屏仍从 `src/data/sites.json` 读取；数据库里 `published` 且未设置 `removed_at` 的记录会在分类页“加载更多”时返回。
+数据库提交会创建 `published` 记录；遇到已有 `slug` 或 URL 会返回 `409 DUPLICATE_SITE`，不会覆盖已发布、已归档或已移除记录。如果同一站点之前以 `draft` 存在，再次提交会更新为 `published`。成功提交会立即失效发布目录缓存，新记录随后可出现在首页、分类、详情、相关推荐和 sitemap，无需先修改 JSON。
 
 ## 部署配置
 

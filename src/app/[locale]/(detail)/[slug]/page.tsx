@@ -1,11 +1,10 @@
 import {
   CategoryMapping,
-  findNavigationItem,
   findNavigationItemByLegacyId,
-  findSiteRecord,
   getLocalizedNavigationData,
   hasLocalizedContent,
   NavigationItem,
+  toNavigationItem,
 } from '@/data/navigation';
 import Link from 'next/link';
 import QrBox from '@/components/qr-box';
@@ -32,7 +31,12 @@ import {
   openGraphLocale,
   siteOrigin,
 } from '@/lib/seo';
-import { findPublishedSiteFromDatabase } from '@/lib/database-sites';
+import {
+  findPublishedSite,
+  getPublishedSiteDirectory,
+} from '@/lib/published-sites';
+
+export const revalidate = 300;
 
 type Props = {
   params: Promise<{ slug: string, locale: string }>
@@ -46,14 +50,9 @@ export async function generateMetadata(
   const t = await getTranslations({locale, namespace: 'Metadata'});
   const legacyItem = findNavigationItemByLegacyId(slug)
   const resolvedSlug = legacyItem?.id || slug
-  const jsonNavItem = findNavigationItem(resolvedSlug, locale)
-  const jsonSiteRecord = findSiteRecord(resolvedSlug)
-  const databaseSite =
-    jsonNavItem && jsonSiteRecord
-      ? undefined
-      : await findPublishedSiteFromDatabase(resolvedSlug, locale)
-  const navItem = jsonNavItem || databaseSite?.navItem
-  const siteRecord = jsonSiteRecord || databaseSite?.siteRecord
+  const publishedSite = await findPublishedSite(resolvedSlug, locale)
+  const navItem = publishedSite?.navItem
+  const siteRecord = publishedSite?.siteRecord
 
   if (!navItem || !siteRecord) {
     return {
@@ -149,15 +148,14 @@ export default async function Home({
     permanentRedirect(localizedPath(locale, `/${legacyItem.id}`))
   }
 
-  const navItem =
-    findNavigationItem(slug, locale) ||
-    (await findPublishedSiteFromDatabase(slug, locale))?.navItem
+  const directory = await getPublishedSiteDirectory(locale)
+  const siteRecord = directory.records.find((site) => site.slug === slug)
+  const navItem = siteRecord ? toNavigationItem(siteRecord, locale) : undefined
   if (!navItem) {
     notFound()
   }
 
-  const navigationData = getLocalizedNavigationData(locale)
-  const relatedSites = getRelatedSites(navItem, navigationData);
+  const relatedSites = getRelatedSites(navItem, directory.items);
   const canonical = localizedUrl(locale, `/${navItem.id}`)
 
   const jsonLd = {

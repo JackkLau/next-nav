@@ -1,10 +1,7 @@
 import {
   CategoryType,
   CategoryNameMapping,
-  sortNavigationItems,
-  getLocalizedNavigationData,
   hasLocalizedContent,
-  publishedSiteRecords,
 } from '@/data/navigation'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
@@ -25,8 +22,11 @@ import {
   minimumIndexableLocalizedItems,
   openGraphLocale,
 } from '@/lib/seo'
+import { getPublishedSiteDirectory } from '@/lib/published-sites'
+import { cursorFromNavigationItem } from '@/lib/site-pagination'
 
 const categoryInitialPageSize = 24
+export const revalidate = 300
 
 type Props = {
   params: Promise<{ category: string, locale: string }>
@@ -50,10 +50,11 @@ export async function generateMetadata(
 
   const localizedCategoryName = t(`category.${category}`)
   const canonical = localizedUrl(locale, `/category/${category}`)
-  const categoryCount = getLocalizedNavigationData(locale).filter(
+  const directory = await getPublishedSiteDirectory(locale)
+  const categoryCount = directory.items.filter(
     (site) => site.categoryKey === category,
   ).length
-  const localizedCategoryCount = publishedSiteRecords.filter(
+  const localizedCategoryCount = directory.records.filter(
     (site) =>
       site.category === category && hasLocalizedContent(site, locale),
   ).length
@@ -108,15 +109,13 @@ export default async function CategoryPage({
     notFound()
   }
 
-  const categorySites = getLocalizedNavigationData(locale).filter(
+  const directory = await getPublishedSiteDirectory(locale)
+  const categorySites = directory.items.filter(
     (site) => site.categoryKey === category,
   )
 
-  const sortedSites = sortNavigationItems(categorySites)
-  const databaseLoadMoreEnabled = Boolean(process.env.DATABASE_URL)
-  const initialSites = databaseLoadMoreEnabled
-    ? sortedSites.slice(0, categoryInitialPageSize)
-    : sortedSites
+  const initialSites = categorySites.slice(0, categoryInitialPageSize)
+  const initialHasMore = categorySites.length > initialSites.length
 
   // 结构化数据
   const jsonLd = {
@@ -127,8 +126,8 @@ export default async function CategoryPage({
     "inLanguage": locale,
     "mainEntity": {
       "@type": "ItemList",
-      "numberOfItems": sortedSites.length,
-      "itemListElement": sortedSites.map((site, index) => ({
+      "numberOfItems": categorySites.length,
+      "itemListElement": categorySites.map((site, index) => ({
         "@type": "ListItem",
         "position": index + 1,
         "url": localizedUrl(locale, `/${site.id}`),
@@ -174,17 +173,19 @@ export default async function CategoryPage({
             </div>
           </section>
 
-          {/* 网站列表（首屏 JSON，翻页后查询数据库） */}
+          {/* 网站列表（统一发布目录首屏，后续使用 cursor 翻页） */}
           <SiteLoadMore
             category={category as keyof typeof CategoryType}
-            initialCursor={null}
-            initialHasMore={databaseLoadMoreEnabled}
+            initialCursor={initialHasMore
+              ? cursorFromNavigationItem(initialSites.at(-1))
+              : null}
+            initialHasMore={initialHasMore}
             initialItems={initialSites}
             locale={locale}
           />
 
           {/* 空状态 */}
-          {sortedSites.length === 0 && (
+          {categorySites.length === 0 && (
             <section className="rounded-2xl border border-dashed border-slate-200 bg-white/60 py-12 text-center" aria-label={t('empty_state')}>
               <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-slate-100" aria-hidden="true">
                 <FontAwesomeIcon icon={faFolder} className="size-5 text-slate-400" />

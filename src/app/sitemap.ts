@@ -2,20 +2,23 @@ import type { MetadataRoute } from 'next'
 import {
   CategoryType,
   hasLocalizedContent,
-  publishedSiteRecords,
 } from '@/data/navigation'
 import {
   indexableLocales,
   localizedUrl,
   minimumIndexableLocalizedItems,
 } from '@/lib/seo'
+import { getPublishedSiteDirectory } from '@/lib/published-sites'
+
+export const revalidate = 300
 
 function latestDate(dates: string[]) {
   return new Date([...dates].sort().at(-1) || '2025-07-22')
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = []
+  const { records: publishedSiteRecords } = await getPublishedSiteDirectory()
 
   for (const locale of indexableLocales) {
     const localizedDetailSites = publishedSiteRecords.filter((site) =>

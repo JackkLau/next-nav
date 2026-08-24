@@ -1,4 +1,7 @@
-import type { NavigationItem } from '@/data/navigation'
+import {
+  sortNavigationItems,
+  type NavigationItem,
+} from '@/data/navigation'
 
 export interface SiteCursor {
   favorite: boolean
@@ -44,4 +47,38 @@ export function cursorFromNavigationItem(
     name: item.name,
     slug: item.id,
   })
+}
+
+export function compareNavigationItemToCursor(
+  item: NavigationItem,
+  cursor: SiteCursor,
+) {
+  const itemFavorite = item.favorite === true
+  if (itemFavorite !== cursor.favorite) return itemFavorite ? -1 : 1
+
+  return item.name.localeCompare(cursor.name) || item.id.localeCompare(cursor.slug)
+}
+
+export function paginateNavigationItems(
+  items: NavigationItem[],
+  cursor: SiteCursor | undefined,
+  limit: number,
+) {
+  const sortedItems = sortNavigationItems(items)
+  const startIndex = cursor
+    ? sortedItems.findIndex(
+        (item) => compareNavigationItemToCursor(item, cursor) > 0,
+      )
+    : 0
+  const remainingItems = startIndex === -1 ? [] : sortedItems.slice(startIndex)
+  const pageItems = remainingItems.slice(0, limit)
+  const hasMore = remainingItems.length > limit
+
+  return {
+    items: pageItems,
+    hasMore,
+    nextCursor: hasMore
+      ? cursorFromNavigationItem(pageItems.at(-1))
+      : null,
+  }
 }

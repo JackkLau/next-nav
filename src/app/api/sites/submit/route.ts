@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { eq, inArray, or } from 'drizzle-orm'
 import {
   createRateLimitKey,
@@ -13,6 +14,7 @@ import {
 } from '@/lib/tool-rate-limit'
 import { siteCategories, type CategoryKey } from '@/data/site-model'
 import { getDatabase, sites, type NewSiteRow } from '@/db'
+import { PUBLISHED_SITES_CACHE_TAG } from '@/lib/published-sites'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -317,6 +319,14 @@ function isUniqueViolation(error: unknown) {
   )
 }
 
+function revalidatePublishedSites() {
+  revalidateTag(PUBLISHED_SITES_CACHE_TAG, { expire: 0 })
+  revalidatePath('/[locale]', 'page')
+  revalidatePath('/[locale]/category/[category]', 'page')
+  revalidatePath('/[locale]/[slug]', 'page')
+  revalidatePath('/sitemap.xml')
+}
+
 export async function POST(request: Request) {
   const body = await readSubmissionBody(request)
   if (body instanceof Response) return body
@@ -380,6 +390,8 @@ export async function POST(request: Request) {
           updatedAt: sites.updatedAt,
         })
 
+      revalidatePublishedSites()
+
       return responseWithoutRateLimit(
         { site: updatedSite, unlimited: true },
         200,
@@ -406,6 +418,8 @@ export async function POST(request: Request) {
         status: sites.status,
         updatedAt: sites.updatedAt,
       })
+
+    revalidatePublishedSites()
 
     return responseWithoutRateLimit(
       { site: insertedSite, unlimited: true },

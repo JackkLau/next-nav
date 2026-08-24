@@ -14,23 +14,24 @@ Navigation To Value 是一个基于 Next.js 的英文导航站，主要面向海
 ## 本地开发
 
 ```bash
-npm ci
-npm run dev
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 提交前运行：
 
 ```bash
-npm run check
-npm run lint
-npm run seo:verify
+pnpm run check
+pnpm test
+pnpm run lint
+pnpm run seo:verify
 ```
 
 `seo:verify` 会先创建全新的生产构建，再启动本地生产服务器检查 sitemap、canonical、重定向、noindex 和 404 行为。
 
 ## 数据维护
 
-导航条目统一维护在 `src/data/sites.json`。项目提供数据格式校验、稳定 slug、旧数字 URL 重定向，以及从飞书多维表格导入并自动创建 Pull Request 的 GitHub Actions 工作流。
+Supabase PostgreSQL 是线上发布目录的主要数据源，`src/data/sites.json` 保留为版本化快照和数据库不可用时的完整回退。项目提供数据格式校验、稳定 slug、旧数字 URL 重定向、飞书多维表格导入，以及主分支 JSON 变更自动同步数据库的 GitHub Actions 工作流。
 
 字段说明、飞书配置和发布流程见 [导航数据维护工作流](./docs/data-workflow.md)。
 

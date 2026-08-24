@@ -1,12 +1,14 @@
 # Supabase PostgreSQL 数据库基建
 
-项目数据库已选定 Supabase PostgreSQL，并使用 Drizzle ORM 管理 schema、迁移与查询。配置 `DATABASE_URL` 后，受保护的工具提交接口可以写入 `sites` 表中的 published 记录，分类页翻页可以从数据库读取 published 记录。
+项目数据库已选定 Supabase PostgreSQL，并使用 Drizzle ORM 管理 schema、迁移与查询。配置 `DATABASE_URL` 后，`sites` 表中的 published 记录是首页、分类、详情、相关推荐和 sitemap 共用的线上发布目录。
 
 ## 当前运行边界
 
-首屏页面、sitemap 和旧 URL 重定向仍从 `src/data/sites.json` 读取，默认导出的 `siteRepository` 也仍是 JSON 适配器。分类页首屏渲染 JSON 前 24 条；用户继续加载更多时调用 `GET /api/sites` 从数据库读取。只有运行分页接口、详情页 DB 兜底、`POST /api/sites/submit`、JSON 导入脚本或错误密码限流逻辑时才需要 `DATABASE_URL`。
+`src/lib/published-sites.ts` 统一读取发布目录：JSON 提供完整快照，数据库按 slug 覆盖同名记录、追加 DB-only 发布记录，并用 draft、archived 或软移除记录作为下架标记。生产构建只读取已校验的 JSON 快照，避免静态生成 worker 并发占用数据库连接；部署后的请求再合并缓存 5 分钟的数据库结果。数据库未配置或查询失败时返回完整 JSON 快照。所有页面和 `GET /api/sites` 都通过这一层读取，因此首页数量、分类分页、详情、结构化数据与 sitemap 使用同一份内容。旧 URL 重定向继续使用 JSON，保证代理层无需连接数据库。
 
-`createSupabaseSiteRepository(databaseUrl)` 是只读 PostgreSQL 仓储适配器。当前仍保留 JSON 首屏，后续如需全量切库，再把默认仓储切到 Supabase。
+nav-gen 成功写入后会立即失效发布目录缓存及首页、分类、详情、sitemap 页面缓存。GitHub Actions 或人工导入等外部写入无法直接通知应用，因此依靠最长 5 分钟的自动刷新周期。
+
+`createSupabaseSiteRepository(databaseUrl)` 仍保留为底层只读 PostgreSQL 仓储适配器；页面层统一通过 `published-sites.ts` 访问发布目录，不再自行选择 JSON 或数据库。
 
 ## 连接配置
 
@@ -29,15 +31,15 @@ DIRECT_URL=postgresql://postgres:PASSWORD@db.PROJECT_REF.supabase.co:5432/postgr
 - `drizzle.config.ts`：加载 `.env.local`，配置 PostgreSQL 方言和迁移连接；
 - `src/db/schema.ts`：`sites` 与工具提交限流表、PostgreSQL enum、`jsonb`、软移除字段、约束、索引和 RLS；
 - `src/db/client.ts`：Serverless 运行时复用的小型 PostgreSQL 连接池；
-- `src/db/supabase-site-repository.ts`：Supabase PostgreSQL 只读仓储适配器；
-- `src/app/api/sites/route.ts`：分类页翻页读取 published 且未移除的数据库记录；
+- `src/lib/published-sites.ts`：数据库优先、JSON 回退的统一发布目录与缓存；
+- `src/app/api/sites/route.ts`：基于统一目录的稳定 cursor 分页；
 - `src/app/api/sites/submit/route.ts`：受密码保护的站点提交接口；
 - `scripts/data/import-sites-to-db.ts`：把 `src/data/sites.json` 幂等 upsert 到数据库；
 - `src/db/json-site-repository.ts`：当前生产使用的 JSON 适配器；
 - `src/db/site-repository.ts`：页面与存储实现之间的统一接口；
 - `drizzle/`：可审查并纳入版本控制的 PostgreSQL SQL 迁移和快照。
 
-`sites.removed_at` 是软移除标记；`GET /api/sites`、JSON 首屏和详情页 DB 兜底都会排除已移除记录。`sites_active_published_category_page_idx` 是给分类页 cursor 分页使用的 partial index，仅覆盖 `status = 'published' and removed_at is null` 的行。
+`sites.removed_at` 是软移除标记；统一发布目录只查询 `published` 且未移除的数据库记录。`sites_active_published_category_page_idx` 仅覆盖活跃发布记录，继续为分类读取和后续扩大数据量时的数据库分页优化保留。
 
 `tool_submission_rate_limits` 由受密码保护的 JSON 生成和站点提交工具使用。部署要求和限流语义见 [`docs/tool-submission.md`](./tool-submission.md)。
 
@@ -63,6 +65,8 @@ pnpm run data:import:db
 pnpm run data:import:db -- --write
 ```
 
+写入使用单一事务：URL 唯一键冲突、连接中断或返回记录数不一致都会回滚，不会留下只导入了前几批的数据。
+
 `db:migrate` 和 `db:studio` 会连接真实数据库，其中迁移会修改远程 schema。它们不应放进普通构建命令，也不要在未核对连接目标和 SQL 时运行。
 
 `sites` 位于 Supabase 默认暴露给 Data API 的 `public` schema，因此初始迁移会主动启用 Row Level Security。目前没有创建面向 `anon` 或 `authenticated` 的策略，Data API 默认拒绝访问；应用只通过服务端连接串查询，后续确需浏览器直连时再按最小权限补充策略。
@@ -71,9 +75,10 @@ pnpm run data:import:db -- --write
 
 1. 在 Supabase 项目中设置 `DIRECT_URL`，审查并执行 `drizzle/0000`、`0001`、`0002` 迁移；
 2. 在 Vercel Production 设置 transaction pooler 的 `DATABASE_URL`，不要暴露给浏览器；
-3. 本地或 CI 执行 `pnpm run data:import:db -- --write`，把 JSON upsert 到数据库；
+3. 本地执行一次 `pnpm run data:import:db -- --write` 完成初始导入；
 4. 核对记录数、分类数、旧 ID、URL、翻译 JSON、发布日期、排序和软移除标记；
-5. 部署后检查分类页“加载更多”和一个数据库返回的详情页；
-6. 后续如需完全切库，再把页面默认仓储切到 Supabase，并至少保留一个发布周期的 JSON 回退。
+5. 部署后检查首页数量、分类页“加载更多”、数据库新增详情页和 sitemap；
+6. 在 GitHub Actions Secrets 添加 `DATABASE_URL`；以后 `sites.json` 合并到主分支时由 `Publish site data to database` 工作流自动事务同步；
+7. 保留 JSON 快照作为数据库故障回退，并定期检查工作流的导入记录数。
 
 参考：[Supabase 连接模式](https://supabase.com/docs/guides/database/connecting-to-postgres)、[Drizzle + Supabase](https://orm.drizzle.team/docs/connect-supabase) 和 [Drizzle migrations](https://orm.drizzle.team/docs/drizzle-kit-migrate)。

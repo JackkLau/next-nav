@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server'
 import { siteCategories, type CategoryKey } from '@/data/site-model'
 import {
   decodeOptionalSiteCursor,
-  listPublishedSitesFromDatabase,
   normalizeSitePageLimit,
-  parseExcludedSiteIds,
 } from '@/lib/database-sites'
+import { getPublishedSiteDirectory } from '@/lib/published-sites'
+import { paginateNavigationItems } from '@/lib/site-pagination'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -26,8 +26,6 @@ export async function GET(request: Request) {
   const limit = normalizeSitePageLimit(url.searchParams.get('limit'))
   const cursorValue = url.searchParams.get('cursor')
   const cursor = decodeOptionalSiteCursor(cursorValue)
-  const excludeValue = url.searchParams.get('exclude')
-  const excludeSlugs = parseExcludedSiteIds(excludeValue)
 
   if (category && !allowedCategories.has(category)) {
     return response(
@@ -49,45 +47,25 @@ export async function GET(request: Request) {
     )
   }
 
-  if (excludeValue && !excludeSlugs) {
-    return response(
-      {
-        error: 'INVALID_EXCLUDE',
-        message: 'The excluded site list is invalid',
-      },
-      400,
-    )
-  }
-
-  if (!process.env.DATABASE_URL) {
-    return response(
-      {
-        error: 'SERVICE_NOT_CONFIGURED',
-        message: 'Site database is not configured',
-      },
-      503,
-    )
-  }
-
   try {
-    const page = await listPublishedSitesFromDatabase({
-      category: category as CategoryKey | undefined,
-      cursor,
-      excludeSlugs,
-      limit,
-      locale,
-    })
+    const directory = await getPublishedSiteDirectory(locale)
+    const categoryItems = category
+      ? directory.items.filter(
+          (item) => item.categoryKey === (category as CategoryKey),
+        )
+      : directory.items
+    const page = paginateNavigationItems(categoryItems, cursor, limit)
 
-    return response({ ...page, source: 'database' })
+    return response({ ...page, source: directory.source })
   } catch (error) {
     console.error(
-      'Site database page unavailable:',
+      'Site directory page unavailable:',
       error instanceof Error ? error.message : 'Unknown database error',
     )
     return response(
       {
         error: 'SERVICE_UNAVAILABLE',
-        message: 'Site database is temporarily unavailable',
+        message: 'Site directory is temporarily unavailable',
       },
       503,
     )

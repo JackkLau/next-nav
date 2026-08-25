@@ -35,6 +35,10 @@ Supabase PostgreSQL 是线上发布目录的主要数据源，`src/data/sites.js
 
 字段说明、飞书配置和发布流程见 [导航数据维护工作流](./docs/data-workflow.md)。
 
+## 评论系统
+
+工具详情页支持通过 GitHub 登录的 giscus 评论区。GitHub Discussions、giscus App 和环境变量配置见 [Giscus 评论系统](./docs/giscus-comments.md)。
+
 ## 支持与反馈
 如果您在使用过程中遇到任何问题或有任何建议，欢迎通过以下方式与我们联系：  
 vx: xiaoke_edit

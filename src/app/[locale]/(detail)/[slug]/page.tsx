@@ -20,6 +20,7 @@ import {
   faExternalLinkAlt 
 } from '@fortawesome/free-solid-svg-icons';
 import FavoriteButtonWrapper from "@/components/favorite-button-wrapper";
+import GiscusComments from '@/components/giscus-comments';
 import { getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import {
@@ -35,6 +36,7 @@ import {
   findPublishedSite,
   getPublishedSiteDirectory,
 } from '@/lib/published-sites';
+import { getGiscusConfig } from '@/lib/giscus';
 
 export const revalidate = 300;
 
@@ -157,6 +159,7 @@ export default async function Home({
 
   const relatedSites = getRelatedSites(navItem, directory.items);
   const canonical = localizedUrl(locale, `/${navItem.id}`)
+  const giscusConfig = getGiscusConfig()
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -258,6 +261,25 @@ export default async function Home({
           <aside aria-label={t('related_sites')}>
             <RelatedSites currentSite={navItem} relatedSites={relatedSites} />
           </aside>
+
+          {giscusConfig && (
+            <section
+              className="mt-5 rounded-2xl border border-slate-200/80 bg-white/85 px-4 py-5 shadow-sm shadow-slate-950/[0.03] sm:px-6"
+              aria-labelledby="comments-heading"
+            >
+              <h2
+                id="comments-heading"
+                className="mb-4 text-base font-semibold tracking-tight text-slate-900 md:text-lg"
+              >
+                {t('comments')}
+              </h2>
+              <GiscusComments
+                config={giscusConfig}
+                locale={locale}
+                siteSlug={navItem.id}
+              />
+            </section>
+          )}
         </div>
       </main>
     </>

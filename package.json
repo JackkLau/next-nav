@@ -19,7 +19,8 @@
     "check": "pnpm run data:validate && tsc --noEmit",
     "seo:verify": "node scripts/seo/verify-production-build.mjs",
     "start": "next start",
-    "test": "pnpm run test:security && pnpm run test:data",
+    "test": "pnpm run test:security && pnpm run test:data && pnpm run test:comments",
+    "test:comments": "tsx --test src/lib/giscus.test.ts",
     "test:data": "tsx --test src/lib/site-pagination.test.ts src/lib/published-sites.test.ts",
     "test:security": "tsx --test src/lib/nav-gen-security.test.ts src/app/api/meta/route.test.ts src/app/api/sites/route.test.ts src/app/api/sites/submit/route.test.ts",
     "lint": "eslint ."
@@ -28,6 +29,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@giscus/react": "3.1.0",
     "@next/env": "^16.3.1",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",

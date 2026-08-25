@@ -45,6 +45,7 @@
     "more_value_content": "Descubra mais conteúdo valioso"
   },
   "search_tool": {
+    "this_site": "Este site",
     "bing": "Bing",
     "google": "Google",
     "duckduckgo": "DuckDuckGo",
@@ -55,6 +56,13 @@
     "brave": "Brave"
   },
   "search_placeholder": "Descubra conteúdo valioso",
+  "site_search": {
+    "title": "Pesquisar no diretório",
+    "description": "Pesquise sites publicados no diretório ativo e nos dados integrados.",
+    "results": "{count} resultados para “{query}”",
+    "no_results": "Nenhum site encontrado para “{query}”.",
+    "enter_query": "Digite um nome, descrição, categoria ou URL."
+  },
   "site_icon": "Ícone do site",
   "qr_code_view": "Ver código QR",
   "need_vpn_desc": "VPN necessário para acessar",

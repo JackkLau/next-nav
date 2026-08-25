@@ -45,6 +45,7 @@
     "more_value_content": "Mehr wertvolle Inhalte entdecken"
   },
   "search_tool": {
+    "this_site": "Diese Website",
     "bing": "Bing",
     "google": "Google",
     "duckduckgo": "DuckDuckGo",
@@ -55,6 +56,13 @@
     "brave": "Brave"
   },
   "search_placeholder": "Entdecken Sie wertvolle Inhalte",
+  "site_search": {
+    "title": "Verzeichnis durchsuchen",
+    "description": "Durchsuchen Sie veröffentlichte Websites aus dem Live-Verzeichnis und den integrierten Daten.",
+    "results": "{count} Ergebnisse für „{query}“",
+    "no_results": "Keine Websites für „{query}“ gefunden.",
+    "enter_query": "Geben Sie einen Namen, eine Beschreibung, eine Kategorie oder eine URL ein."
+  },
   "site_icon": "Webseiten-Icon",
   "qr_code_view": "QR-Code anzeigen",
   "need_vpn_desc": "VPN erforderlich für den Zugriff",

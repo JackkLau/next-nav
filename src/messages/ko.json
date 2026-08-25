@@ -45,6 +45,7 @@
     "more_value_content": "더 가치 있는 콘텐츠 발견"
   },
   "search_tool": {
+    "this_site": "이 사이트",
     "bing": "Bing",
     "google": "Google",
     "duckduckgo": "DuckDuckGo",
@@ -55,6 +56,13 @@
     "brave": "Brave"
   },
   "search_placeholder": "가치 있는 콘텐츠를 발견하세요",
+  "site_search": {
+    "title": "사이트 검색",
+    "description": "데이터베이스와 기본 데이터에서 공개된 웹사이트를 검색합니다.",
+    "results": "“{query}” 검색 결과 {count}개",
+    "no_results": "“{query}”에 해당하는 웹사이트를 찾지 못했습니다.",
+    "enter_query": "웹사이트 이름, 설명, 카테고리 또는 URL을 입력하세요."
+  },
   "site_icon": "사이트 아이콘",
   "qr_code_view": "QR코드 보기",
   "need_vpn_desc": "VPN이 필요합니다",

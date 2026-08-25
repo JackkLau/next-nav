@@ -45,6 +45,7 @@
     "more_value_content": "さらに価値あるコンテンツを発見"
   },
   "search_tool": {
+    "this_site": "このサイト",
     "bing": "Bing",
     "google": "Google",
     "duckduckgo": "DuckDuckGo",
@@ -55,6 +56,13 @@
     "brave": "Brave"
   },
   "search_placeholder": "価値あるコンテンツを発見",
+  "site_search": {
+    "title": "サイト内検索",
+    "description": "公開中のウェブサイトをデータベースと内蔵データから検索します。",
+    "results": "「{query}」の検索結果：{count}件",
+    "no_results": "「{query}」に一致するウェブサイトはありません。",
+    "enter_query": "サイト名、説明、カテゴリー、URLを入力してください。"
+  },
   "site_icon": "サイトアイコン",
   "qr_code_view": "QRコードで表示",
   "need_vpn_desc": "VPNが必要です",

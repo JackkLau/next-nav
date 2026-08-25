@@ -9,27 +9,36 @@ import {
   SelectItem,
   SelectValue
 } from '@/components/ui/select';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 
-function Index() {
+function Index({initialQuery = ''}: {initialQuery?: string}) {
   const t = useTranslations();
-  const [engine, setEngine] = useState(searchTool[0].url)
+  const locale = useLocale();
+  const router = useRouter();
   const [toolId, setToolId] = useState('0')
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState(initialQuery)
 
   function onSelectEngine(value: string) {
     const selected = searchTool.find(tool => tool.id === value)
     if (selected) {
-      setEngine(selected.url)
       setToolId(selected.id)
     }
   }
 
   function handleSearch() {
     const query = content.trim();
-    if (engine && query) {
-      window.open(`${engine}${encodeURIComponent(query)}`, '_blank', 'noopener,noreferrer')
+    const selected = searchTool.find(tool => tool.id === toolId) || searchTool[0];
+    if (!query) return;
+
+    if (selected.kind === 'site') {
+      router.push(`/${locale}/search?q=${encodeURIComponent(query)}`);
+      return;
+    }
+
+    if (selected.url) {
+      window.open(`${selected.url}${encodeURIComponent(query)}`, '_blank', 'noopener,noreferrer')
     }
   }
 
@@ -40,6 +49,8 @@ function Index() {
     <form
       className="w-full"
       role="search"
+      action={`/${locale}/search`}
+      method="get"
       onSubmit={(event) => {
         event.preventDefault();
         handleSearch();
@@ -59,9 +70,12 @@ function Index() {
         </Select>
         {/* 搜索输入框 */}
         <Input
+          name="q"
+          value={content}
           onChange={handleInput}
           className="h-10 min-w-0 flex-1 rounded-none border-none bg-transparent px-3 text-sm text-slate-900 shadow-none placeholder:text-slate-400 focus:outline-none focus:ring-0 focus-visible:border-transparent focus-visible:ring-0"
           type="search"
+          maxLength={100}
           aria-label={t('search_placeholder')}
           placeholder={t('search_placeholder')}
           style={{ boxSizing: 'border-box' }}

@@ -45,6 +45,7 @@
     "more_value_content": "Откройте больше ценных материалов"
   },
   "search_tool": {
+    "this_site": "Этот сайт",
     "bing": "Bing",
     "google": "Google",
     "duckduckgo": "DuckDuckGo",
@@ -55,6 +56,13 @@
     "brave": "Brave"
   },
   "search_placeholder": "Откройте для себя ценный контент",
+  "site_search": {
+    "title": "Поиск по каталогу",
+    "description": "Ищите опубликованные сайты в актуальном каталоге и встроенных данных.",
+    "results": "{count} результатов по запросу «{query}»",
+    "no_results": "По запросу «{query}» сайты не найдены.",
+    "enter_query": "Введите название, описание, категорию или URL сайта."
+  },
   "site_icon": "Иконка сайта",
   "qr_code_view": "Просмотр QR-кода",
   "need_vpn_desc": "Для доступа требуется VPN",

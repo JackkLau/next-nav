@@ -44,6 +44,7 @@
     "more_value_content": "More Value Content"
   },
   "search_tool": {
+    "this_site": "This Site",
     "bing": "Bing",
     "google": "Google",
     "duckduckgo": "DuckDuckGo",
@@ -54,6 +55,13 @@
     "brave": "Brave"
   },
   "search_placeholder": "Search useful websites and online tools",
+  "site_search": {
+    "title": "Search the directory",
+    "description": "Search published websites from the live directory and bundled data.",
+    "results": "{count} results for “{query}”",
+    "no_results": "No websites found for “{query}”.",
+    "enter_query": "Enter a website name, description, category, or URL."
+  },
   "site_icon": "Site Icon",
   "qr_code_view": "QR Code View",
   "need_vpn_desc": "Need VPN to access",

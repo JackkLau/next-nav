@@ -97,8 +97,25 @@ function Index({navItems, title, showAll, hideTitle, gridCols, hasMoreItems}: { 
               </div>
             </li>
             {item.description && (
-              <TooltipContent side="bottom">
-                <p className={'max-w-40'}>{item.description}</p>
+              <TooltipContent
+                side="bottom"
+                align="start"
+                sideOffset={10}
+                collisionPadding={12}
+                showArrow={false}
+                className="w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-slate-200 bg-white p-3.5 text-left text-slate-700 shadow-xl shadow-slate-950/10 sm:w-96"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <p className="min-w-0 truncate text-sm font-semibold text-slate-950">
+                    {item.name}
+                  </p>
+                  <span className="shrink-0 rounded-md bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700 ring-1 ring-blue-100">
+                    {t(`category.${item.categoryKey}`)}
+                  </span>
+                </div>
+                <p className="mt-2 line-clamp-6 text-sm leading-6 text-slate-600">
+                  {item.description}
+                </p>
               </TooltipContent>
             )}
           </Tooltip>

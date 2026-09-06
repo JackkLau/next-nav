@@ -22,7 +22,6 @@ function LeftMenu({ onNavigate }: { onNavigate?: () => void }) {
 
   useEffect(() => {
     if (!isHome) {
-      setActiveHash('');
       return;
     }
 
@@ -63,7 +62,7 @@ function LeftMenu({ onNavigate }: { onNavigate?: () => void }) {
       animationFrame = requestAnimationFrame(updateActiveSection);
     };
 
-    updateActiveSection();
+    scheduleUpdate();
     scrollRoot.addEventListener('scroll', scheduleUpdate, {passive: true});
     window.addEventListener('resize', scheduleUpdate);
     window.addEventListener('hashchange', scheduleUpdate);
@@ -92,7 +91,7 @@ function LeftMenu({ onNavigate }: { onNavigate?: () => void }) {
                 href={href}
                 scroll={isHome}
                 onClick={onNavigate}
-                aria-current={isActive ? 'page' : undefined}
+                aria-current={isActive ? (isHome ? 'location' : 'page') : undefined}
                 className={`group flex min-h-11 items-center gap-3 rounded-xl px-2.5 py-2 text-sm font-medium transition-colors ${
                   isActive
                     ? 'bg-blue-50 text-blue-700'

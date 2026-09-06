@@ -37,12 +37,26 @@
   "cancel_favorite": "즐겨찾기 해제",
   "add_favorite": "즐겨찾기",
   "open_menu": "메뉴 열기",
+  "close_menu": "메뉴 닫기",
+  "open_actions": "작업 메뉴 열기",
+  "clear_search": "검색 지우기",
+  "searching": "검색 중...",
   "top_menu": {
     "home": "홈",
     "favorite": "즐겨찾기",
     "follow_me": "팔로우하기",
     "submit_collection": "콜렉션 제출",
     "more_value_content": "더 가치 있는 콘텐츠 발견"
+  },
+  "favorites": {
+    "title": "즐겨찾기",
+    "description": "저장한 웹사이트는 이 브라우저에만 보관됩니다.",
+    "count": "저장된 웹사이트 {count}개",
+    "empty_title": "아직 즐겨찾기가 없습니다",
+    "empty_description": "웹사이트 카드의 별을 선택하면 여기에 저장됩니다.",
+    "browse_sites": "웹사이트 둘러보기",
+    "added": "{name}을 즐겨찾기에 추가했습니다",
+    "removed": "{name}을 즐겨찾기에서 삭제했습니다"
   },
   "search_tool": {
     "this_site": "이 사이트",

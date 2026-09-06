@@ -3,5 +3,5 @@ import FavoriteButton from "./favorite-button";
 import { NavigationItem } from "@/data/navigation";
 
 export default function FavoriteButtonWrapper(props: { item: NavigationItem }) {
-  return <FavoriteButton id={props.item.id} />;
-} 
+  return <FavoriteButton id={props.item.id} name={props.item.name} />;
+}

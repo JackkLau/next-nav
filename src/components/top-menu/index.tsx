@@ -125,7 +125,6 @@ function TopMenuItem({item, locale, mobile = false, onNavigate}: {item: MenuData
       <FavoriteMenuLink
         item={item}
         locale={locale}
-        mobile={mobile}
         onNavigate={onNavigate}
         active={isFavorites}
         className={itemClass}
@@ -176,7 +175,6 @@ function FavoriteMenuLink({
 }: {
   item: MenuData;
   locale: string;
-  mobile: boolean;
   onNavigate?: () => void;
   active: boolean;
   className: string;
@@ -192,7 +190,7 @@ function FavoriteMenuLink({
       className={`${className} ${active ? 'bg-blue-50 text-blue-700' : ''}`}
     >
       <FontAwesomeIcon icon={item.icon} className="size-3.5" />
-      <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
+      <span>{t(`top_menu.${topMenuMapping[item.name as keyof typeof topMenuMapping]}`)}</span>
       {favorites.length > 0 && (
         <span className="ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-amber-100 px-1.5 text-[11px] font-semibold text-amber-700" aria-label={t('favorites.count', {count: favorites.length})}>
           {favorites.length}

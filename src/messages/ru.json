@@ -37,12 +37,26 @@
   "cancel_favorite": "Удалить из избранного",
   "add_favorite": "Добавить в избранное",
   "open_menu": "Открыть меню",
+  "close_menu": "Закрыть меню",
+  "open_actions": "Открыть действия",
+  "clear_search": "Очистить поиск",
+  "searching": "Поиск...",
   "top_menu": {
     "home": "Главная",
     "favorite": "Избранное",
     "follow_me": "Подписаться",
     "submit_collection": "Отправить коллекцию",
     "more_value_content": "Откройте больше ценных материалов"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "description": "Сохранённые сайты хранятся только в этом браузере.",
+    "count": "Сохранено сайтов: {count}",
+    "empty_title": "В избранном пока пусто",
+    "empty_description": "Нажмите звезду на карточке сайта, чтобы сохранить его здесь.",
+    "browse_sites": "Перейти к сайтам",
+    "added": "{name} добавлен в избранное",
+    "removed": "{name} удалён из избранного"
   },
   "search_tool": {
     "this_site": "Этот сайт",

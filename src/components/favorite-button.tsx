@@ -6,7 +6,7 @@ import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { useTranslations } from 'next-intl'
 import { toast } from 'sonner';
 
-export default function FavoriteButton({ id }: { id: string }) {
+export default function FavoriteButton({ id, name }: { id: string; name: string }) {
   const t = useTranslations()
   const { favorites, toggleFavorite } = useFavoriteSites();
   const isFav = favorites.includes(id);
@@ -16,8 +16,8 @@ export default function FavoriteButton({ id }: { id: string }) {
       onClick={() => {
         const isFavorite = toggleFavorite(id);
         toast(isFavorite
-          ? t('favorites.added', {name: id})
-          : t('favorites.removed', {name: id}));
+          ? t('favorites.added', {name})
+          : t('favorites.removed', {name}));
       }}
       aria-label={isFav ? t('cancel_favorite') : t('add_favorite')}
       aria-pressed={isFav}

@@ -37,12 +37,26 @@
   "cancel_favorite": "Retirer des favoris",
   "add_favorite": "Ajouter aux favoris",
   "open_menu": "Ouvrir le menu",
+  "close_menu": "Fermer le menu",
+  "open_actions": "Ouvrir les actions",
+  "clear_search": "Effacer la recherche",
+  "searching": "Recherche...",
   "top_menu": {
     "home": "Accueil",
     "favorite": "Favoris",
     "follow_me": "Suivez-moi",
     "submit_collection": "Soumettre la collection",
     "more_value_content": "Découvrez plus de contenus de valeur"
+  },
+  "favorites": {
+    "title": "Favoris",
+    "description": "Vos sites enregistrés restent privés dans ce navigateur.",
+    "count": "{count} sites enregistrés",
+    "empty_title": "Aucun favori pour le moment",
+    "empty_description": "Sélectionnez l’étoile d’une fiche pour la retrouver rapidement ici.",
+    "browse_sites": "Parcourir les sites",
+    "added": "{name} ajouté aux favoris",
+    "removed": "{name} retiré des favoris"
   },
   "search_tool": {
     "this_site": "Ce site",

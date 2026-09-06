@@ -145,7 +145,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                     <GlobalLayout>
                         {children}
                     </GlobalLayout>
-                    <Toaster />
+                    <Toaster position="bottom-center" richColors closeButton />
                 </NextIntlClientProvider>
             </body>
         </html>

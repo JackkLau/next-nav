@@ -36,12 +36,26 @@
   "cancel_favorite": "Cancel Favorite",
   "add_favorite": "Add Favorite",
   "open_menu": "Open Menu",
+  "close_menu": "Close Menu",
+  "open_actions": "Open Actions",
+  "clear_search": "Clear Search",
+  "searching": "Searching...",
   "top_menu": {
     "home": "Home",
     "favorite": "Favorite",
     "follow_me": "Follow Me",
     "submit_collection": "Submit Collection",
     "more_value_content": "More Value Content"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "description": "Your saved websites are kept privately in this browser.",
+    "count": "{count} saved websites",
+    "empty_title": "No favorites yet",
+    "empty_description": "Select the star on any website card to keep it here for quick access.",
+    "browse_sites": "Browse websites",
+    "added": "{name} added to favorites",
+    "removed": "{name} removed from favorites"
   },
   "search_tool": {
     "this_site": "This Site",

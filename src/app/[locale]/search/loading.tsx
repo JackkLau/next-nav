@@ -1,6 +1,6 @@
 export default function SearchLoading() {
   return (
-    <main className="mx-auto w-full max-w-[1680px] px-2 pb-6 pt-5" aria-busy="true" aria-label="Loading">
+    <main className="mx-auto w-full max-w-[1680px] px-2 pb-6 pt-5" aria-busy="true">
       <div className="mx-auto h-8 w-52 animate-pulse rounded-lg bg-slate-200" />
       <div className="mx-auto mt-3 h-4 w-96 max-w-full animate-pulse rounded bg-slate-200/80" />
       <div className="mx-auto mt-5 h-12 w-full max-w-2xl animate-pulse rounded-2xl border border-slate-200 bg-white/80" />

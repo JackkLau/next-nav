@@ -111,11 +111,11 @@ function Index({initialQuery = ''}: {initialQuery?: string}) {
           name="q"
           value={content}
           onChange={handleInput}
-          className="h-10 min-w-0 flex-1 rounded-none border-none bg-transparent px-3 text-sm text-slate-900 shadow-none placeholder:text-slate-400 focus:outline-none focus:ring-0 focus-visible:border-transparent focus-visible:ring-0"
+          className="h-10 min-w-0 flex-1 rounded-none border-none bg-transparent px-3 text-sm text-slate-900 shadow-none placeholder:text-slate-400 focus:outline-none focus:ring-0 focus-visible:border-transparent focus-visible:ring-0 [&::-webkit-search-cancel-button]:hidden"
           type="search"
           maxLength={MAX_SITE_SEARCH_QUERY_LENGTH}
           aria-keyshortcuts="/"
-          aria-label={t('search_placeholder')}
+          aria-label={isPending ? t('searching') : t('search_placeholder')}
           placeholder={t('search_placeholder')}
           onKeyDown={(event) => {
             if (event.key === 'Escape' && content) {
@@ -146,7 +146,6 @@ function Index({initialQuery = ''}: {initialQuery?: string}) {
           ) : (
             <Search className="size-[18px]" strokeWidth={2.2} aria-hidden="true" />
           )}
-          <span className="sr-only">{isPending ? t('searching') : t('search_placeholder')}</span>
         </button>
       </div>
     </form>

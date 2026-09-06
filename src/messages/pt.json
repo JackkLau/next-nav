@@ -116,9 +116,10 @@
         "category": "Categoria",
         "favorite": "Favoritos",
         "needVPN": "VPN necessário",
-        "generate": "Gerar dados de navegação",
-        "loading": "Gerando...",
+        "generate": "Verificar e gerar",
+        "loading": "Verificando...",
         "success": "Dados de navegação gerados com sucesso!",
+        "existing-loaded": "Site existente detectado. Os dados atuais estão prontos para edição.",
         "error": {
           "password-required": "Insira a senha de acesso",
           "password": "A senha de acesso está incorreta",
@@ -139,12 +140,31 @@
         "generated-data": {
           "title": "Dados de navegação gerados",
           "description": "Envie para o banco de dados após revisar, ou copie para fluxos manuais",
+          "edit-title": "Editar site existente",
+          "edit-description": "Revise e altere os dados ou a disponibilidade e salve a atualização",
+          "existing-badge": "Site existente",
+          "new-badge": "Novo site",
+          "duplicate-found": "Duplicado detectado: {slug}",
+          "duplicate-source": "Carregado de {source}; ao salvar, a substituição no banco é criada ou atualizada",
+          "source-database": "banco de dados",
+          "source-snapshot": "snapshot estático",
+          "slug": "Slug permanente",
+          "name": "Nome do site",
+          "url": "URL do site",
+          "image-url": "URL do ícone",
+          "site-description": "Descrição",
+          "available": "Site disponível",
+          "available-help": "Desative para arquivar o site e ocultá-lo do diretório público. Ative para publicá-lo novamente.",
+          "json-preview": "Prévia do JSON",
           "copy": "Copiar",
           "json-format": "Formato JSON",
           "submit": "Enviar ao DB",
+          "update": "Salvar atualização",
           "submitting": "Enviando...",
           "submit-success": "{slug} salvo no banco de dados",
-          "submitted": "{slug} está salvo no banco de dados"
+          "update-success": "{slug} atualizado no banco de dados",
+          "submitted": "{slug} está salvo no banco de dados",
+          "updated": "{slug} foi atualizado no banco de dados"
         }
       }
     }

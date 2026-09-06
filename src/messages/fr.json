@@ -116,9 +116,10 @@
         "category": "Catégorie",
         "favorite": "Favoris",
         "needVPN": "VPN requis",
-        "generate": "Générer les données de navigation",
-        "loading": "Génération en cours...",
+        "generate": "Vérifier et générer",
+        "loading": "Vérification...",
         "success": "Données de navigation générées avec succès !",
+        "existing-loaded": "Site existant détecté. Ses données actuelles sont prêtes à être modifiées.",
         "error": {
           "password-required": "Veuillez saisir le mot de passe d’accès",
           "password": "Le mot de passe d’accès est incorrect",
@@ -139,12 +140,31 @@
         "generated-data": {
           "title": "Données de navigation générées",
           "description": "Envoyez-le en base après vérification, ou copiez-le pour les workflows manuels",
+          "edit-title": "Modifier le site existant",
+          "edit-description": "Vérifiez les données et la disponibilité actuelles, puis enregistrez la mise à jour",
+          "existing-badge": "Site existant",
+          "new-badge": "Nouveau site",
+          "duplicate-found": "Doublon détecté : {slug}",
+          "duplicate-source": "Chargé depuis {source} ; l’enregistrement crée ou actualise sa version dans la base",
+          "source-database": "la base de données",
+          "source-snapshot": "l’instantané statique",
+          "slug": "Slug permanent",
+          "name": "Nom du site",
+          "url": "URL du site",
+          "image-url": "URL de l’icône",
+          "site-description": "Description",
+          "available": "Site disponible",
+          "available-help": "Désactivez cette option pour archiver le site et le masquer de l’annuaire public. Réactivez-la pour le republier.",
+          "json-preview": "Aperçu JSON",
           "copy": "Copier",
           "json-format": "Format JSON",
           "submit": "Envoyer en DB",
+          "update": "Enregistrer la mise à jour",
           "submitting": "Envoi...",
           "submit-success": "{slug} enregistré dans la base",
-          "submitted": "{slug} est enregistré dans la base"
+          "update-success": "{slug} mis à jour dans la base",
+          "submitted": "{slug} est enregistré dans la base",
+          "updated": "{slug} a été mis à jour dans la base"
         }
       }
     }

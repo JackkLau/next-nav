@@ -4,7 +4,7 @@ Supabase PostgreSQL 与版本化 JSON 快照共同形成线上发布目录：`sr
 
 仓库已接入 Supabase PostgreSQL + Drizzle 的 schema、迁移、JSON 导入脚本和分页查询 API。数据库命令和上线切换步骤见 [`docs/database.md`](./database.md)。
 
-需要新增站点时，也可以使用受密码保护的 `/en/tools/nav-gen` 生成导航 JSON，并直接提交到数据库。正确密码可无限生成和提交，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
+新增或维护站点时，也可以使用受密码保护的 `/en/tools/nav-gen`。页面会在生成前同时检查数据库和 JSON 快照；重复站点会进入编辑模式，可更新内容及“是否可用”，无需手动打开数据库。正确密码可无限检查和保存，错误密码的防暴力限流与部署配置见 [`docs/tool-submission.md`](./tool-submission.md)。
 
 数据库中 `published` 且未移除的记录会出现在首页、分类、详情、相关推荐、结构化数据和 sitemap。生产构建使用已校验的 JSON 快照，部署后的请求再合并数据库。nav-gen 成功提交后会立即失效发布目录及相关页面缓存；数据库被外部脚本更新时，页面最迟在 5 分钟缓存周期内刷新。
 
@@ -15,6 +15,7 @@ Supabase PostgreSQL 与版本化 JSON 快照共同形成线上发布目录：`sr
 3. 从 `nav-gen` 提交的数据会直接写入数据库并标记为 `published`；手动维护 JSON 时仍可按需要使用 `draft` 做审核缓冲。
 4. 内容发生实质变化时更新 `updatedAt`，格式为 `YYYY-MM-DD`。
 5. 需要下架无法访问的网站时，设置 `removedAt`，可选填写 `removalReason`；已移除记录不会出现在数据库发布目录或 JSON 回退结果中。
+   日常快速维护也可在 `nav-gen` 中关闭“网站可用”，将数据库记录设为 `archived`；重新开启会恢复 `published` 并清除软移除标记。
 6. 运行 `pnpm run data:validate`、`pnpm test` 和 `pnpm run build`。
 7. 提交 Pull Request；CI 会重复执行数据校验、测试、类型检查、lint、生产构建和 SEO 路由验收。
 8. 合并到 `main` 或 `master` 后，`Publish site data to database` 工作流会在单一数据库事务中 upsert 并核对全部 JSON 记录。

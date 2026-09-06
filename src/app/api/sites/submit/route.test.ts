@@ -23,6 +23,14 @@ function createRequest(password: string, site: Record<string, unknown> = {}) {
   })
 }
 
+function createCheckRequest(password: string, url: unknown) {
+  return new Request('http://localhost/api/sites/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, action: 'check', url }),
+  })
+}
+
 async function withEnvironment(
   environment: Record<string, string | undefined>,
   run: () => Promise<void>,
@@ -82,6 +90,60 @@ test('site submission requires a database after the password and payload are val
 
       assert.equal(response.status, 503)
       assert.equal(body.error, 'SERVICE_NOT_CONFIGURED')
+    },
+  )
+})
+
+test('site duplicate checks validate the URL before requiring a database', async () => {
+  await withEnvironment(
+    {
+      TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD,
+      DATABASE_URL: undefined,
+    },
+    async () => {
+      const response = await POST(
+        createCheckRequest(TEST_PASSWORD, 'not-a-public-url'),
+      )
+      const body = (await response.json()) as { error?: string }
+
+      assert.equal(response.status, 400)
+      assert.equal(body.error, 'INVALID_SITE')
+    },
+  )
+})
+
+test('site duplicate checks require the configured database for a complete result', async () => {
+  await withEnvironment(
+    {
+      TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD,
+      DATABASE_URL: undefined,
+    },
+    async () => {
+      const response = await POST(
+        createCheckRequest(TEST_PASSWORD, 'https://example.com'),
+      )
+      const body = (await response.json()) as { error?: string }
+
+      assert.equal(response.status, 503)
+      assert.equal(body.error, 'SERVICE_NOT_CONFIGURED')
+    },
+  )
+})
+
+test('site submission only accepts editable availability states', async () => {
+  await withEnvironment(
+    {
+      TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD,
+      DATABASE_URL: undefined,
+    },
+    async () => {
+      const response = await POST(
+        createRequest(TEST_PASSWORD, { status: 'draft' }),
+      )
+      const body = (await response.json()) as { error?: string }
+
+      assert.equal(response.status, 400)
+      assert.equal(body.error, 'INVALID_SITE')
     },
   )
 })

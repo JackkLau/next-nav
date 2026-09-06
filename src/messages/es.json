@@ -116,9 +116,10 @@
         "category": "Categoría",
         "favorite": "Favoritos",
         "needVPN": "Se requiere VPN",
-        "generate": "Generar datos de navegación",
-        "loading": "Generando...",
+        "generate": "Comprobar y generar",
+        "loading": "Comprobando...",
         "success": "¡Datos de navegación generados con éxito!",
+        "existing-loaded": "Se detectó un sitio existente. Sus datos actuales están listos para editar.",
         "error": {
           "password-required": "Introduce la contraseña de acceso",
           "password": "La contraseña de acceso es incorrecta",
@@ -139,12 +140,31 @@
         "generated-data": {
           "title": "Datos de navegación generados",
           "description": "Envíalo a la base de datos tras revisarlo, o cópialo para flujos manuales",
+          "edit-title": "Editar sitio existente",
+          "edit-description": "Revisa y cambia los datos o la disponibilidad y guarda la actualización",
+          "existing-badge": "Sitio existente",
+          "new-badge": "Sitio nuevo",
+          "duplicate-found": "Duplicado detectado: {slug}",
+          "duplicate-source": "Cargado desde {source}; al guardar se crea o actualiza su copia en la base de datos",
+          "source-database": "la base de datos",
+          "source-snapshot": "la instantánea estática",
+          "slug": "Slug permanente",
+          "name": "Nombre del sitio",
+          "url": "URL del sitio",
+          "image-url": "URL del icono",
+          "site-description": "Descripción",
+          "available": "Sitio disponible",
+          "available-help": "Desactiva esta opción para archivar el sitio y ocultarlo del directorio público. Actívala para volver a publicarlo.",
+          "json-preview": "Vista previa JSON",
           "copy": "Copiar",
           "json-format": "Formato JSON",
           "submit": "Enviar a DB",
+          "update": "Guardar actualización",
           "submitting": "Enviando...",
           "submit-success": "{slug} guardado en la base de datos",
-          "submitted": "{slug} está guardado en la base de datos"
+          "update-success": "{slug} actualizado en la base de datos",
+          "submitted": "{slug} está guardado en la base de datos",
+          "updated": "{slug} se ha actualizado en la base de datos"
         }
       }
     }

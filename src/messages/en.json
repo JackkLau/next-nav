@@ -115,9 +115,10 @@
         "category": "Category",
         "favorite": "Favorite",
         "needVPN": "Need VPN",
-        "generate": "Generate Navigation Data",
-        "loading": "Generating...",
+        "generate": "Check and generate",
+        "loading": "Checking...",
         "success": "Navigation data generated successfully!",
+        "existing-loaded": "Existing site detected. Its current data is ready to edit.",
         "error": {
           "password-required": "Please enter the access password",
           "password": "The access password is incorrect",
@@ -138,12 +139,31 @@
         "generated-data": {
           "title": "Generated Navigation Data",
           "description": "Submit it to the database after review, or copy it for manual workflows",
+          "edit-title": "Edit Existing Site",
+          "edit-description": "Review the current record, change its details or availability, then save the update",
+          "existing-badge": "Existing site",
+          "new-badge": "New site",
+          "duplicate-found": "Duplicate detected: {slug}",
+          "duplicate-source": "Loaded from {source}; saving creates or updates its database override",
+          "source-database": "database",
+          "source-snapshot": "static snapshot",
+          "slug": "Permanent slug",
+          "name": "Site name",
+          "url": "Site URL",
+          "image-url": "Icon URL",
+          "site-description": "Description",
+          "available": "Site is available",
+          "available-help": "Turn this off to archive the site and hide it from the public directory. Turn it on to publish it again.",
+          "json-preview": "JSON preview",
           "copy": "Copy",
           "json-format": "JSON Format",
           "submit": "Submit to DB",
+          "update": "Save update",
           "submitting": "Submitting...",
           "submit-success": "Saved {slug} to database",
-          "submitted": "{slug} is saved in the database"
+          "update-success": "Updated {slug} in the database",
+          "submitted": "{slug} is saved in the database",
+          "updated": "{slug} has been updated in the database"
         }
       }
     }

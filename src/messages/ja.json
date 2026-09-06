@@ -116,9 +116,10 @@
         "category": "カテゴリ",
         "favorite": "お気に入り",
         "needVPN": "VPNが必要",
-        "generate": "ナビゲーションデータを生成",
-        "loading": "生成中...",
+        "generate": "重複を確認して生成",
+        "loading": "確認中...",
         "success": "ナビゲーションデータが正常に生成されました！",
+        "existing-loaded": "既存サイトを検出しました。現在のデータを編集できます。",
         "error": {
           "password-required": "アクセスパスワードを入力してください",
           "password": "アクセスパスワードが正しくありません",
@@ -139,12 +140,31 @@
         "generated-data": {
           "title": "生成されたナビゲーションデータ",
           "description": "確認後にデータベースへ送信するか、手動作業用にコピーします",
+          "edit-title": "既存サイトを編集",
+          "edit-description": "現在の情報や公開状態を確認・変更してから更新を保存します",
+          "existing-badge": "既存サイト",
+          "new-badge": "新規サイト",
+          "duplicate-found": "重複を検出しました：{slug}",
+          "duplicate-source": "{source} から読み込みました。保存するとデータベースの上書きレコードが作成または更新されます",
+          "source-database": "データベース",
+          "source-snapshot": "静的スナップショット",
+          "slug": "固定スラッグ",
+          "name": "サイト名",
+          "url": "サイトURL",
+          "image-url": "アイコンURL",
+          "site-description": "説明",
+          "available": "サイトは利用可能",
+          "available-help": "オフにするとサイトをアーカイブして公開一覧から非表示にし、オンにすると再公開します。",
+          "json-preview": "JSONプレビュー",
           "copy": "コピー",
           "json-format": "JSON形式",
           "submit": "DB に送信",
+          "update": "更新を保存",
           "submitting": "送信中...",
           "submit-success": "{slug} をデータベースに保存しました",
-          "submitted": "{slug} はデータベースに保存済みです"
+          "update-success": "{slug} をデータベースで更新しました",
+          "submitted": "{slug} はデータベースに保存済みです",
+          "updated": "{slug} はデータベースで更新されました"
         }
       }
     }

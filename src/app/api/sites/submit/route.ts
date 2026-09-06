@@ -13,8 +13,16 @@ import {
   type ToolRateLimitResult,
 } from '@/lib/tool-rate-limit'
 import { siteCategories, type CategoryKey } from '@/data/site-model'
-import { getDatabase, sites, type NewSiteRow } from '@/db'
+import { siteRecords } from '@/data/navigation'
+import { getDatabase, sites, toSiteRecord, type NewSiteRow } from '@/db'
 import { PUBLISHED_SITES_CACHE_TAG } from '@/lib/published-sites'
+import {
+  findDuplicateSite,
+  mergeSiteSources,
+  resolveSiteSave,
+  shouldVerifyPublicSiteUrl,
+  siteUrlLookupCandidates,
+} from '@/lib/site-submission'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -30,11 +38,17 @@ const allowedCategories = new Set<string>(siteCategories)
 
 interface SiteSubmitBody {
   password?: unknown
+  action?: unknown
+  url?: unknown
+  existingSlug?: unknown
   site?: unknown
 }
 
 interface NormalizedSiteSubmission {
-  site: NewSiteRow
+  site: NewSiteRow & {
+    status: 'published' | 'archived'
+    url: string
+  }
   rawUrl: string
 }
 
@@ -69,6 +83,10 @@ function responseWithoutRateLimit(body: Record<string, unknown>, status = 200) {
 
 function invalidSite(message: string) {
   return responseWithoutRateLimit({ error: 'INVALID_SITE', message }, 400)
+}
+
+function invalidRequest(message: string) {
+  return responseWithoutRateLimit({ error: 'INVALID_REQUEST', message }, 400)
 }
 
 async function readSubmissionBody(
@@ -234,7 +252,27 @@ function optionalHttpUrl(value: unknown, field: string) {
   return url
 }
 
-function normalizeSiteSubmission(input: unknown): NormalizedSiteSubmission | Response {
+function requiredHttpUrl(value: unknown, field: string) {
+  const url = requiredString(value, field, MAX_URL_LENGTH)
+  if (url instanceof Response) return url
+
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return invalidSite(`${field} must use http or https`)
+    }
+    if (parsed.username || parsed.password) {
+      return invalidSite(`${field} must not contain credentials`)
+    }
+    return parsed.href
+  } catch {
+    return invalidSite(`${field} is invalid`)
+  }
+}
+
+function normalizeSiteSubmission(
+  input: unknown,
+): NormalizedSiteSubmission | Response {
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
     return invalidSite('site must be an object')
   }
@@ -249,19 +287,8 @@ function normalizeSiteSubmission(input: unknown): NormalizedSiteSubmission | Res
   const name = requiredString(payload.name, 'name', MAX_NAME_LENGTH)
   if (name instanceof Response) return name
 
-  const rawUrl = requiredString(payload.url, 'url', MAX_URL_LENGTH)
+  const rawUrl = requiredHttpUrl(payload.url, 'url')
   if (rawUrl instanceof Response) return rawUrl
-  try {
-    const parsed = new URL(rawUrl)
-    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-      return invalidSite('url must use http or https')
-    }
-    if (parsed.username || parsed.password) {
-      return invalidSite('url must not contain credentials')
-    }
-  } catch {
-    return invalidSite('url is invalid')
-  }
 
   const imgUrl = optionalHttpUrl(payload.imgUrl, 'imgUrl')
   if (imgUrl instanceof Response) return imgUrl
@@ -279,35 +306,71 @@ function normalizeSiteSubmission(input: unknown): NormalizedSiteSubmission | Res
   )
   if (description instanceof Response) return description
 
+  const status = payload.status ?? 'published'
+  if (status !== 'published' && status !== 'archived') {
+    return invalidSite('status must be published or archived')
+  }
+
   return {
     rawUrl,
     site: {
       slug,
       name,
       url: rawUrl,
-      ...(imgUrl ? { imgUrl } : {}),
+      imgUrl: imgUrl || null,
       category: category as CategoryKey,
       favorite: payload.favorite === true,
-      ...(description ? { description } : {}),
+      description: description || null,
       needVPN: payload.needVPN === true,
       sourceLocale: 'en',
-      status: 'published',
+      status,
       updatedAt: new Date().toISOString().slice(0, 10),
       sortOrder: 0,
     },
   }
 }
 
-function urlConflictCandidates(rawUrl: string, publicUrl: URL) {
-  const candidates = new Set([rawUrl, publicUrl.href])
-  if (
-    publicUrl.pathname === '/' &&
-    !publicUrl.search &&
-    !publicUrl.hash
-  ) {
-    candidates.add(publicUrl.origin)
+function editableSite(site: ReturnType<typeof toSiteRecord>) {
+  return {
+    slug: site.slug,
+    name: site.name,
+    url: site.url,
+    imgUrl: site.imgUrl || '',
+    category: site.category,
+    favorite: site.favorite === true,
+    description: site.description || '',
+    needVPN: site.needVPN === true,
+    sourceLocale: site.sourceLocale,
+    status:
+      site.status === 'published' && !site.removedAt
+        ? ('published' as const)
+        : ('archived' as const),
+    updatedAt: site.updatedAt,
   }
-  return Array.from(candidates)
+}
+
+async function findSiteRecords(url: string, slugs: string[] = []) {
+  const snapshotMatch = findDuplicateSite(siteRecords, { url })
+  const lookupSlugs = Array.from(
+    new Set([...slugs, ...(snapshotMatch ? [snapshotMatch.slug] : [])]),
+  )
+  const urlCandidates = siteUrlLookupCandidates(url)
+  const database = getDatabase()
+  const databaseRows = await database.query.sites.findMany({
+    where: or(
+      inArray(sites.url, urlCandidates),
+      lookupSlugs.length ? inArray(sites.slug, lookupSlugs) : undefined,
+    ),
+  })
+
+  return {
+    database,
+    databaseRows,
+    records: mergeSiteSources(
+      siteRecords,
+      databaseRows.map((row) => toSiteRecord(row)),
+    ),
+  }
 }
 
 function isUniqueViolation(error: unknown) {
@@ -334,6 +397,57 @@ export async function POST(request: Request) {
   const authFailure = await authorizeSubmission(request, body.password)
   if (authFailure) return authFailure
 
+  const action = body.action ?? 'save'
+  if (action !== 'check' && action !== 'save') {
+    return invalidRequest('action must be check or save')
+  }
+
+  if (action === 'check') {
+    const lookupUrl = requiredHttpUrl(body.url, 'url')
+    if (lookupUrl instanceof Response) return lookupUrl
+
+    if (!process.env.DATABASE_URL) {
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_NOT_CONFIGURED',
+          message: 'Site submission database is not configured',
+        },
+        503,
+      )
+    }
+
+    try {
+      const { databaseRows, records } = await findSiteRecords(lookupUrl)
+      const existingSite = findDuplicateSite(records, { url: lookupUrl })
+
+      return responseWithoutRateLimit({
+        duplicate: Boolean(existingSite),
+        ...(existingSite
+          ? {
+              site: editableSite(existingSite),
+              source: databaseRows.some((row) => row.slug === existingSite.slug)
+                ? 'database'
+                : 'snapshot',
+            }
+          : {}),
+        unlimited: true,
+      })
+    } catch (error) {
+      console.error(
+        'Site duplicate check unavailable:',
+        error instanceof Error ? error.message : 'Unknown database error',
+      )
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_UNAVAILABLE',
+          message: 'Site duplicate check is temporarily unavailable',
+          unlimited: true,
+        },
+        503,
+      )
+    }
+  }
+
   const normalized = normalizeSiteSubmission(body.site)
   if (normalized instanceof Response) return normalized
 
@@ -347,42 +461,113 @@ export async function POST(request: Request) {
     )
   }
 
-  let publicUrl: URL
+  const existingSlug = optionalString(
+    body.existingSlug,
+    'existingSlug',
+    MAX_SLUG_LENGTH,
+  )
+  if (existingSlug instanceof Response) return existingSlug
+  if (existingSlug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(existingSlug)) {
+    return invalidSite('existingSlug is invalid')
+  }
+
+  const siteToSave = {
+    ...normalized.site,
+    url: normalized.rawUrl,
+  }
+
   try {
-    publicUrl = await assertPublicHttpUrl(normalized.rawUrl)
-  } catch (error) {
-    if (error instanceof PublicUrlError) {
+    const { database, databaseRows, records } = await findSiteRecords(
+      siteToSave.url,
+      [siteToSave.slug, ...(existingSlug ? [existingSlug] : [])],
+    )
+    const { updateTarget, conflictingSite } = resolveSiteSave(
+      records,
+      { slug: siteToSave.slug, url: siteToSave.url },
+      existingSlug,
+    )
+
+    if (existingSlug && !updateTarget) {
       return responseWithoutRateLimit(
-        { error: 'INVALID_SITE', message: error.message, unlimited: true },
-        400,
+        {
+          error: 'SITE_NOT_FOUND',
+          message: 'The site to update no longer exists',
+          unlimited: true,
+        },
+        404,
       )
     }
-    throw error
-  }
 
-  const database = getDatabase()
-  const siteToInsert = {
-    ...normalized.site,
-    url: publicUrl.href,
-  }
+    if (conflictingSite) {
+      return responseWithoutRateLimit(
+        {
+          error: 'DUPLICATE_SITE',
+          message: 'A site with this slug or URL already exists',
+          site: editableSite(conflictingSite),
+          source: databaseRows.some((row) => row.slug === conflictingSite.slug)
+            ? 'database'
+            : 'snapshot',
+          unlimited: true,
+        },
+        409,
+      )
+    }
 
-  try {
-    const existingSite = await database.query.sites.findFirst({
-      where: or(
-        eq(sites.slug, siteToInsert.slug),
-        inArray(sites.url, urlConflictCandidates(normalized.rawUrl, publicUrl)),
-      ),
-    })
+    if (shouldVerifyPublicSiteUrl(siteToSave, updateTarget)) {
+      try {
+        siteToSave.url = (await assertPublicHttpUrl(siteToSave.url)).href
+      } catch (error) {
+        if (error instanceof PublicUrlError) {
+          return responseWithoutRateLimit(
+            { error: 'INVALID_SITE', message: error.message, unlimited: true },
+            400,
+          )
+        }
+        throw error
+      }
+    }
 
-    if (existingSite?.status === 'draft' && !existingSite.removedAt) {
+    if (updateTarget) {
+      const existingDatabaseRow = databaseRows.find(
+        (row) => row.slug === updateTarget.slug,
+      )
+      const updateValues = {
+        ...siteToSave,
+        slug: updateTarget.slug,
+        sourceLocale: updateTarget.sourceLocale,
+        sortOrder: existingDatabaseRow?.sortOrder ?? siteToSave.sortOrder,
+        ...(siteToSave.status === 'published'
+          ? { removedAt: null, removalReason: null }
+          : {}),
+        modifiedAt: new Date(),
+      }
+
+      if (!existingDatabaseRow) {
+        const [insertedOverride] = await database
+          .insert(sites)
+          .values({
+            ...updateValues,
+            legacyId: updateTarget.legacyId,
+            translations: updateTarget.translations,
+          })
+          .returning({
+            slug: sites.slug,
+            url: sites.url,
+            status: sites.status,
+            updatedAt: sites.updatedAt,
+          })
+
+        revalidatePublishedSites()
+        return responseWithoutRateLimit(
+          { site: insertedOverride, operation: 'updated', unlimited: true },
+          200,
+        )
+      }
+
       const [updatedSite] = await database
         .update(sites)
-        .set({
-          ...siteToInsert,
-          slug: existingSite.slug,
-          modifiedAt: new Date(),
-        })
-        .where(eq(sites.slug, existingSite.slug))
+        .set(updateValues)
+        .where(eq(sites.slug, updateTarget.slug))
         .returning({
           slug: sites.slug,
           url: sites.url,
@@ -393,25 +578,14 @@ export async function POST(request: Request) {
       revalidatePublishedSites()
 
       return responseWithoutRateLimit(
-        { site: updatedSite, unlimited: true },
+        { site: updatedSite, operation: 'updated', unlimited: true },
         200,
-      )
-    }
-
-    if (existingSite) {
-      return responseWithoutRateLimit(
-        {
-          error: 'DUPLICATE_SITE',
-          message: 'A site with this slug or URL already exists',
-          unlimited: true,
-        },
-        409,
       )
     }
 
     const [insertedSite] = await database
       .insert(sites)
-      .values(siteToInsert)
+      .values(siteToSave)
       .returning({
         slug: sites.slug,
         url: sites.url,
@@ -422,7 +596,7 @@ export async function POST(request: Request) {
     revalidatePublishedSites()
 
     return responseWithoutRateLimit(
-      { site: insertedSite, unlimited: true },
+      { site: insertedSite, operation: 'created', unlimited: true },
       201,
     )
   } catch (error) {

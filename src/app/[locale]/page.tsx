@@ -71,6 +71,7 @@ async function SearchParamsComponent({locale}: {locale: string}) {
                   <section
                     key={type}
                     id={categoryName}
+                    data-category-section={type}
                     className="w-full scroll-mt-24 px-1"
                     tabIndex={-1}
                   >

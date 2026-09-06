@@ -12,6 +12,7 @@ import { getCategorySlug } from '@/lib/category';
 import { useFavoriteSites } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import { toast } from 'sonner';
 
 const previewItemCount = 8;
 
@@ -20,15 +21,7 @@ function Index({navItems, title, showAll, hideTitle, gridCols, hasMoreItems}: { 
   const locale = pathname.split('/')[1];
   const t = useTranslations();
   const { favorites, toggleFavorite } = useFavoriteSites();
-  // 收藏的排前面
-  const sortedNavItems = [...navItems].sort((a, b) => {
-    const aFav = favorites.includes(a.id);
-    const bFav = favorites.includes(b.id);
-    if (aFav && !bFav) return -1;
-    if (!aFav && bFav) return 1;
-    return 0;
-  });
-  const itemsToShow = showAll ? sortedNavItems : sortedNavItems.slice(0, previewItemCount);
+  const itemsToShow = showAll ? navItems : navItems.slice(0, previewItemCount);
   const usesGridLayout = Boolean(gridCols && gridCols > 1);
   const ulClass = usesGridLayout
     ? 'grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'
@@ -89,8 +82,14 @@ function Index({navItems, title, showAll, hideTitle, gridCols, hasMoreItems}: { 
                 <button
                   type="button"
                   className={`z-10 flex size-10 items-center justify-center rounded-lg text-amber-400 transition-colors hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 sm:size-8 ${favorites.includes(item.id) ? '' : 'text-slate-300 hover:text-amber-400'}`}
-                  onClick={() => toggleFavorite(item.id)}
+                  onClick={() => {
+                    const isFavorite = toggleFavorite(item.id);
+                    toast(isFavorite
+                      ? t('favorites.added', {name: item.name})
+                      : t('favorites.removed', {name: item.name}));
+                  }}
                   aria-label={favorites.includes(item.id) ? t('cancel_favorite') : t('add_favorite')}
+                  aria-pressed={favorites.includes(item.id)}
                   tabIndex={0}
                 >
                   <FontAwesomeIcon icon={favorites.includes(item.id) ? faStarSolid : faStar} className="size-3.5" />

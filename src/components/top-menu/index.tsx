@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +12,9 @@ import LanguageSwitcher from '../LanguageSwitcher';
 import * as Drawer from '@radix-ui/react-dialog';
 import { faEllipsisVertical, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { usePathname } from 'next/navigation';
+import { useFavoriteSites } from '@/lib/utils';
+
+const submissionFormUrl = 'https://d4fj7h0wc7.feishu.cn/share/base/form/shrcnpuNuNCYDTqjqB47fbzz9yY';
 
 function Index({ topMenu, sheetTrigger, scrolled = false }: { topMenu: MenuData[]; sheetTrigger?: React.ReactNode; scrolled?: boolean }) {
   const t = useTranslations();
@@ -42,7 +45,7 @@ function Index({ topMenu, sheetTrigger, scrolled = false }: { topMenu: MenuData[
           <div className="flex shrink-0 items-center">
             <Drawer.Root open={mobileActionsOpen} onOpenChange={setMobileActionsOpen}>
               <Drawer.Trigger asChild>
-                <button className="flex size-11 items-center justify-center rounded-xl text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" aria-label={t('open_menu')}>
+                <button type="button" className="flex size-11 items-center justify-center rounded-xl text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" aria-label={t('open_actions')}>
                   <FontAwesomeIcon icon={faEllipsisVertical} className="h-5 w-5" />
                 </button>
               </Drawer.Trigger>
@@ -55,7 +58,7 @@ function Index({ topMenu, sheetTrigger, scrolled = false }: { topMenu: MenuData[
                       <Drawer.Description className="mt-1 text-xs text-slate-500">{t('navigation_menu_desc')}</Drawer.Description>
                     </div>
                   <Drawer.Close asChild>
-                    <button className="flex size-11 items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950" aria-label="Close menu">
+                    <button type="button" className="flex size-11 items-center justify-center rounded-xl text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950" aria-label={t('close_menu')}>
                       <FontAwesomeIcon icon={faXmark} className="size-5" />
                     </button>
                   </Drawer.Close>
@@ -70,7 +73,11 @@ function Index({ topMenu, sheetTrigger, scrolled = false }: { topMenu: MenuData[
                         onNavigate={() => setMobileActionsOpen(false)}
                       />
                     ))}
-                    <div className="mt-4 border-t border-slate-100 pt-4"><LanguageSwitcher fullWidth /></div>
+                    <div className="mt-4 border-t border-slate-100 pt-4">
+                      <Suspense fallback={<LanguageSwitcherFallback fullWidth />}>
+                        <LanguageSwitcher fullWidth />
+                      </Suspense>
+                    </div>
                   </div>
                 </Drawer.Content>
               </Drawer.Portal>
@@ -81,7 +88,11 @@ function Index({ topMenu, sheetTrigger, scrolled = false }: { topMenu: MenuData[
           {topMenu.map((item) => (
             <TopMenuItem key={item.id} item={item} locale={locale} />
           ))}
-          <div className="ml-auto flex items-center"><LanguageSwitcher /></div>
+          <div className="ml-auto flex items-center">
+            <Suspense fallback={<LanguageSwitcherFallback />}>
+              <LanguageSwitcher />
+            </Suspense>
+          </div>
         </div>
       </nav>
     </header>
@@ -93,6 +104,7 @@ function TopMenuItem({item, locale, mobile = false, onNavigate}: {item: MenuData
   const t = useTranslations();
   const pathname = usePathname();
   const isHome = pathname === `/${locale}`;
+  const isFavorites = pathname === `/${locale}/favorites`;
   const isPrimary = item.name === 'submit_collection';
   const itemClass = `inline-flex min-h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
     mobile ? 'w-full justify-start min-h-12' : ''
@@ -110,24 +122,26 @@ function TopMenuItem({item, locale, mobile = false, onNavigate}: {item: MenuData
         <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
       </Link>}
     {item.name === 'favorite' &&
-      <button type="button" onClick={() => {
-        alert('Use Ctrl+D or Command+D to bookmark this page.');
-        onNavigate?.();
-      }}
-        className={itemClass}>
-        <FontAwesomeIcon icon={item.icon} className="size-3.5" />
-        <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
-      </button>
+      <FavoriteMenuLink
+        item={item}
+        locale={locale}
+        mobile={mobile}
+        onNavigate={onNavigate}
+        active={isFavorites}
+        className={itemClass}
+      />
     }
     {item.name === 'submit_collection' &&
-      <button type="button" onClick={() => {
-        window.open('https://d4fj7h0wc7.feishu.cn/share/base/form/shrcnpuNuNCYDTqjqB47fbzz9yY', '_blank', 'noopener,noreferrer');
-        onNavigate?.();
-      }}
-        className={itemClass}>
+      <a
+        href={submissionFormUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onNavigate}
+        className={itemClass}
+      >
         <FontAwesomeIcon icon={item.icon} className="size-3.5" />
         <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
-      </button>
+      </a>
     }
     {item.name === 'follow_me' &&
       <Popover>
@@ -151,6 +165,50 @@ function TopMenuItem({item, locale, mobile = false, onNavigate}: {item: MenuData
     }
   </div>
   )
+}
+
+function FavoriteMenuLink({
+  item,
+  locale,
+  onNavigate,
+  active,
+  className,
+}: {
+  item: MenuData;
+  locale: string;
+  mobile: boolean;
+  onNavigate?: () => void;
+  active: boolean;
+  className: string;
+}) {
+  const t = useTranslations();
+  const {favorites} = useFavoriteSites();
+
+  return (
+    <Link
+      href={`/${locale}/favorites`}
+      onClick={onNavigate}
+      aria-current={active ? 'page' : undefined}
+      className={`${className} ${active ? 'bg-blue-50 text-blue-700' : ''}`}
+    >
+      <FontAwesomeIcon icon={item.icon} className="size-3.5" />
+      <span>{t(`top_menu.${topMenuMapping[item.name]}`)}</span>
+      {favorites.length > 0 && (
+        <span className="ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-amber-100 px-1.5 text-[11px] font-semibold text-amber-700" aria-label={t('favorites.count', {count: favorites.length})}>
+          {favorites.length}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+function LanguageSwitcherFallback({fullWidth = false}: {fullWidth?: boolean}) {
+  return (
+    <div
+      className={`${fullWidth ? 'h-11 w-full' : 'ml-2 h-10 w-[118px]'} animate-pulse rounded-xl border border-slate-200 bg-white/70`}
+      aria-hidden="true"
+    />
+  );
 }
 
 export default Index;

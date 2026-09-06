@@ -21,11 +21,60 @@ function LeftMenu({ onNavigate }: { onNavigate?: () => void }) {
   const [activeHash, setActiveHash] = useState('');
 
   useEffect(() => {
-    const updateHash = () => setActiveHash(window.location.hash);
-    updateHash();
-    window.addEventListener('hashchange', updateHash);
-    return () => window.removeEventListener('hashchange', updateHash);
-  }, [pathname]);
+    if (!isHome) {
+      setActiveHash('');
+      return;
+    }
+
+    const scrollRoot = document.querySelector<HTMLElement>('[data-content-scroll]');
+    const sections = leftMenu.flatMap((item) => {
+      const section = document.getElementById(item.name);
+      return section ? [section] : [];
+    });
+
+    if (!scrollRoot || sections.length === 0) return;
+
+    let animationFrame = 0;
+    const updateActiveSection = () => {
+      animationFrame = 0;
+      const atBottom = scrollRoot.scrollTop + scrollRoot.clientHeight >= scrollRoot.scrollHeight - 8;
+      let currentSection = sections[0];
+
+      if (atBottom) {
+        currentSection = sections.at(-1) || currentSection;
+      } else {
+        const activationLine = scrollRoot.getBoundingClientRect().top +
+          Math.min(180, scrollRoot.clientHeight * 0.3);
+
+        for (const section of sections) {
+          if (section.getBoundingClientRect().top <= activationLine) {
+            currentSection = section;
+          } else {
+            break;
+          }
+        }
+      }
+
+      setActiveHash(`#${currentSection.id}`);
+    };
+
+    const scheduleUpdate = () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(updateActiveSection);
+    };
+
+    updateActiveSection();
+    scrollRoot.addEventListener('scroll', scheduleUpdate, {passive: true});
+    window.addEventListener('resize', scheduleUpdate);
+    window.addEventListener('hashchange', scheduleUpdate);
+
+    return () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      scrollRoot.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      window.removeEventListener('hashchange', scheduleUpdate);
+    };
+  }, [isHome, pathname]);
 
   return (
     <nav className="w-full flex-1 overflow-y-auto overscroll-contain px-3 py-3" aria-label={t('navigation_menu')}>

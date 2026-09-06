@@ -1,6 +1,7 @@
 'use client'
 import { useSyncExternalStore } from 'react';
 import { CategoryMapping, legacyIdToSlug } from '@/data/navigation';
+import { toggleFavoriteId } from '@/lib/favorite-state';
 
 /** Returns the stable category slug used by routes and data records. */
 export function getCategorySlug(categoryName: string): string {
@@ -67,10 +68,9 @@ export function useFavoriteSites() {
 
   const toggleFavorite = (id: string) => {
     const currentFavorites = getFavoriteSites();
-    const nextFavorites = currentFavorites.includes(id)
-      ? currentFavorites.filter((favoriteId) => favoriteId !== id)
-      : [...currentFavorites, id];
-    setFavoriteSites(nextFavorites);
+    const result = toggleFavoriteId(currentFavorites, id);
+    setFavoriteSites(result.ids);
+    return result.isFavorite;
   };
 
   return { favorites, toggleFavorite };

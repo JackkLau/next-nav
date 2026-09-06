@@ -58,7 +58,8 @@ function Index({children}: { children: React.ReactNode }) {
         <div className="relative z-10 flex min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden lg:ml-60">
           {/*主内容区*/}
           <div
-            className="mx-auto min-h-0 w-full flex-1 overflow-y-auto overscroll-contain scroll-smooth px-2 pb-3 pt-1 sm:px-3 md:px-5 md:pb-5 md:pt-2"
+            data-content-scroll
+            className="mx-auto min-h-0 w-full flex-1 overflow-y-auto overscroll-contain scroll-smooth scroll-pt-24 px-2 pb-3 pt-1 sm:px-3 md:px-5 md:pb-5 md:pt-2"
             onScroll={handleContentScroll}
           >
             {/* 顶部导航置于滚动容器内，滚动后内容会经过毛玻璃层下方。 */}

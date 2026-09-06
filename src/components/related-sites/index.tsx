@@ -51,7 +51,8 @@ export default function RelatedSites({ currentSite, relatedSites }: RelatedSites
                 <div className="flex-shrink-0 relative">
                   <SiteIcon 
                     src={site.imgUrl} 
-                    alt={`${site.name} ${t('site_icon')}`}
+                    siteUrl={site.url}
+                    alt={site.name}
                     size="md"
                     className="transition-transform duration-200 group-hover:scale-105"
                   />

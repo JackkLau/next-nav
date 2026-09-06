@@ -37,6 +37,7 @@ import {
   getPublishedSiteDirectory,
 } from '@/lib/published-sites';
 import { getGiscusConfig } from '@/lib/giscus';
+import { buildSiteIconSources } from '@/lib/site-icon';
 
 export const revalidate = 300;
 
@@ -71,6 +72,10 @@ export async function generateMetadata(
   const indexable =
     isIndexableLocale(locale) && availableLocales.includes(locale)
   const description = navItem.description || t('description')
+  const iconSource = buildSiteIconSources(navItem.imgUrl, navItem.url)[0]
+  const iconUrl = iconSource?.startsWith('/')
+    ? `${siteOrigin}${iconSource}`
+    : iconSource
 
   return {
     title: `${navItem.name} | ${t('site_name')}`,
@@ -85,11 +90,9 @@ export async function generateMetadata(
       description,
       url: canonical,
       siteName: t('site_name'),
-      images: navItem.imgUrl ? [
+      images: iconUrl ? [
         {
-          url: navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteOrigin}${navItem.imgUrl}`,
-          width: 1200,
-          height: 630,
+          url: iconUrl,
           alt: navItem.name,
         }
       ] : undefined,
@@ -100,9 +103,7 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: navItem.name,
       description,
-      images: navItem.imgUrl ? [
-        navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteOrigin}${navItem.imgUrl}`
-      ] : undefined,
+      images: iconUrl ? [iconUrl] : undefined,
     },
   }
 }
@@ -160,6 +161,10 @@ export default async function Home({
   const relatedSites = getRelatedSites(navItem, directory.items);
   const canonical = localizedUrl(locale, `/${navItem.id}`)
   const giscusConfig = getGiscusConfig()
+  const iconSource = buildSiteIconSources(navItem.imgUrl, navItem.url)[0]
+  const iconUrl = iconSource?.startsWith('/')
+    ? `${siteOrigin}${iconSource}`
+    : iconSource
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -168,7 +173,7 @@ export default async function Home({
     "name": navItem.name,
     "description": navItem.description,
     "inLanguage": locale,
-    "image": navItem.imgUrl ? (navItem.imgUrl.startsWith('http') ? navItem.imgUrl : `${siteOrigin}${navItem.imgUrl}`) : undefined,
+    "image": iconUrl,
     "isPartOf": {
       "@type": "WebSite",
       "url": localizedUrl(locale),
@@ -195,7 +200,8 @@ export default async function Home({
               <div className="flex-shrink-0 relative flex justify-center items-center">
                 <SiteIcon 
                   src={navItem?.imgUrl} 
-                  alt={`${navItem?.name} ${t('site_icon')}`}
+                  siteUrl={navItem?.url}
+                  alt={navItem?.name}
                   size="lg"
                 />
                 {navItem?.favorite && (

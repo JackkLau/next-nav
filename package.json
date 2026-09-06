@@ -23,7 +23,7 @@
     "test:comments": "tsx --test src/lib/giscus.test.ts",
     "test:data": "tsx --test src/lib/site-pagination.test.ts src/lib/published-sites.test.ts",
     "test:search": "tsx --test src/lib/site-search.test.ts",
-    "test:interactions": "tsx --test src/lib/favorite-state.test.ts src/lib/locale-navigation.test.ts",
+    "test:interactions": "tsx --test src/lib/favorite-state.test.ts src/lib/locale-navigation.test.ts src/lib/site-icon.test.ts",
     "test:security": "tsx --test src/lib/nav-gen-security.test.ts src/app/api/meta/route.test.ts src/app/api/sites/route.test.ts src/app/api/sites/submit/route.test.ts",
     "lint": "eslint ."
   },

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import SiteIcon from '@/components/ui/site-icon'
 import {
   Card,
   CardContent,
@@ -522,15 +522,12 @@ export default function NavGenPage() {
                     {t('tools.nav-gen.form.meta-data.favicon')}
                   </Label>
                   <div className="flex items-center space-x-2">
-                    <Image
-                      width={16}
-                      height={16}
+                    <SiteIcon
+                      key={metaData.favicon}
                       src={metaData.favicon}
-                      alt="favicon"
-                      className="w-4 h-4"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                      }}
+                      siteUrl={url}
+                      alt={metaData.title || url}
+                      size="sm"
                     />
                     <span className="text-sm text-muted-foreground">
                       {metaData.favicon}

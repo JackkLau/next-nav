@@ -4,7 +4,7 @@ import React from 'react';
 import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 import Link from 'next/link';
 import {NavigationItem} from '@/data/navigation';
-import Image from 'next/image';
+import SiteIcon from '@/components/ui/site-icon';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar} from '@fortawesome/free-regular-svg-icons';
 import {faArrowUpRightFromSquare, faChevronRight, faStar as faStarSolid} from '@fortawesome/free-solid-svg-icons';
@@ -60,11 +60,11 @@ function Index({navItems, title, showAll, hideTitle, gridCols, hasMoreItems}: { 
               )}
               <TooltipTrigger asChild>
                 <Link href={`/${locale}/${item.id}`} className="flex min-w-0 flex-1 items-center" prefetch={false}>
-                  <Image className="size-11 shrink-0 rounded-xl bg-slate-50 object-contain p-1 ring-1 ring-slate-100"
-                         width={44}
-                         height={44}
-                    src={item.imgUrl || '/favicon.png'}
+                  <SiteIcon
+                    src={item.imgUrl}
+                    siteUrl={item.url}
                     alt={item.name}
+                    size="card"
                   />
                   <div className="ml-3 min-w-0 flex-1">
                     <h3 className="truncate text-sm font-semibold leading-5 text-slate-900 transition-colors group-hover:text-blue-700">{item.name}</h3>

@@ -120,6 +120,7 @@
         "loading": "Verificando...",
         "success": "Dados de navegação gerados com sucesso!",
         "existing-loaded": "Site existente detectado. Os dados atuais estão prontos para edição.",
+        "existing-unavailable": "Um site existente foi detectado, mas o link não está acessível.",
         "error": {
           "password-required": "Insira a senha de acesso",
           "password": "A senha de acesso está incorreta",
@@ -130,7 +131,9 @@
           "generate-failed": "Falha ao gerar, verifique o endereço do site",
           "copy-failed": "Falha ao copiar",
           "duplicate": "Este site já existe no banco de dados",
-          "invalid-data": "Os dados gerados são inválidos. Gere novamente e tente outra vez"
+          "invalid-data": "Os dados gerados são inválidos. Gere novamente e tente outra vez",
+          "site-reachable": "O site voltou a estar acessível e, por isso, não foi removido.",
+          "remove-failed": "Não foi possível remover o site inacessível"
         },
         "meta-data": {
           "title": "Metadados do site",
@@ -155,6 +158,14 @@
           "site-description": "Descrição",
           "available": "Site disponível",
           "available-help": "Desative para arquivar o site e ocultá-lo do diretório público. Ative para publicá-lo novamente.",
+          "unavailable-title": "Este link salvo não está acessível",
+          "unavailable-description": "A verificação de disponibilidade falhou. O servidor verificará o link novamente antes de removê-lo do diretório público.",
+          "remove": "Remover site inacessível",
+          "remove-confirm": "Remover {slug} do diretório público? O registro será mantido para recuperação.",
+          "cancel-remove": "Cancelar",
+          "confirm-remove": "Confirmar remoção",
+          "removing": "Removendo...",
+          "removed-success": "{slug} foi removido do diretório público",
           "json-preview": "Prévia do JSON",
           "copy": "Copiar",
           "json-format": "Formato JSON",

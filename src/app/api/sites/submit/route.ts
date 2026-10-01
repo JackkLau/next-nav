@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { eq, inArray, or } from 'drizzle-orm'
+import { and, eq, inArray, or } from 'drizzle-orm'
 import {
   createRateLimitKey,
   getClientIdentifier,
@@ -16,9 +16,11 @@ import { siteCategories, type CategoryKey } from '@/data/site-model'
 import { siteRecords } from '@/data/navigation'
 import { getDatabase, sites, toSiteRecord, type NewSiteRow } from '@/db'
 import { PUBLISHED_SITES_CACHE_TAG } from '@/lib/published-sites'
+import { fetchPublicSiteMetadata, SiteMetadataError } from '@/lib/site-metadata'
 import {
   findDuplicateSite,
   mergeSiteSources,
+  resolveSiteRemoval,
   resolveSiteSave,
   shouldVerifyPublicSiteUrl,
   siteUrlLookupCandidates,
@@ -390,6 +392,28 @@ function revalidatePublishedSites() {
   revalidatePath('/sitemap.xml')
 }
 
+function isUnavailableSiteError(error: unknown) {
+  return (
+    error instanceof PublicUrlError ||
+    error instanceof SiteMetadataError ||
+    error instanceof TypeError ||
+    (error instanceof Error && error.name === 'TimeoutError')
+  )
+}
+
+export async function confirmSiteUnavailable(
+  url: string,
+  inspect: typeof fetchPublicSiteMetadata = fetchPublicSiteMetadata,
+) {
+  try {
+    await inspect(url)
+    return false
+  } catch (error) {
+    if (isUnavailableSiteError(error)) return true
+    throw error
+  }
+}
+
 export async function POST(request: Request) {
   const body = await readSubmissionBody(request)
   if (body instanceof Response) return body
@@ -398,8 +422,8 @@ export async function POST(request: Request) {
   if (authFailure) return authFailure
 
   const action = body.action ?? 'save'
-  if (action !== 'check' && action !== 'save') {
-    return invalidRequest('action must be check or save')
+  if (action !== 'check' && action !== 'save' && action !== 'remove') {
+    return invalidRequest('action must be check, save, or remove')
   }
 
   if (action === 'check') {
@@ -425,6 +449,7 @@ export async function POST(request: Request) {
         ...(existingSite
           ? {
               site: editableSite(existingSite),
+              removed: Boolean(existingSite.removedAt),
               source: databaseRows.some((row) => row.slug === existingSite.slug)
                 ? 'database'
                 : 'snapshot',
@@ -448,6 +473,164 @@ export async function POST(request: Request) {
     }
   }
 
+  const existingSlug = optionalString(
+    body.existingSlug,
+    'existingSlug',
+    MAX_SLUG_LENGTH,
+  )
+  if (existingSlug instanceof Response) return existingSlug
+  if (existingSlug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(existingSlug)) {
+    return invalidSite('existingSlug is invalid')
+  }
+
+  if (action === 'remove') {
+    if (!existingSlug) return invalidRequest('existingSlug is required')
+    const lookupUrl = requiredHttpUrl(body.url, 'url')
+    if (lookupUrl instanceof Response) return lookupUrl
+
+    if (!process.env.DATABASE_URL) {
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_NOT_CONFIGURED',
+          message: 'Site submission database is not configured',
+        },
+        503,
+      )
+    }
+
+    try {
+      const { database, databaseRows, records } = await findSiteRecords(
+        lookupUrl,
+        [existingSlug],
+      )
+      const removalTarget = resolveSiteRemoval(records, {
+        slug: existingSlug,
+        url: lookupUrl,
+      })
+
+      if (!removalTarget) {
+        return responseWithoutRateLimit(
+          {
+            error: 'SITE_NOT_FOUND',
+            message: 'The site to remove no longer exists or has changed',
+            unlimited: true,
+          },
+          404,
+        )
+      }
+      if (removalTarget.removedAt) {
+        return responseWithoutRateLimit(
+          {
+            error: 'SITE_ALREADY_REMOVED',
+            message: 'The site has already been removed',
+            unlimited: true,
+          },
+          409,
+        )
+      }
+
+      if (!(await confirmSiteUnavailable(removalTarget.url))) {
+        return responseWithoutRateLimit(
+          {
+            error: 'SITE_REACHABLE',
+            message: 'The site is reachable and cannot be removed',
+            unlimited: true,
+          },
+          409,
+        )
+      }
+
+      const removedAt = new Date().toISOString()
+      const removalReason = 'Unavailable link confirmed by nav-gen'
+      const existingDatabaseRow = databaseRows.find(
+        (row) => row.slug === removalTarget.slug,
+      )
+
+      const [removedSite] = existingDatabaseRow
+        ? await database
+            .update(sites)
+            .set({ removedAt, removalReason, modifiedAt: new Date() })
+            .where(
+              and(
+                eq(sites.slug, removalTarget.slug),
+                eq(sites.url, removalTarget.url),
+              ),
+            )
+            .returning({
+              slug: sites.slug,
+              url: sites.url,
+              status: sites.status,
+              updatedAt: sites.updatedAt,
+            })
+        : await database
+            .insert(sites)
+            .values({
+              slug: removalTarget.slug,
+              legacyId: removalTarget.legacyId,
+              name: removalTarget.name,
+              url: removalTarget.url,
+              imgUrl: removalTarget.imgUrl,
+              category: removalTarget.category,
+              favorite: removalTarget.favorite ?? false,
+              description: removalTarget.description,
+              needVPN: removalTarget.needVPN ?? false,
+              sourceLocale: removalTarget.sourceLocale,
+              translations: removalTarget.translations,
+              status: removalTarget.status,
+              updatedAt: removalTarget.updatedAt,
+              removedAt,
+              removalReason,
+              sortOrder: 0,
+            })
+            .returning({
+              slug: sites.slug,
+              url: sites.url,
+              status: sites.status,
+              updatedAt: sites.updatedAt,
+            })
+
+      if (!removedSite) {
+        return responseWithoutRateLimit(
+          {
+            error: 'SITE_CHANGED',
+            message: 'The site changed during removal; check it again',
+            unlimited: true,
+          },
+          409,
+        )
+      }
+
+      revalidatePublishedSites()
+      return responseWithoutRateLimit(
+        { site: removedSite, operation: 'removed', unlimited: true },
+        200,
+      )
+    } catch (error) {
+      if (isUniqueViolation(error)) {
+        return responseWithoutRateLimit(
+          {
+            error: 'SITE_CHANGED',
+            message: 'The site changed during removal; check it again',
+            unlimited: true,
+          },
+          409,
+        )
+      }
+      console.error(
+        'Site removal unavailable:',
+        error instanceof Error ? error.message : 'Unknown database error',
+      )
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_UNAVAILABLE',
+          message: 'Site removal is temporarily unavailable',
+          unlimited: true,
+        },
+        503,
+      )
+    }
+  }
+
   const normalized = normalizeSiteSubmission(body.site)
   if (normalized instanceof Response) return normalized
 
@@ -459,16 +642,6 @@ export async function POST(request: Request) {
       },
       503,
     )
-  }
-
-  const existingSlug = optionalString(
-    body.existingSlug,
-    'existingSlug',
-    MAX_SLUG_LENGTH,
-  )
-  if (existingSlug instanceof Response) return existingSlug
-  if (existingSlug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(existingSlug)) {
-    return invalidSite('existingSlug is invalid')
   }
 
   const siteToSave = {

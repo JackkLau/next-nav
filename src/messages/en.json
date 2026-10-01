@@ -119,6 +119,7 @@
         "loading": "Checking...",
         "success": "Navigation data generated successfully!",
         "existing-loaded": "Existing site detected. Its current data is ready to edit.",
+        "existing-unavailable": "Existing site detected, but its link could not be reached.",
         "error": {
           "password-required": "Please enter the access password",
           "password": "The access password is incorrect",
@@ -129,7 +130,9 @@
           "generate-failed": "Failed to generate navigation data, please check the site address",
           "copy-failed": "Failed to copy",
           "duplicate": "This site already exists in the database",
-          "invalid-data": "Generated data is invalid. Regenerate and try again"
+          "invalid-data": "Generated data is invalid. Regenerate and try again",
+          "site-reachable": "The site is reachable again, so it was not removed.",
+          "remove-failed": "Failed to remove the unavailable site"
         },
         "meta-data": {
           "title": "Site Metadata",
@@ -154,6 +157,14 @@
           "site-description": "Description",
           "available": "Site is available",
           "available-help": "Turn this off to archive the site and hide it from the public directory. Turn it on to publish it again.",
+          "unavailable-title": "This saved link is unavailable",
+          "unavailable-description": "The availability check failed. The server will check it again before removing it from the public directory.",
+          "remove": "Remove unavailable site",
+          "remove-confirm": "Remove {slug} from the public directory? Its record will be retained for recovery.",
+          "cancel-remove": "Cancel",
+          "confirm-remove": "Confirm removal",
+          "removing": "Removing...",
+          "removed-success": "{slug} was removed from the public directory",
           "json-preview": "JSON preview",
           "copy": "Copy",
           "json-format": "JSON Format",

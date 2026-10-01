@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { POST } from './route'
+import { SiteMetadataError } from '@/lib/site-metadata'
+import { confirmSiteUnavailable, POST } from './route'
 
 const TEST_PASSWORD = 'correct-test-password'
 
@@ -28,6 +29,18 @@ function createCheckRequest(password: string, url: unknown) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password, action: 'check', url }),
+  })
+}
+
+function createRemoveRequest(
+  password: string,
+  existingSlug: unknown = 'example',
+  url: unknown = 'https://example.com',
+) {
+  return new Request('http://localhost/api/sites/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, action: 'remove', existingSlug, url }),
   })
 }
 
@@ -127,6 +140,65 @@ test('site duplicate checks require the configured database for a complete resul
       assert.equal(response.status, 503)
       assert.equal(body.error, 'SERVICE_NOT_CONFIGURED')
     },
+  )
+})
+
+test('site removal validates its target before requiring a database', async () => {
+  await withEnvironment(
+    {
+      TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD,
+      DATABASE_URL: undefined,
+    },
+    async () => {
+      const missingSlug = await POST(createRemoveRequest(TEST_PASSWORD, null))
+      const invalidUrl = await POST(
+        createRemoveRequest(TEST_PASSWORD, 'example', 'not-a-url'),
+      )
+
+      assert.equal(missingSlug.status, 400)
+      assert.equal((await missingSlug.json()).error, 'INVALID_REQUEST')
+      assert.equal(invalidUrl.status, 400)
+      assert.equal((await invalidUrl.json()).error, 'INVALID_SITE')
+    },
+  )
+})
+
+test('authorized site removal requires the configured database', async () => {
+  await withEnvironment(
+    {
+      TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD,
+      DATABASE_URL: undefined,
+    },
+    async () => {
+      const response = await POST(createRemoveRequest(TEST_PASSWORD))
+      const body = (await response.json()) as { error?: string }
+
+      assert.equal(response.status, 503)
+      assert.equal(body.error, 'SERVICE_NOT_CONFIGURED')
+    },
+  )
+})
+
+test('site removal rechecks availability and only accepts known access failures', async () => {
+  assert.equal(
+    await confirmSiteUnavailable('https://example.com', async () => ({
+      title: 'Example',
+      description: '',
+      favicon: '',
+    })),
+    false,
+  )
+  assert.equal(
+    await confirmSiteUnavailable('https://example.com', async () => {
+      throw new SiteMetadataError('The site returned HTTP 404')
+    }),
+    true,
+  )
+  await assert.rejects(
+    confirmSiteUnavailable('https://example.com', async () => {
+      throw new Error('Unexpected implementation failure')
+    }),
+    /Unexpected implementation failure/,
   )
 })
 

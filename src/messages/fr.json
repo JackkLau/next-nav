@@ -120,6 +120,7 @@
         "loading": "Vérification...",
         "success": "Données de navigation générées avec succès !",
         "existing-loaded": "Site existant détecté. Ses données actuelles sont prêtes à être modifiées.",
+        "existing-unavailable": "Site existant détecté, mais son lien est inaccessible.",
         "error": {
           "password-required": "Veuillez saisir le mot de passe d’accès",
           "password": "Le mot de passe d’accès est incorrect",
@@ -130,7 +131,9 @@
           "generate-failed": "Échec de la génération, veuillez vérifier l'adresse du site",
           "copy-failed": "Échec de la copie",
           "duplicate": "Ce site existe déjà dans la base de données",
-          "invalid-data": "Les données générées sont invalides. Regénérez-les puis réessayez"
+          "invalid-data": "Les données générées sont invalides. Regénérez-les puis réessayez",
+          "site-reachable": "Le site est de nouveau accessible et n’a donc pas été retiré.",
+          "remove-failed": "Impossible de retirer le site inaccessible"
         },
         "meta-data": {
           "title": "Métadonnées du site",
@@ -155,6 +158,14 @@
           "site-description": "Description",
           "available": "Site disponible",
           "available-help": "Désactivez cette option pour archiver le site et le masquer de l’annuaire public. Réactivez-la pour le republier.",
+          "unavailable-title": "Ce lien enregistré est inaccessible",
+          "unavailable-description": "La vérification de disponibilité a échoué. Le serveur vérifiera de nouveau le lien avant de le retirer de l’annuaire public.",
+          "remove": "Retirer le site inaccessible",
+          "remove-confirm": "Retirer {slug} de l’annuaire public ? Son enregistrement sera conservé pour permettre sa restauration.",
+          "cancel-remove": "Annuler",
+          "confirm-remove": "Confirmer le retrait",
+          "removing": "Retrait...",
+          "removed-success": "{slug} a été retiré de l’annuaire public",
           "json-preview": "Aperçu JSON",
           "copy": "Copier",
           "json-format": "Format JSON",

@@ -24,11 +24,13 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import {
   Copy,
+  CircleAlert,
   Database,
   ExternalLink,
   Loader2,
   LockKeyhole,
   ShieldCheck,
+  Trash2,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { CategoryMapping, CategoryType } from '@/data/navigation'
@@ -59,7 +61,8 @@ interface SiteSubmitApiResponse {
   error?: string
   message?: string
   duplicate?: boolean
-  operation?: 'created' | 'updated'
+  operation?: 'created' | 'updated' | 'removed'
+  removed?: boolean
   source?: 'database' | 'snapshot'
   site?: GeneratedNavItem
   rateLimit?: RateLimitInfo
@@ -73,6 +76,14 @@ class ToolSubmissionError extends Error {
   ) {
     super(code)
   }
+}
+
+function isUnavailableCheckError(error: unknown) {
+  return (
+    error instanceof ToolSubmissionError &&
+    (error.code === 'METADATA_FETCH_FAILED' ||
+      error.code === 'METADATA_FETCH_TIMEOUT')
+  )
 }
 
 interface GeneratedNavItem {
@@ -115,6 +126,7 @@ export default function NavGenPage() {
   const [needVPN, setNeedVPN] = useState(false)
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [removing, setRemoving] = useState(false)
   const [metaData, setMetaData] = useState<MetaData>({})
   const [generatedItem, setGeneratedItem] = useState<GeneratedNavItem | null>(
     null,
@@ -124,6 +136,9 @@ export default function NavGenPage() {
     'database' | 'snapshot' | ''
   >('')
   const [duplicateDetected, setDuplicateDetected] = useState(false)
+  const [linkUnavailable, setLinkUnavailable] = useState(false)
+  const [removeConfirmOpen, setRemoveConfirmOpen] = useState(false)
+  const [removedSlug, setRemovedSlug] = useState('')
   const [submittedSlug, setSubmittedSlug] = useState('')
   const [submittedOperation, setSubmittedOperation] = useState<
     'created' | 'updated' | ''
@@ -224,6 +239,9 @@ export default function NavGenPage() {
     setExistingSlug(site.slug)
     setExistingSource(source)
     setDuplicateDetected(true)
+    setLinkUnavailable(false)
+    setRemoveConfirmOpen(false)
+    setRemovedSlug('')
     setSubmittedSlug('')
     setSubmittedOperation('')
     setUrl(site.url)
@@ -246,6 +264,10 @@ export default function NavGenPage() {
     )
     setSubmittedSlug('')
     setSubmittedOperation('')
+    if (field === 'url') {
+      setLinkUnavailable(false)
+      setRemoveConfirmOpen(false)
+    }
   }
 
   // 生成导航数据
@@ -266,6 +288,9 @@ export default function NavGenPage() {
     }
 
     setLoading(true)
+    setLinkUnavailable(false)
+    setRemoveConfirmOpen(false)
+    setRemovedSlug('')
     try {
       const duplicateCheck = await checkExistingSite(url)
       if (duplicateCheck.duplicate && duplicateCheck.site) {
@@ -273,6 +298,23 @@ export default function NavGenPage() {
           duplicateCheck.site,
           duplicateCheck.source || 'database',
         )
+        if (!duplicateCheck.removed) {
+          try {
+            const meta = await fetchMetaData(duplicateCheck.site.url)
+            setMetaData({
+              title: meta.title || duplicateCheck.site.name,
+              description: meta.description || duplicateCheck.site.description,
+              favicon: meta.favicon || duplicateCheck.site.imgUrl,
+            })
+          } catch (error) {
+            if (isUnavailableCheckError(error)) {
+              setLinkUnavailable(true)
+              toast.error(t('tools.nav-gen.form.existing-unavailable'))
+              return
+            }
+            throw error
+          }
+        }
         toast.info(t('tools.nav-gen.form.existing-loaded'))
         return
       }
@@ -398,7 +440,12 @@ export default function NavGenPage() {
       }
 
       const slug = data.site?.slug || generatedItem.slug
-      const operation = data.operation || (existingSlug ? 'updated' : 'created')
+      const operation =
+        data.operation === 'created' || data.operation === 'updated'
+          ? data.operation
+          : existingSlug
+            ? 'updated'
+            : 'created'
       if (data.site) {
         setGeneratedItem((current) =>
           current
@@ -455,6 +502,112 @@ export default function NavGenPage() {
       }
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const completeRemoval = (slug: string) => {
+    setRemovedSlug(slug)
+    setGeneratedItem(null)
+    setMetaData({})
+    setExistingSlug('')
+    setExistingSource('')
+    setDuplicateDetected(false)
+    setLinkUnavailable(false)
+    setRemoveConfirmOpen(false)
+    setSubmittedSlug('')
+    setSubmittedOperation('')
+  }
+
+  const removeUnavailableSite = async () => {
+    if (!password) {
+      toast.error(t('tools.nav-gen.form.error.password-required'))
+      return
+    }
+    if (!existingSlug || !generatedItem || !linkUnavailable) {
+      toast.error(t('tools.nav-gen.form.error.invalid-data'))
+      return
+    }
+
+    setRemoving(true)
+    try {
+      const response = await fetch('/api/sites/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password,
+          action: 'remove',
+          existingSlug,
+          url: generatedItem.url,
+        }),
+      })
+      const data = (await response
+        .json()
+        .catch(() => ({}))) as SiteSubmitApiResponse
+
+      if (data.unlimited) {
+        setAccessVerified(true)
+      } else {
+        setAccessVerified(false)
+        applyRateLimit(data.rateLimit)
+      }
+
+      if (!response.ok) {
+        if (data.error === 'SITE_ALREADY_REMOVED') {
+          completeRemoval(existingSlug)
+          toast.success(
+            t('tools.nav-gen.form.generated-data.removed-success', {
+              slug: existingSlug,
+            }),
+          )
+          return
+        }
+        if (data.error === 'SITE_REACHABLE') {
+          setLinkUnavailable(false)
+          setRemoveConfirmOpen(false)
+          toast.error(t('tools.nav-gen.form.error.site-reachable'))
+          return
+        }
+        throw new ToolSubmissionError(
+          data.error || 'UNKNOWN_ERROR',
+          data.rateLimit?.retryAfterSeconds,
+        )
+      }
+
+      const slug = data.site?.slug || existingSlug
+      completeRemoval(slug)
+      toast.success(
+        t('tools.nav-gen.form.generated-data.removed-success', { slug }),
+      )
+    } catch (error) {
+      if (error instanceof ToolSubmissionError) {
+        if (error.code === 'INVALID_PASSWORD') {
+          toast.error(t('tools.nav-gen.form.error.password'))
+        } else if (error.code === 'RATE_LIMITED') {
+          toast.error(
+            t('tools.nav-gen.form.error.rate-limited', {
+              seconds: error.retryAfterSeconds || cooldownSeconds || 60,
+            }),
+          )
+        } else if (
+          error.code === 'SITE_CHANGED' ||
+          error.code === 'SITE_NOT_FOUND' ||
+          error.code === 'INVALID_SITE'
+        ) {
+          toast.error(t('tools.nav-gen.form.error.invalid-data'))
+        } else if (
+          error.code === 'SERVICE_NOT_CONFIGURED' ||
+          error.code === 'SERVICE_UNAVAILABLE'
+        ) {
+          toast.error(t('tools.nav-gen.form.error.service-unavailable'))
+        } else {
+          toast.error(t('tools.nav-gen.form.error.remove-failed'))
+        }
+      } else {
+        console.error('Failed to remove unavailable site:', error)
+        toast.error(t('tools.nav-gen.form.error.remove-failed'))
+      }
+    } finally {
+      setRemoving(false)
     }
   }
 
@@ -541,6 +694,9 @@ export default function NavGenPage() {
                 value={url}
                 onChange={(event) => {
                   setUrl(event.target.value)
+                  setLinkUnavailable(false)
+                  setRemoveConfirmOpen(false)
+                  setRemovedSlug('')
                   setSubmittedSlug('')
                   setSubmittedOperation('')
                 }}
@@ -607,6 +763,16 @@ export default function NavGenPage() {
                 </>
               )}
             </Button>
+            {removedSlug && (
+              <p
+                className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
+                role="status"
+              >
+                {t('tools.nav-gen.form.generated-data.removed-success', {
+                  slug: removedSlug,
+                })}
+              </p>
+            )}
           </CardContent>
         </Card>
 
@@ -701,7 +867,9 @@ export default function NavGenPage() {
                   <Button
                     size="sm"
                     onClick={submitToDatabase}
-                    disabled={submitting || !password || !generatedItem}
+                    disabled={
+                      submitting || removing || !password || !generatedItem
+                    }
                   >
                     {submitting ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -736,6 +904,81 @@ export default function NavGenPage() {
                       ),
                     })}
                   </p>
+                </div>
+              )}
+
+              {linkUnavailable && existingSlug && accessVerified && (
+                <div
+                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-950"
+                  role="alert"
+                >
+                  <div className="flex items-start gap-3">
+                    <CircleAlert className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold">
+                        {t(
+                          'tools.nav-gen.form.generated-data.unavailable-title',
+                        )}
+                      </p>
+                      <p className="mt-1 leading-6 text-red-800">
+                        {t(
+                          'tools.nav-gen.form.generated-data.unavailable-description',
+                        )}
+                      </p>
+
+                      {!removeConfirmOpen ? (
+                        <Button
+                          className="mt-3"
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => setRemoveConfirmOpen(true)}
+                          disabled={submitting || removing}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          {t('tools.nav-gen.form.generated-data.remove')}
+                        </Button>
+                      ) : (
+                        <div className="mt-4 rounded-lg border border-red-300 bg-white p-3">
+                          <p className="font-medium text-red-950">
+                            {t(
+                              'tools.nav-gen.form.generated-data.remove-confirm',
+                              { slug: existingSlug },
+                            )}
+                          </p>
+                          <div className="mt-3 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setRemoveConfirmOpen(false)}
+                              disabled={removing}
+                            >
+                              {t(
+                                'tools.nav-gen.form.generated-data.cancel-remove',
+                              )}
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={removeUnavailableSite}
+                              disabled={removing}
+                              aria-busy={removing}
+                            >
+                              {removing ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <Trash2 className="mr-2 h-4 w-4" />
+                              )}
+                              {t(
+                                removing
+                                  ? 'tools.nav-gen.form.generated-data.removing'
+                                  : 'tools.nav-gen.form.generated-data.confirm-remove',
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
 

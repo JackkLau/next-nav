@@ -102,6 +102,21 @@ export function resolveSiteSave(
   return { updateTarget, conflictingSite }
 }
 
+export function resolveSiteRemoval(
+  records: SiteRecord[],
+  target: { slug: string; url: string },
+) {
+  const record = records.find((site) => site.slug === target.slug)
+  if (
+    !record ||
+    canonicalSiteUrlKey(record.url) !== canonicalSiteUrlKey(target.url)
+  ) {
+    return undefined
+  }
+
+  return record
+}
+
 export function shouldVerifyPublicSiteUrl(
   submission: { url: string; status: 'published' | 'archived' },
   updateTarget?: Pick<SiteRecord, 'url'>,

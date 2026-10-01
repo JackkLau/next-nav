@@ -15,7 +15,7 @@ Supabase PostgreSQL 与版本化 JSON 快照共同形成线上发布目录：`sr
 3. 从 `nav-gen` 提交的数据会直接写入数据库并标记为 `published`；手动维护 JSON 时仍可按需要使用 `draft` 做审核缓冲。
 4. 内容发生实质变化时更新 `updatedAt`，格式为 `YYYY-MM-DD`。
 5. 需要下架无法访问的网站时，设置 `removedAt`，可选填写 `removalReason`；已移除记录不会出现在数据库发布目录或 JSON 回退结果中。
-   日常快速维护也可在 `nav-gen` 中关闭“网站可用”，将数据库记录设为 `archived`；重新开启会恢复 `published` 并清除软移除标记。
+   日常快速维护也可在 `nav-gen` 中检测已收录地址：检测失败后使用“移除”写入软移除标记，或关闭“网站可用”将数据库记录设为 `archived`；重新开启会恢复 `published` 并清除软移除标记。
 6. 运行 `pnpm run data:validate`、`pnpm test` 和 `pnpm run build`。
 7. 提交 Pull Request；CI 会重复执行数据校验、测试、类型检查、lint、生产构建和 SEO 路由验收。
 8. 合并到 `main` 或 `master` 后，`Publish site data to database` 工作流会在单一数据库事务中 upsert 并核对全部 JSON 记录。

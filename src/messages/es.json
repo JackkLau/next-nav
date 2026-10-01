@@ -120,6 +120,7 @@
         "loading": "Comprobando...",
         "success": "¡Datos de navegación generados con éxito!",
         "existing-loaded": "Se detectó un sitio existente. Sus datos actuales están listos para editar.",
+        "existing-unavailable": "Se detectó un sitio existente, pero no se pudo acceder a su enlace.",
         "error": {
           "password-required": "Introduce la contraseña de acceso",
           "password": "La contraseña de acceso es incorrecta",
@@ -130,7 +131,9 @@
           "generate-failed": "Error al generar, verifica la dirección del sitio",
           "copy-failed": "Error al copiar",
           "duplicate": "Este sitio ya existe en la base de datos",
-          "invalid-data": "Los datos generados no son válidos. Genéralos de nuevo e inténtalo otra vez"
+          "invalid-data": "Los datos generados no son válidos. Genéralos de nuevo e inténtalo otra vez",
+          "site-reachable": "El sitio vuelve a estar accesible, por lo que no se eliminó.",
+          "remove-failed": "No se pudo eliminar el sitio inaccesible"
         },
         "meta-data": {
           "title": "Metadatos del sitio",
@@ -155,6 +158,14 @@
           "site-description": "Descripción",
           "available": "Sitio disponible",
           "available-help": "Desactiva esta opción para archivar el sitio y ocultarlo del directorio público. Actívala para volver a publicarlo.",
+          "unavailable-title": "Este enlace guardado no está disponible",
+          "unavailable-description": "La comprobación de disponibilidad falló. El servidor volverá a comprobar el enlace antes de retirarlo del directorio público.",
+          "remove": "Eliminar sitio inaccesible",
+          "remove-confirm": "¿Eliminar {slug} del directorio público? El registro se conservará para poder recuperarlo.",
+          "cancel-remove": "Cancelar",
+          "confirm-remove": "Confirmar eliminación",
+          "removing": "Eliminando...",
+          "removed-success": "{slug} se eliminó del directorio público",
           "json-preview": "Vista previa JSON",
           "copy": "Copiar",
           "json-format": "Formato JSON",

@@ -5,6 +5,7 @@ import {
   canonicalSiteUrlKey,
   findDuplicateSite,
   mergeSiteSources,
+  resolveSiteRemoval,
   resolveSiteSave,
   shouldVerifyPublicSiteUrl,
   siteUrlLookupCandidates,
@@ -135,6 +136,32 @@ test('save resolution only updates an explicit target and rejects conflicts with
     'example',
   )
   assert.equal(conflictingUpdate.conflictingSite?.slug, 'docs')
+})
+
+test('removal resolution requires the permanent slug and matching canonical URL', () => {
+  const records = [site('example', 'https://www.example.com/docs/')]
+
+  assert.equal(
+    resolveSiteRemoval(records, {
+      slug: 'example',
+      url: 'http://example.com/docs?from=nav',
+    })?.slug,
+    'example',
+  )
+  assert.equal(
+    resolveSiteRemoval(records, {
+      slug: 'other',
+      url: 'https://example.com/docs',
+    }),
+    undefined,
+  )
+  assert.equal(
+    resolveSiteRemoval(records, {
+      slug: 'example',
+      url: 'https://example.com/another-page',
+    }),
+    undefined,
+  )
 })
 
 test('an unavailable existing site can be archived even when its unchanged host no longer resolves', () => {

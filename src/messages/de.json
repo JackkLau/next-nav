@@ -120,6 +120,7 @@
         "loading": "Prüfung läuft...",
         "success": "Navigationsdaten erfolgreich generiert!",
         "existing-loaded": "Bestehende Website erkannt. Die aktuellen Daten können bearbeitet werden.",
+        "existing-unavailable": "Bestehende Website erkannt, aber ihr Link ist nicht erreichbar.",
         "error": {
           "password-required": "Bitte geben Sie das Zugangspasswort ein",
           "password": "Das Zugangspasswort ist falsch",
@@ -130,7 +131,9 @@
           "generate-failed": "Generierung fehlgeschlagen, bitte überprüfen Sie die Webseitenadresse",
           "copy-failed": "Kopieren fehlgeschlagen",
           "duplicate": "Diese Website existiert bereits in der Datenbank",
-          "invalid-data": "Die generierten Daten sind ungültig. Bitte neu erzeugen und erneut versuchen"
+          "invalid-data": "Die generierten Daten sind ungültig. Bitte neu erzeugen und erneut versuchen",
+          "site-reachable": "Die Website ist wieder erreichbar und wurde daher nicht entfernt.",
+          "remove-failed": "Die nicht erreichbare Website konnte nicht entfernt werden"
         },
         "meta-data": {
           "title": "Webseiten-Metadaten",
@@ -155,6 +158,14 @@
           "site-description": "Beschreibung",
           "available": "Website ist verfügbar",
           "available-help": "Deaktivieren, um die Website zu archivieren und aus dem öffentlichen Verzeichnis auszublenden. Aktivieren, um sie erneut zu veröffentlichen.",
+          "unavailable-title": "Dieser gespeicherte Link ist nicht erreichbar",
+          "unavailable-description": "Die Verfügbarkeitsprüfung ist fehlgeschlagen. Der Server prüft den Link erneut, bevor er aus dem öffentlichen Verzeichnis entfernt wird.",
+          "remove": "Nicht erreichbare Website entfernen",
+          "remove-confirm": "{slug} aus dem öffentlichen Verzeichnis entfernen? Der Eintrag bleibt zur Wiederherstellung erhalten.",
+          "cancel-remove": "Abbrechen",
+          "confirm-remove": "Entfernen bestätigen",
+          "removing": "Wird entfernt...",
+          "removed-success": "{slug} wurde aus dem öffentlichen Verzeichnis entfernt",
           "json-preview": "JSON-Vorschau",
           "copy": "Kopieren",
           "json-format": "JSON-Format",

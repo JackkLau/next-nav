@@ -120,6 +120,7 @@
         "loading": "確認中...",
         "success": "ナビゲーションデータが正常に生成されました！",
         "existing-loaded": "既存サイトを検出しました。現在のデータを編集できます。",
+        "existing-unavailable": "既存サイトを検出しましたが、リンクにアクセスできません。",
         "error": {
           "password-required": "アクセスパスワードを入力してください",
           "password": "アクセスパスワードが正しくありません",
@@ -130,7 +131,9 @@
           "generate-failed": "生成に失敗しました。サイトアドレスが正しいかご確認ください",
           "copy-failed": "コピーに失敗しました",
           "duplicate": "このサイトは既にデータベースに存在します",
-          "invalid-data": "生成データが無効です。再生成してからお試しください"
+          "invalid-data": "生成データが無効です。再生成してからお試しください",
+          "site-reachable": "サイトに再びアクセスできるため、削除されませんでした。",
+          "remove-failed": "アクセスできないサイトを削除できませんでした"
         },
         "meta-data": {
           "title": "サイトメタデータ",
@@ -155,6 +158,14 @@
           "site-description": "説明",
           "available": "サイトは利用可能",
           "available-help": "オフにするとサイトをアーカイブして公開一覧から非表示にし、オンにすると再公開します。",
+          "unavailable-title": "保存済みのリンクにアクセスできません",
+          "unavailable-description": "利用可否の確認に失敗しました。公開一覧から削除する前に、サーバーでもう一度リンクを確認します。",
+          "remove": "アクセスできないサイトを削除",
+          "remove-confirm": "{slug} を公開一覧から削除しますか？復元できるようにレコードは保持されます。",
+          "cancel-remove": "キャンセル",
+          "confirm-remove": "削除を確定",
+          "removing": "削除中...",
+          "removed-success": "{slug} を公開一覧から削除しました",
           "json-preview": "JSONプレビュー",
           "copy": "コピー",
           "json-format": "JSON形式",

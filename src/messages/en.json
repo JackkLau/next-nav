@@ -164,7 +164,29 @@
           "update-success": "Updated {slug} in the database",
           "submitted": "{slug} is saved in the database",
           "updated": "{slug} has been updated in the database"
-        }
+        },
+        "show-password": "Show password",
+        "hide-password": "Hide password"
+      },
+      "removal": {
+        "title": "Remove unavailable sites",
+        "description": "Find a listed address and confirm its removal. The website does not need to be online.",
+        "url": "Site address to remove",
+        "password-help": "Use the access password in Site Information above.",
+        "check": "Find site",
+        "checking": "Finding site...",
+        "clear": "Clear address",
+        "remove": "Remove site",
+        "confirm-title": "Remove this site?",
+        "confirm-description": "{name} will be hidden from the public directory. Its record is kept so you can restore it later.",
+        "cancel": "Cancel",
+        "removing": "Removing...",
+        "success": "Removed {name} from the public directory.",
+        "already-removed": "{name} has already been removed.",
+        "not-found": "No site matches this address. Check the full URL and try again.",
+        "failed": "Could not confirm removal. Find the address again before retrying.",
+        "changed": "The site address changed. Find it again before removing.",
+        "restore-help": "To restore this site, load its address in Site Information, turn on Site is available, and save the update."
       }
     }
   },

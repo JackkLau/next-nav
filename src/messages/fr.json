@@ -165,7 +165,29 @@
           "update-success": "{slug} mis à jour dans la base",
           "submitted": "{slug} est enregistré dans la base",
           "updated": "{slug} a été mis à jour dans la base"
-        }
+        },
+        "show-password": "Afficher le mot de passe",
+        "hide-password": "Masquer le mot de passe"
+      },
+      "removal": {
+        "title": "Retirer les sites inaccessibles",
+        "description": "Recherchez une adresse répertoriée et confirmez son retrait. Le site peut être hors ligne.",
+        "url": "Adresse du site à retirer",
+        "password-help": "Utilisez le mot de passe dans les informations du site ci-dessus.",
+        "check": "Rechercher le site",
+        "checking": "Recherche...",
+        "clear": "Effacer l’adresse",
+        "remove": "Retirer le site",
+        "confirm-title": "Retirer ce site ?",
+        "confirm-description": "{name} sera masqué dans le répertoire public. Sa fiche sera conservée pour permettre sa restauration.",
+        "cancel": "Annuler",
+        "removing": "Retrait...",
+        "success": "{name} a été retiré du répertoire public.",
+        "already-removed": "{name} a déjà été retiré.",
+        "not-found": "Aucun site ne correspond à cette adresse. Vérifiez l’URL complète et réessayez.",
+        "failed": "Impossible de confirmer le retrait. Recherchez à nouveau l’adresse avant de réessayer.",
+        "changed": "L’adresse du site a changé. Recherchez-le à nouveau avant de le retirer.",
+        "restore-help": "Pour restaurer ce site, chargez son adresse dans les informations du site, activez sa disponibilité et enregistrez la mise à jour."
       }
     }
   },

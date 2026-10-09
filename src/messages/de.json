@@ -165,7 +165,29 @@
           "update-success": "{slug} wurde in der Datenbank aktualisiert",
           "submitted": "{slug} ist in der Datenbank gespeichert",
           "updated": "{slug} wurde in der Datenbank aktualisiert"
-        }
+        },
+        "show-password": "Passwort anzeigen",
+        "hide-password": "Passwort verbergen"
+      },
+      "removal": {
+        "title": "Nicht erreichbare Websites entfernen",
+        "description": "Suchen Sie eine eingetragene Adresse und bestätigen Sie das Entfernen. Die Website darf offline sein.",
+        "url": "Zu entfernende Website-Adresse",
+        "password-help": "Verwenden Sie das Zugangspasswort in den Website-Informationen oben.",
+        "check": "Website suchen",
+        "checking": "Suche läuft...",
+        "clear": "Adresse löschen",
+        "remove": "Website entfernen",
+        "confirm-title": "Diese Website entfernen?",
+        "confirm-description": "{name} wird im öffentlichen Verzeichnis ausgeblendet. Der Datensatz bleibt für eine spätere Wiederherstellung erhalten.",
+        "cancel": "Abbrechen",
+        "removing": "Wird entfernt...",
+        "success": "{name} wurde aus dem öffentlichen Verzeichnis entfernt.",
+        "already-removed": "{name} wurde bereits entfernt.",
+        "not-found": "Keine Website mit dieser Adresse gefunden. Prüfen Sie die vollständige URL und versuchen Sie es erneut.",
+        "failed": "Das Entfernen konnte nicht bestätigt werden. Suchen Sie die Adresse erneut, bevor Sie es wiederholen.",
+        "changed": "Die Website-Adresse wurde geändert. Suchen Sie die Website erneut, bevor Sie sie entfernen.",
+        "restore-help": "Zum Wiederherstellen laden Sie die Adresse in den Website-Informationen, aktivieren die Verfügbarkeit und speichern die Änderung."
       }
     }
   },

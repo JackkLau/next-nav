@@ -165,7 +165,29 @@
           "update-success": "{slug} aggiornato nel database",
           "submitted": "{slug} è salvato nel database",
           "updated": "{slug} è stato aggiornato nel database"
-        }
+        },
+        "show-password": "Mostra password",
+        "hide-password": "Nascondi password"
+      },
+      "removal": {
+        "title": "Rimuovi siti non accessibili",
+        "description": "Cerca un indirizzo presente nel catalogo e conferma la rimozione. Il sito può essere offline.",
+        "url": "Indirizzo del sito da rimuovere",
+        "password-help": "Usa la password di accesso nelle informazioni del sito qui sopra.",
+        "check": "Cerca sito",
+        "checking": "Ricerca...",
+        "clear": "Cancella indirizzo",
+        "remove": "Rimuovi sito",
+        "confirm-title": "Rimuovere questo sito?",
+        "confirm-description": "{name} verrà nascosto dal catalogo pubblico. La scheda verrà conservata per consentirne il ripristino.",
+        "cancel": "Annulla",
+        "removing": "Rimozione...",
+        "success": "{name} è stato rimosso dal catalogo pubblico.",
+        "already-removed": "{name} è già stato rimosso.",
+        "not-found": "Nessun sito corrisponde a questo indirizzo. Controlla l’URL completo e riprova.",
+        "failed": "Impossibile confermare la rimozione. Cerca nuovamente l’indirizzo prima di riprovare.",
+        "changed": "L’indirizzo del sito è cambiato. Cercalo di nuovo prima di rimuoverlo.",
+        "restore-help": "Per ripristinare questo sito, carica l’indirizzo nelle informazioni del sito, attiva la disponibilità e salva l’aggiornamento."
       }
     }
   },

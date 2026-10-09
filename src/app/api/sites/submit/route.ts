@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { eq, inArray, or } from 'drizzle-orm'
+import { and, eq, inArray, or } from 'drizzle-orm'
 import {
   createRateLimitKey,
   getClientIdentifier,
@@ -17,6 +17,7 @@ import { siteRecords } from '@/data/navigation'
 import { getDatabase, sites, toSiteRecord, type NewSiteRow } from '@/db'
 import { PUBLISHED_SITES_CACHE_TAG } from '@/lib/published-sites'
 import {
+  canonicalSiteUrlKey,
   findDuplicateSite,
   mergeSiteSources,
   resolveSiteSave,
@@ -117,7 +118,11 @@ async function readSubmissionBody(
   }
 
   try {
-    return JSON.parse(rawBody) as SiteSubmitBody
+    const body: unknown = JSON.parse(rawBody)
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return invalidRequest('Request body must be an object')
+    }
+    return body as SiteSubmitBody
   } catch {
     return responseWithoutRateLimit(
       { error: 'INVALID_REQUEST', message: 'Invalid JSON body' },
@@ -346,6 +351,7 @@ function editableSite(site: ReturnType<typeof toSiteRecord>) {
         ? ('published' as const)
         : ('archived' as const),
     updatedAt: site.updatedAt,
+    ...(site.removedAt ? { removedAt: site.removedAt } : {}),
   }
 }
 
@@ -398,8 +404,127 @@ export async function POST(request: Request) {
   if (authFailure) return authFailure
 
   const action = body.action ?? 'save'
-  if (action !== 'check' && action !== 'save') {
-    return invalidRequest('action must be check or save')
+  if (action !== 'check' && action !== 'save' && action !== 'remove') {
+    return invalidRequest('action must be check, save, or remove')
+  }
+
+  if (action === 'remove') {
+    // A dead hostname must remain removable: validate syntax without DNS or HTTP.
+    const lookupUrl = requiredHttpUrl(body.url, 'url')
+    if (lookupUrl instanceof Response) return lookupUrl
+    const targetSlug = requiredString(
+      body.existingSlug,
+      'existingSlug',
+      MAX_SLUG_LENGTH,
+    )
+    if (targetSlug instanceof Response) return targetSlug
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(targetSlug)) {
+      return invalidSite('existingSlug is invalid')
+    }
+
+    if (!process.env.DATABASE_URL) {
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_NOT_CONFIGURED',
+          message: 'Site submission database is not configured',
+        },
+        503,
+      )
+    }
+
+    try {
+      const { database, databaseRows, records } = await findSiteRecords(
+        lookupUrl,
+        [targetSlug],
+      )
+      const target = records.find((site) => site.slug === targetSlug)
+      if (!target) {
+        return responseWithoutRateLimit(
+          {
+            error: 'SITE_NOT_FOUND',
+            message: 'The site to remove no longer exists',
+            unlimited: true,
+          },
+          404,
+        )
+      }
+      const changedResponse = () =>
+        responseWithoutRateLimit(
+          {
+            error: 'SITE_CHANGED',
+            message:
+              'The site address changed. Check it again before removing.',
+            unlimited: true,
+          },
+          409,
+        )
+      if (canonicalSiteUrlKey(target.url) !== canonicalSiteUrlKey(lookupUrl)) {
+        return changedResponse()
+      }
+      if (target.removedAt) {
+        revalidatePublishedSites()
+        return responseWithoutRateLimit({
+          site: editableSite(target),
+          operation: 'removed',
+          alreadyRemoved: true,
+          unlimited: true,
+        })
+      }
+
+      const now = new Date()
+      const removalValues = {
+        status: 'archived' as const,
+        removedAt: now.toISOString(),
+        removalReason: 'Manually removed as unavailable',
+        updatedAt: now.toISOString().slice(0, 10),
+        modifiedAt: now,
+      }
+      const existingRow = databaseRows.find((row) => row.slug === target.slug)
+      const [removedSite] = existingRow
+        ? await database
+            .update(sites)
+            .set(removalValues)
+            .where(and(eq(sites.slug, target.slug), eq(sites.url, target.url)))
+            .returning()
+        : await database
+            .insert(sites)
+            .values({
+              ...target,
+              ...removalValues,
+              sortOrder: Math.max(
+                0,
+                siteRecords.findIndex((site) => site.slug === target.slug),
+              ),
+            })
+            .onConflictDoUpdate({
+              target: sites.slug,
+              set: removalValues,
+              setWhere: eq(sites.url, target.url),
+            })
+            .returning()
+
+      // A concurrent URL change must not remove a different address.
+      if (!removedSite) return changedResponse()
+      revalidatePublishedSites()
+      return responseWithoutRateLimit({
+        site: editableSite(toSiteRecord(removedSite)),
+        operation: 'removed',
+        unlimited: true,
+      })
+    } catch (error) {
+      console.error(
+        'Site removal unavailable:',
+        error instanceof Error ? error.message : 'Unknown database error',
+      )
+      return responseWithoutRateLimit(
+        {
+          error: 'SERVICE_UNAVAILABLE',
+          message: 'Site removal is temporarily unavailable',
+          unlimited: true,
+        },
+        503,
+      )
+    }
   }
 
   if (action === 'check') {

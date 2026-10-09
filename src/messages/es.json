@@ -165,7 +165,29 @@
           "update-success": "{slug} actualizado en la base de datos",
           "submitted": "{slug} está guardado en la base de datos",
           "updated": "{slug} se ha actualizado en la base de datos"
-        }
+        },
+        "show-password": "Mostrar contraseña",
+        "hide-password": "Ocultar contraseña"
+      },
+      "removal": {
+        "title": "Retirar sitios inaccesibles",
+        "description": "Busque una dirección registrada y confirme su retirada. El sitio puede estar sin conexión.",
+        "url": "Dirección del sitio que desea retirar",
+        "password-help": "Use la contraseña de acceso en la información del sitio de arriba.",
+        "check": "Buscar sitio",
+        "checking": "Buscando...",
+        "clear": "Borrar dirección",
+        "remove": "Retirar sitio",
+        "confirm-title": "¿Retirar este sitio?",
+        "confirm-description": "{name} se ocultará del directorio público. Se conservará su registro para poder restaurarlo después.",
+        "cancel": "Cancelar",
+        "removing": "Retirando...",
+        "success": "Se ha retirado {name} del directorio público.",
+        "already-removed": "{name} ya se ha retirado.",
+        "not-found": "No hay ningún sitio con esta dirección. Compruebe la URL completa y vuelva a intentarlo.",
+        "failed": "No se pudo confirmar la retirada. Busque de nuevo la dirección antes de reintentarlo.",
+        "changed": "La dirección del sitio ha cambiado. Búsquelo de nuevo antes de retirarlo.",
+        "restore-help": "Para restaurar este sitio, cargue su dirección en la información del sitio, active su disponibilidad y guarde la actualización."
       }
     }
   },

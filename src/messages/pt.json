@@ -165,7 +165,29 @@
           "update-success": "{slug} atualizado no banco de dados",
           "submitted": "{slug} está salvo no banco de dados",
           "updated": "{slug} foi atualizado no banco de dados"
-        }
+        },
+        "show-password": "Mostrar senha",
+        "hide-password": "Ocultar senha"
+      },
+      "removal": {
+        "title": "Remover sites inacessíveis",
+        "description": "Procure um endereço cadastrado e confirme a remoção. O site pode estar offline.",
+        "url": "Endereço do site a remover",
+        "password-help": "Use a senha de acesso nas informações do site acima.",
+        "check": "Procurar site",
+        "checking": "Procurando...",
+        "clear": "Limpar endereço",
+        "remove": "Remover site",
+        "confirm-title": "Remover este site?",
+        "confirm-description": "{name} será ocultado do diretório público. O cadastro será mantido para permitir a restauração posterior.",
+        "cancel": "Cancelar",
+        "removing": "Removendo...",
+        "success": "{name} foi removido do diretório público.",
+        "already-removed": "{name} já foi removido.",
+        "not-found": "Nenhum site corresponde a este endereço. Verifique a URL completa e tente novamente.",
+        "failed": "Não foi possível confirmar a remoção. Procure o endereço novamente antes de tentar outra vez.",
+        "changed": "O endereço do site mudou. Procure-o novamente antes de remover.",
+        "restore-help": "Para restaurar este site, carregue o endereço nas informações do site, ative sua disponibilidade e salve a atualização."
       }
     }
   },

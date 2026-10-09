@@ -31,6 +31,18 @@ function createCheckRequest(password: string, url: unknown) {
   })
 }
 
+function createRemoveRequest(
+  password: string,
+  url: unknown,
+  existingSlug = 'example',
+) {
+  return new Request('http://localhost/api/sites/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, action: 'remove', url, existingSlug }),
+  })
+}
+
 async function withEnvironment(
   environment: Record<string, string | undefined>,
   run: () => Promise<void>,
@@ -162,4 +174,77 @@ test('site submission keeps invalid-password attempts behind the shared limiter'
       assert.equal(body.error, 'SERVICE_NOT_CONFIGURED')
     },
   )
+})
+
+test('site removal validates the address before requiring a database', async () => {
+  await withEnvironment(
+    { TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD, DATABASE_URL: undefined },
+    async () => {
+      for (const url of [
+        'not-a-url',
+        'file:///tmp/site',
+        'https://user:secret@example.com',
+      ]) {
+        const response = await POST(createRemoveRequest(TEST_PASSWORD, url))
+        assert.equal(response.status, 400)
+        assert.equal((await response.json()).error, 'INVALID_SITE')
+      }
+    },
+  )
+})
+
+test('site removal accepts an unreachable hostname without resolving or fetching it', async () => {
+  await withEnvironment(
+    { TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD, DATABASE_URL: undefined },
+    async () => {
+      const response = await POST(
+        createRemoveRequest(
+          TEST_PASSWORD,
+          'https://unreachable.invalid/resource',
+        ),
+      )
+      assert.equal(response.status, 503)
+      assert.equal((await response.json()).error, 'SERVICE_NOT_CONFIGURED')
+    },
+  )
+})
+
+test('site removal requires the reviewed target slug', async () => {
+  await withEnvironment(
+    { TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD, DATABASE_URL: undefined },
+    async () => {
+      const response = await POST(
+        createRemoveRequest(TEST_PASSWORD, 'https://example.com', ''),
+      )
+      assert.equal(response.status, 400)
+      assert.equal((await response.json()).error, 'INVALID_SITE')
+    },
+  )
+})
+
+test('site removal cannot bypass password authorization', async () => {
+  await withEnvironment(
+    { TOOL_SUBMISSION_PASSWORD: TEST_PASSWORD, DATABASE_URL: undefined },
+    async () => {
+      const response = await POST(
+        createRemoveRequest('wrong-password', 'https://example.com'),
+      )
+      assert.equal(response.status, 503)
+      assert.equal((await response.json()).error, 'SERVICE_NOT_CONFIGURED')
+    },
+  )
+})
+
+test('site submission rejects non-object JSON without throwing', async () => {
+  for (const payload of [null, [], 'remove']) {
+    const response = await POST(
+      new Request('http://localhost/api/sites/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }),
+    )
+    assert.equal(response.status, 400)
+    assert.equal((await response.json()).error, 'INVALID_REQUEST')
+  }
 })

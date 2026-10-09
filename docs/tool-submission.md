@@ -6,6 +6,14 @@
 
 “网站可用”开启时保存为 `published`，关闭时保存为 `archived` 并从公开目录隐藏；重新开启会清除已有的软移除标记并恢复发布。如果命中的是只存在于 JSON 快照中的记录，编辑保存会在数据库创建同 `slug` 的覆盖记录，不会直接修改版本化 JSON。成功保存会立即失效发布目录缓存，变更随后可反映到首页、分类、详情、相关推荐和 sitemap。
 
+## 移除无法访问的地址
+
+添加页面的“移除无法访问的网站”区域复用上方的访问密码。输入要移除的完整 URL，点击查找，核对返回的网站名称与地址，再点击移除并在弹窗中确认。整个流程只查询收录数据，不抓取网站内容或解析域名，因此域名失效或网站无法访问时仍可移除。
+
+移除会把记录标为 `archived`，设置 `removed_at` 和 `removal_reason`，并立即失效发布目录缓存。记录与翻译等信息会保留。仅存在于 JSON 快照中的网站会创建数据库覆盖记录；后续 JSON 导入保留移除标记，避免重新上架。数据库不可用时，公开目录仍按现有规则回退到 JSON 快照，因此快照中的网站可能暂时再次显示。
+
+已移除的地址会显示当前状态，重复请求不会更改首次移除时间。需要恢复时，在原有“网站信息”区域加载同一地址，开启“网站可用”并保存。移除不增加新迁移，但数据库必须已应用 `0002_site-removal-markers.sql`。
+
 ## 部署配置
 
 在本地 `.env.local` 和 Vercel 的加密环境变量中设置：
@@ -18,7 +26,7 @@ TOOL_SUBMISSION_PASSWORD=replace-with-a-long-random-password
 DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@REGION.pooler.supabase.com:6543/postgres
 ```
 
-提交密码只发送给同源的服务端接口。`POST /api/meta` 校验后抓取目标网站元数据；`POST /api/sites/submit` 校验后执行重复检查或保存变更。正确密码可以无限次调用，并且不会访问限流数据库。不要把密码提交到 Git，也不要放进任何 `NEXT_PUBLIC_*` 变量。
+提交密码只发送给同源的服务端接口。`POST /api/meta` 校验后抓取目标网站元数据；`POST /api/sites/submit` 校验后执行重复检查、保存或移除变更。正确密码可以无限次调用，并且不会访问限流数据库。不要把密码提交到 Git，也不要放进任何 `NEXT_PUBLIC_*` 变量。
 
 部署前还需人工审查并执行 `drizzle/` 中尚未应用的迁移：
 
@@ -63,6 +71,22 @@ Content-Type: application/json
 ```
 
 检查结果用 `duplicate` 表示是否重复；命中时同时返回完整的可编辑 `site` 和 `source`（`database` 或 `snapshot`）。密码始终只在服务端校验，不会放入 URL 或浏览器缓存。
+
+移除使用同一个受保护接口，必须携带查找结果中的 `slug` 与目标地址：
+
+```http
+POST /api/sites/submit
+Content-Type: application/json
+
+{
+  "password": "...",
+  "action": "remove",
+  "existingSlug": "example",
+  "url": "https://example.com"
+}
+```
+
+成功返回 `operation: "removed"` 和带 `removedAt` 的 `site`；重复移除同时返回 `alreadyRemoved: true`。不存在的记录返回 `404 SITE_NOT_FOUND`；地址在确认前后发生变更时返回 `409 SITE_CHANGED`，要求重新查找后确认。密码校验与错误密码限流规则和添加功能相同。
 
 ```http
 POST /api/sites/submit

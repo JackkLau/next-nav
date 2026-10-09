@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import SiteRemoval from '@/components/site-removal'
 import SiteIcon from '@/components/ui/site-icon'
 import {
   Card,
@@ -26,6 +27,8 @@ import {
   Copy,
   Database,
   ExternalLink,
+  Eye,
+  EyeOff,
   Loader2,
   LockKeyhole,
   ShieldCheck,
@@ -109,6 +112,11 @@ function createSlug(name: string, url: string) {
 export default function NavGenPage() {
   const t = useTranslations()
   const [password, setPassword] = useState('')
+  const [passwordVersion, setPasswordVersion] = useState(0)
+  const [removalUrl, setRemovalUrl] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [passwordInvalid, setPasswordInvalid] = useState(false)
+  const passwordRef = useRef<HTMLInputElement>(null)
   const [url, setUrl] = useState('')
   const [category, setCategory] = useState('common')
   const [favorite, setFavorite] = useState(false)
@@ -518,18 +526,60 @@ export default function NavGenPage() {
                 <LockKeyhole className="h-4 w-4" />
                 {t('tools.nav-gen.form.password')}
               </Label>
-              <Input
-                id="tool-password"
-                type="password"
-                autoComplete="current-password"
-                maxLength={256}
-                placeholder={t('tools.nav-gen.form.password-placeholder')}
-                value={password}
-                onChange={(event) => {
-                  setPassword(event.target.value)
-                  setAccessVerified(false)
-                }}
-              />
+              <div className="relative">
+                <Input
+                  ref={passwordRef}
+                  id="tool-password"
+                  type={showPassword ? 'text' : 'password'}
+                  className="pr-12"
+                  aria-invalid={passwordInvalid}
+                  aria-describedby={
+                    passwordInvalid ? 'tool-password-error' : undefined
+                  }
+                  autoComplete="current-password"
+                  maxLength={256}
+                  placeholder={t('tools.nav-gen.form.password-placeholder')}
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value)
+                    setPasswordVersion((version) => version + 1)
+                    setAccessVerified(false)
+                    setPasswordInvalid(false)
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-9 w-10 cursor-pointer active:opacity-80"
+                  aria-label={t(
+                    showPassword
+                      ? 'tools.nav-gen.form.hide-password'
+                      : 'tools.nav-gen.form.show-password',
+                  )}
+                  aria-pressed={showPassword}
+                  onClick={() => setShowPassword((value) => !value)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </Button>
+              </div>
+              {passwordInvalid && (
+                <p
+                  id="tool-password-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
+                  {t(
+                    password
+                      ? 'tools.nav-gen.form.error.password'
+                      : 'tools.nav-gen.form.error.password-required',
+                  )}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -609,6 +659,33 @@ export default function NavGenPage() {
             </Button>
           </CardContent>
         </Card>
+
+        <SiteRemoval
+          key={passwordVersion}
+          password={password}
+          url={removalUrl}
+          onUrlChange={setRemovalUrl}
+          disabled={loading || submitting}
+          onAccessResult={(data) => {
+            setAccessVerified(Boolean(data.unlimited))
+            if (!data.unlimited) applyRateLimit(data.rateLimit)
+          }}
+          onPasswordError={() => {
+            setPasswordInvalid(true)
+            passwordRef.current?.focus()
+          }}
+          onRemoved={(site) => {
+            if (generatedItem?.slug === site.slug) {
+              setGeneratedItem((current) =>
+                current ? { ...current, status: 'archived' } : current,
+              )
+              setExistingSlug(site.slug)
+              setExistingSource('database')
+              setSubmittedSlug('')
+              setSubmittedOperation('')
+            }
+          }}
+        />
 
         {/* 元数据显示 */}
         {Object.keys(metaData).length > 0 && (
